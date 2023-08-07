@@ -1,18 +1,20 @@
-
+import 'package:drinklinkmerchant/data_class/cases_class.dart';
 import 'package:drinklinkmerchant/provider/messageProvider.dart';
 import 'package:drinklinkmerchant/routes/route_generator.dart';
 import 'package:drinklinkmerchant/routes/routes.dart';
 import 'package:drinklinkmerchant/ui/web_main.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'ui/services/cases_services.dart';
 
 bool isFlutterLocalNotificationsInitialized = false;
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await setupFlutterNotifications();
 }
+
 Future<void> setupFlutterNotifications() async {
   if (isFlutterLocalNotificationsInitialized) {
     return;
@@ -25,22 +27,25 @@ Future<void> setupFlutterNotifications() async {
   isFlutterLocalNotificationsInitialized = true;
 }
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: const FirebaseOptions(
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
       apiKey: "AIzaSyBJY62BrXSL1nAYg_HBz7p3QyCenryX4mk",
       appId: "1:64421969736:web:1c6871cb405c2fd034fd7d",
       messagingSenderId: "64421969736",
       projectId: "drinklinkv2-d84fe",
-    ),);
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider(create: (_) => MessageProvider()),
-    ],child: const MyApp(),)
-  
+    ),
   );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => MessageProvider()),
+      StreamProvider<List<CasesClass>>.value(
+          value: CasesServices().getCasesList, initialData: const [])
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
