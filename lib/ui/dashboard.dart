@@ -1,9 +1,14 @@
 import 'package:drinklinkmerchant/ui/merchant/merchant.dart';
 import 'package:drinklinkmerchant/ui/messages/message.dart';
 import 'package:drinklinkmerchant/ui/products/products.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+
+import 'cases/cases.dart';
+
+enum Options { cases, exit }
 
 class DashBoard extends StatefulWidget {
   const DashBoard({Key? key}) : super(key: key);
@@ -15,6 +20,48 @@ class DashBoard extends StatefulWidget {
 class _DashBoardState extends State<DashBoard> {
   int indexMenu = 0;
   bool showChat = false;
+
+  var _popupMenuItemIndex = 0;
+  Color _changeColorAccordingToMenuItem = Colors.red;
+  var appBarHeight = AppBar().preferredSize.height;
+
+  PopupMenuItem _buildPopupMenuItem(
+      String title, IconData iconData, int position) {
+    return PopupMenuItem(
+      value: position,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Icon(
+            iconData,
+            color: const Color(0xffbef7700),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          Text(title),
+        ],
+      ),
+    );
+  }
+
+  _onMenuItemSelected(int value) {
+    setState(() {
+      _popupMenuItemIndex = value;
+    });
+
+    if (value == Options.cases.index) {
+      _changeColorAccordingToMenuItem = Colors.red;
+      print('cases');
+      setState(() {
+        indexMenu = 6;
+        // showChat = false;
+      });
+    } else {
+      _changeColorAccordingToMenuItem = Colors.purple;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,13 +73,13 @@ class _DashBoardState extends State<DashBoard> {
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                   child: Row(
                     children: [
-                      Column(
+                      const Column(
                         children: [
                           Text(
                             'DRINKLINK',
                             style: TextStyle(
                                 fontFamily: 'SFPro',
-                                color: Color(0xFFBEF7700),
+                                color: Color(0xffbef7700),
                                 fontSize: 30,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -46,8 +93,8 @@ class _DashBoardState extends State<DashBoard> {
                           ),
                         ],
                       ),
-                      Spacer(),
-                      Column(
+                      const Spacer(),
+                      const Column(
                         children: [
                           Text(
                             'Welcome',
@@ -67,21 +114,41 @@ class _DashBoardState extends State<DashBoard> {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 12,
                       ),
                       Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(113.0),
-                          image: DecorationImage(
-                            image: const AssetImage(
-                                'assets/images/user_sample.png'),
-                            fit: BoxFit.fill,
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(113.0),
+                            image: const DecorationImage(
+                              image:
+                                  AssetImage('assets/images/user_sample.png'),
+                              fit: BoxFit.fill,
+                            ),
                           ),
-                        ),
-                      )
+                          child: PopupMenuButton(
+                            onSelected: (value) {
+                              _onMenuItemSelected(value as int);
+                            },
+                            iconSize: 0.0,
+                            offset: Offset(0.0, appBarHeight),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(8.0),
+                                bottomRight: Radius.circular(8.0),
+                                topLeft: Radius.circular(8.0),
+                                topRight: Radius.circular(8.0),
+                              ),
+                            ),
+                            itemBuilder: (ctx) => [
+                              _buildPopupMenuItem(
+                                  'Cases', Icons.chat, Options.cases.index),
+                              _buildPopupMenuItem('Exit', Icons.exit_to_app,
+                                  Options.exit.index),
+                            ],
+                          ))
                     ],
                   ),
                 ),
@@ -115,7 +182,7 @@ class _DashBoardState extends State<DashBoard> {
                                     fontSize: 18,
                                     color: indexMenu == 0
                                         ? Colors.white
-                                        : Color.fromARGB(255, 66, 64, 64),
+                                        : const Color.fromARGB(255, 66, 64, 64),
                                     fontWeight: FontWeight.w500,
                                   ),
                                   textAlign: TextAlign.center,
@@ -123,7 +190,7 @@ class _DashBoardState extends State<DashBoard> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 12,
                           ),
                           GestureDetector(
@@ -149,7 +216,7 @@ class _DashBoardState extends State<DashBoard> {
                                     fontSize: 18,
                                     color: indexMenu == 1
                                         ? Colors.white
-                                        : Color.fromARGB(255, 66, 64, 64),
+                                        : const Color.fromARGB(255, 66, 64, 64),
                                     fontWeight: FontWeight.w500,
                                   ),
                                   textAlign: TextAlign.center,
@@ -157,7 +224,7 @@ class _DashBoardState extends State<DashBoard> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 12,
                           ),
                           GestureDetector(
@@ -183,7 +250,7 @@ class _DashBoardState extends State<DashBoard> {
                                     fontSize: 18,
                                     color: indexMenu == 2
                                         ? Colors.white
-                                        : Color.fromARGB(255, 66, 64, 64),
+                                        : const Color.fromARGB(255, 66, 64, 64),
                                     fontWeight: FontWeight.w500,
                                   ),
                                   textAlign: TextAlign.center,
@@ -191,7 +258,7 @@ class _DashBoardState extends State<DashBoard> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 12,
                           ),
                           GestureDetector(
@@ -217,7 +284,7 @@ class _DashBoardState extends State<DashBoard> {
                                     fontSize: 18,
                                     color: indexMenu == 3
                                         ? Colors.white
-                                        : Color.fromARGB(255, 66, 64, 64),
+                                        : const Color.fromARGB(255, 66, 64, 64),
                                     fontWeight: FontWeight.w500,
                                   ),
                                   textAlign: TextAlign.center,
@@ -225,7 +292,7 @@ class _DashBoardState extends State<DashBoard> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 12,
                           ),
                           GestureDetector(
@@ -251,7 +318,7 @@ class _DashBoardState extends State<DashBoard> {
                                     fontSize: 18,
                                     color: indexMenu == 4
                                         ? Colors.white
-                                        : Color.fromARGB(255, 66, 64, 64),
+                                        : const Color.fromARGB(255, 66, 64, 64),
                                     fontWeight: FontWeight.w500,
                                   ),
                                   textAlign: TextAlign.center,
@@ -259,7 +326,7 @@ class _DashBoardState extends State<DashBoard> {
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 12,
                           ),
                           GestureDetector(
@@ -285,7 +352,7 @@ class _DashBoardState extends State<DashBoard> {
                                     fontSize: 18,
                                     color: indexMenu == 5
                                         ? Colors.white
-                                        : Color.fromARGB(255, 66, 64, 64),
+                                        : const Color.fromARGB(255, 66, 64, 64),
                                     fontWeight: FontWeight.w500,
                                   ),
                                   textAlign: TextAlign.center,
@@ -295,17 +362,19 @@ class _DashBoardState extends State<DashBoard> {
                           )
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 20,
                       ),
                       if (indexMenu == 0) ...[
-                        widgetWall()
+                        const widgetWall()
                       ] else if (indexMenu == 1) ...[
-                        MerchantPage()
+                        const MerchantPage()
                       ] else if (indexMenu == 2) ...[
-                        ProductsPage()
+                        const ProductsPage()
+                      ] else if (indexMenu == 6) ...[
+                        const CasesPage()
                       ] else ...[
-                        widgetWall()
+                        const widgetWall()
                       ]
                     ],
                   ),
@@ -318,7 +387,7 @@ class _DashBoardState extends State<DashBoard> {
                   child: Container(
                     width: 400,
                     height: 500,
-                    color: Color.fromARGB(137, 106, 105, 105),
+                    color: const Color.fromARGB(137, 106, 105, 105),
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
                       child: Column(children: [
@@ -332,12 +401,15 @@ class _DashBoardState extends State<DashBoard> {
                                     showChat = false;
                                   });
                                 },
-                                child: Icon(Icons.close),
+                                child: const Icon(Icons.close),
                               ),
                             )
                           ],
                         ),
-                        MessagePage(caseId: '01',customerID: '01',)
+                        const MessagePage(
+                          caseId: '01',
+                          customerID: '01',
+                        )
                       ]),
                     ),
                   )),
@@ -374,26 +446,26 @@ class widgetWall extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30.0),
             color: const Color(0xffe9f9fc),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
-                color: const Color(0x29000000),
+                color: Color(0x29000000),
                 offset: Offset(0, 3),
                 blurRadius: 6,
               ),
             ],
           ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 0, 0),
+          child: const Padding(
+            padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
             child: Text(
               'Order Your Best \nFood Anytime / Ads will show here also',
               style: TextStyle(
                 fontFamily: 'SF Pro',
                 fontSize: 30,
-                color: const Color(0xff5b5957),
+                color: Color(0xff5b5957),
                 fontWeight: FontWeight.w700,
                 shadows: [
                   Shadow(
-                    color: const Color(0x29000000),
+                    color: Color(0x29000000),
                     offset: Offset(0, 3),
                     blurRadius: 6,
                   )
@@ -403,7 +475,7 @@ class widgetWall extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         Row(
@@ -419,9 +491,9 @@ class widgetWall extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(55.0),
                     color: const Color(0xfffafafa),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
-                        color: const Color(0x29000000),
+                        color: Color(0x29000000),
                         offset: Offset(0, 3),
                         blurRadius: 6,
                       ),
@@ -434,12 +506,12 @@ class widgetWall extends StatelessWidget {
                     fit: BoxFit.fill,
                   ),
                 ),
-                Row(
+                const Row(
                   children: [],
                 )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
             Column(
@@ -451,9 +523,9 @@ class widgetWall extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(55.0),
                     color: const Color(0xfffafafa),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
-                        color: const Color(0x29000000),
+                        color: Color(0x29000000),
                         offset: Offset(0, 3),
                         blurRadius: 6,
                       ),
@@ -466,7 +538,7 @@ class widgetWall extends StatelessWidget {
                     fit: BoxFit.fill,
                   ),
                 ),
-                Row(
+                const Row(
                   children: [],
                 )
               ],
