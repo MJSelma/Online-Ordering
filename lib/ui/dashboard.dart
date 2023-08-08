@@ -132,6 +132,7 @@ class _DashBoardState extends State<DashBoard> {
                             onSelected: (value) {
                               _onMenuItemSelected(value as int);
                             },
+                            tooltip: '',
                             iconSize: 0.0,
                             offset: Offset(0.0, appBarHeight),
                             shape: const RoundedRectangleBorder(
@@ -144,7 +145,13 @@ class _DashBoardState extends State<DashBoard> {
                             ),
                             itemBuilder: (ctx) => [
                               _buildPopupMenuItem(
-                                  'Cases', Icons.chat, Options.cases.index),
+                                  'My Cases', Icons.chat, Options.cases.index),
+                              _buildPopupMenuItem(
+                                  'New Buiseness', Icons.business, 3),
+                              _buildPopupMenuItem(
+                                  'New Manager', Icons.manage_accounts, 4),
+                              _buildPopupMenuItem(
+                                  'Settings', Icons.settings, 5),
                               _buildPopupMenuItem('Exit', Icons.exit_to_app,
                                   Options.exit.index),
                             ],
