@@ -1,4 +1,4 @@
-import 'package:drinklinkmerchant/data_class/cases_class.dart';
+import 'package:drinklinkmerchant/ui/data_class/cases_class.dart';
 import 'package:drinklinkmerchant/provider/messageProvider.dart';
 import 'package:drinklinkmerchant/routes/route_generator.dart';
 import 'package:drinklinkmerchant/routes/routes.dart';
@@ -42,7 +42,10 @@ void main() async {
     providers: [
       ChangeNotifierProvider(create: (_) => MessageProvider()),
       StreamProvider<List<CasesClass>>.value(
-          value: CasesServices().getCasesList, initialData: const [])
+          value: CasesServices().getCasesList, initialData: const []),
+      // StreamProvider<List<CasesMessagesClass>>.value(
+      //     value: CasesMessagesServices().getCasesMessagesList,
+      //     initialData: const []),
     ],
     child: const MyApp(),
   ));
