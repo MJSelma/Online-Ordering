@@ -1,8 +1,10 @@
+import 'dart:js_interop';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
+import 'package:http/http.dart' as http;
 import '../data_class/cases_class.dart';
 import '../data_class/cases_messages_class.dart';
 
@@ -469,7 +471,32 @@ class _CasesPageState extends State<CasesPage> {
           casesMessagesClass = [];
         }
 
+        // bool checkIfImage(String param) {
+        //   if (param == 'image/jpeg' ||
+        //       param == 'image/png' ||
+        //       param == 'image/gif') {
+        //     return true;
+        //   }
+        //   return false;
+        // }
+
+        // Future<bool> validateImage(String imageUrl) async {
+        //   http.Response res;
+        //   try {
+        //     res = await http.get(Uri.parse(imageUrl));
+        //   } catch (e) {
+        //     return false;
+        //   }
+
+        //   if (res.statusCode != 200) return false;
+        //   Map<String, dynamic> data = res.headers;
+        //   return checkIfImage(data['content-type']);
+        // }
+
         Widget _buildMessage(CasesMessagesClass message) {
+          // final dateFormated = DateFormat('yMMMMd').format(message.date);
+          final dateFormated =
+              DateFormat('MMMM.dd hh:mm aaa').format(message.date);
           return Container(
             margin: const EdgeInsets.symmetric(vertical: 10.0),
             child: Padding(
@@ -483,7 +510,24 @@ class _CasesPageState extends State<CasesPage> {
                     message.from,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(message.messages),
+                  Image.network(
+                    message.messages,
+                    // width: 40,
+                    height: 300,
+                    errorBuilder: (BuildContext context, Object exception,
+                        StackTrace? stackTrace) {
+                      return Text(message.messages);
+                    },
+                  ),
+                  Text(
+                    dateFormated,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 8),
+                  ),
+                  // Image.network(
+                  //   message.messages,
+                  //   height: 120,
+                  // ),
                 ],
               ),
             ),
@@ -555,6 +599,15 @@ class _CasesPageState extends State<CasesPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
                         children: <Widget>[
+                          IconButton(
+                            tooltip: 'Upload image',
+                            icon: Icon(
+                              Icons.upload,
+                              color: Colors.redAccent[700],
+                            ),
+                            onPressed: null,
+                            // onPressed: isLoaded ? null : onSendMessage,
+                          ),
                           const Expanded(
                             child: TextField(
                               // enabled: isLoaded == false ? true : false,
@@ -567,6 +620,7 @@ class _CasesPageState extends State<CasesPage> {
                             ),
                           ),
                           IconButton(
+                            tooltip: 'Send',
                             icon: Icon(
                               Icons.send,
                               color: Colors.redAccent[700],
