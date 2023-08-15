@@ -35,6 +35,7 @@ void main() async {
       appId: "1:64421969736:web:1c6871cb405c2fd034fd7d",
       messagingSenderId: "64421969736",
       projectId: "drinklinkv2-d84fe",
+      storageBucket: "gs://drinklinkv2-d84fe.appspot.com",
     ),
   );
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);

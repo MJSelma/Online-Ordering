@@ -1,6 +1,7 @@
 import 'package:drinklinkmerchant/ui/data_class/cases_messages_class.dart';
 
 class CasesClass {
+  final String id;
   final String caseId;
   final DateTime deteStart;
   final DateTime dateEnd;
@@ -21,7 +22,8 @@ class CasesClass {
   final String agentImage;
   List<CasesMessagesClass> casesMessagesClass;
   CasesClass(
-      {required this.caseId,
+      {required this.id,
+      required this.caseId,
       required this.deteStart,
       required this.dateEnd,
       required this.customerName,

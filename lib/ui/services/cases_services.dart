@@ -51,6 +51,7 @@ class CasesServices {
     // }
     // print(casesMessagesClass.length);
     return CasesClass(
+        id: snapshot.id,
         caseId: snapshot['caseId'] ?? '',
         deteStart: snapshot['dateStart'].toDate(),
         dateEnd: snapshot['dateEnd'].toDate(),

@@ -1,12 +1,26 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:js_interop';
+import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/_internal/file_picker_web.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart' as pathx;
+
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import '../controller/casesMessages_controller.dart';
+import '../controller/cases_controller.dart';
 import '../data_class/cases_class.dart';
 import '../data_class/cases_messages_class.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 enum Options { forward, take }
 
@@ -18,11 +32,16 @@ class CasesPage extends StatefulWidget {
 }
 
 class _CasesPageState extends State<CasesPage> {
+  final casesCollection = FirebaseFirestore.instance.collection('cases');
+
   int colorrow = 0;
   List<CasesClass> casesClass = [];
   List<CasesMessagesClass> casesMessagesClass = [];
-
+  final TextEditingController _txtSendMesasge = TextEditingController();
+  String downloadurl = '';
   bool isOpenMessages = false;
+  String idx = '';
+  String type = '';
 
   final _popupMenuItemIndex = 0;
   final Color _changeColorAccordingToMenuItem = Colors.red;
@@ -47,6 +66,27 @@ class _CasesPageState extends State<CasesPage> {
       ),
     );
   }
+
+  // getCasesMessages(String id) async {
+  //   await casesCollection
+  //       .doc(id)
+  //       .collection('messages')
+  //       .get()
+  //       .then((QuerySnapshot snapshot) {
+  //     for (var item in snapshot.docs) {
+  //       CasesMessagesClass temp = CasesMessagesClass(
+  //           date: item['date'].toDate(),
+  //           from: item['from'] ?? '',
+  //           messages: item['message'] ?? '',
+  //           receiver: item['receiver'] ?? '',
+  //           sender: item['sender'] ?? '',
+  //           status: item['status'] ?? '',
+  //           type: item['type'] ?? '');
+
+  //       casesMessagesClass.add(temp);
+  //     }
+  //   });
+  // }
 
   _onMenuItemSelected(int value) {
     // setState(() {
@@ -85,6 +125,92 @@ class _CasesPageState extends State<CasesPage> {
     //     caseMessagesClasss.where((item) => item.sender == 'dl1').toList();
     // if (casesMessagesClass.isEmpty) {
     //   casesMessagesClass = [];
+    // }
+  }
+
+  _upload(String fileName, String types) async {
+    print('ersult here');
+    Navigator.pop(context);
+    final url = await FirebaseStorage.instance
+        .ref()
+        .child('uploads/$fileName')
+        .getDownloadURL();
+
+    CasesController()
+        .insertMessages(idx, 'agent', url, '01', 'dl01', 'unread', types);
+  }
+
+  uploadImage() async {
+    // FilePickerResult? result = await FilePicker.platform.pickFiles(); for android
+
+    // for web
+    FilePickerResult? result = await FilePickerWeb.platform.pickFiles();
+    String types = '';
+    if (result != null) {
+      Uint8List? fileBytes = result.files.first.bytes;
+      String fileName = result.files.first.name;
+      double progress = 0;
+      if (fileName.contains('.png')) {
+        types = 'image';
+      } else if (fileName.contains('.jpeg')) {
+        types = 'image';
+      } else if (fileName.contains('.jpg')) {
+        types = 'image';
+      } else if (fileName.contains('.pdf')) {
+        types = 'file';
+      }
+
+      // Upload file
+      FirebaseStorage.instance
+          .ref('uploads/$fileName')
+          .putData(fileBytes!)
+          .snapshotEvents
+          .listen((event) {
+        switch (event.state) {
+          case TaskState.running:
+            progress = 100.0 * (event.bytesTransferred / event.totalBytes);
+            if (progress == 100) {
+              _upload(fileName, types);
+            }
+            print("Upload is $progress% complete.");
+            break;
+          case TaskState.paused:
+            print("Upload is paused.");
+            break;
+          case TaskState.canceled:
+            print("Upload was canceled");
+            break;
+          case TaskState.error:
+            // Handle unsuccessful uploads
+            break;
+          case TaskState.success:
+            // Handle successful uploads on complete
+            // ...
+            break;
+        }
+      });
+
+      // final url = await FirebaseStorage.instance
+      //     .ref()
+      //     .child('uploads/$fileName')
+      //     .getDownloadURL();
+
+      // print(url);
+      // await CasesController()
+      //     .insertMessages(idx, 'agent', url, '01', 'dl01', 'unread', types);
+    }
+
+    // FilePickerResult? result =
+    //     await FilePickerWeb.platform.pickFiles(allowMultiple: true);
+
+    // if (result != null) {
+    //   List<File> files = result.paths.map((path) => File(path!)).toList();
+
+    //   for (var item in files) {
+    //     await FirebaseStorage.instance.ref('uploads/$item').putFile(item);
+    //   }
+    // } else {
+    //   // User canceled the picker
     // }
   }
 
@@ -361,10 +487,16 @@ class _CasesPageState extends State<CasesPage> {
                                       backgroundColor: const Color(0xffef7700),
                                       tooltip: 'View conversation',
                                       onPressed: () {
+                                        casesMessagesClass.clear();
+                                        String id = casesClass[index].id;
                                         String cid = casesClass[index].caseId;
                                         String objective =
                                             casesClass[index].caseObjective;
                                         setState(() {
+                                          print('------------------id here 1');
+                                          print(id);
+                                          idx = id;
+
                                           _showMessage(cid, objective);
                                         });
                                       },
@@ -437,40 +569,46 @@ class _CasesPageState extends State<CasesPage> {
     );
   }
 
+  _reloadMesasge(String cid) {
+    print('sddsdsds');
+    print(cid);
+    if (casesMessagesClass.isEmpty) {
+      casesMessagesClass = [];
+    }
+
+    casesMessagesClass.clear();
+    casesClass = casesClass.where((item) => item.caseId == cid).toList();
+    for (var i = 0; i < casesClass.length; i++) {
+      for (var data in casesClass[i].casesMessagesClass) {
+        CasesMessagesClass temp = CasesMessagesClass(
+            date: data.date,
+            from: data.from,
+            messages: data.messages,
+            receiver: data.receiver,
+            sender: data.sender,
+            status: data.status,
+            type: data.type);
+
+        casesMessagesClass.add(temp);
+      }
+    }
+    print(casesMessagesClass.length);
+
+    casesMessagesClass.sort((a, b) => b.date.compareTo(a.date));
+
+    if (casesMessagesClass.isEmpty) {
+      casesMessagesClass = [];
+    }
+  }
+
   _showMessage(String cid, String objective) {
     showDialog(
       context: context,
       builder: (context) {
-        print('sddsdsds');
-        print(cid);
-        if (casesMessagesClass.isEmpty) {
-          casesMessagesClass = [];
-        }
-
-        casesMessagesClass.clear();
-        casesClass = casesClass.where((item) => item.caseId == cid).toList();
-        for (var i = 0; i < casesClass.length; i++) {
-          for (var data in casesClass[i].casesMessagesClass) {
-            CasesMessagesClass temp = CasesMessagesClass(
-                date: data.date,
-                from: data.from,
-                messages: data.messages,
-                receiver: data.receiver,
-                sender: data.sender,
-                status: data.status,
-                type: data.type);
-
-            casesMessagesClass.add(temp);
-          }
-        }
-        print(casesMessagesClass.length);
-
-        casesMessagesClass.sort((a, b) => b.date.compareTo(a.date));
-
-        if (casesMessagesClass.isEmpty) {
-          casesMessagesClass = [];
-        }
-
+        _reloadMesasge(cid);
+        int ind = 0;
+        // FirebaseStorage storage = FirebaseStorage.instance;
+        // Reference ref = storage.ref().child("image1${DateTime.now()}");
         // bool checkIfImage(String param) {
         //   if (param == 'image/jpeg' ||
         //       param == 'image/png' ||
@@ -510,15 +648,19 @@ class _CasesPageState extends State<CasesPage> {
                     message.from,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Image.network(
-                    message.messages,
-                    // width: 40,
-                    height: 300,
-                    errorBuilder: (BuildContext context, Object exception,
-                        StackTrace? stackTrace) {
-                      return Text(message.messages);
-                    },
-                  ),
+                  if (message.type == 'file')
+                    (const Icon(Icons.picture_as_pdf))
+                  else
+                    (Image.network(
+                      message.messages,
+                      // width: 40,
+                      height: 300,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return Text(message.messages);
+                      },
+                    )),
+
                   Text(
                     dateFormated,
                     style: const TextStyle(
@@ -586,6 +728,7 @@ class _CasesPageState extends State<CasesPage> {
                         reverse: true,
                         itemCount: casesMessagesClass.length,
                         itemBuilder: (BuildContext context, int index) {
+                          ind = index;
                           return _buildMessage(casesMessagesClass[index]);
                         },
                       ),
@@ -605,14 +748,21 @@ class _CasesPageState extends State<CasesPage> {
                               Icons.upload,
                               color: Colors.redAccent[700],
                             ),
-                            onPressed: null,
+                            onPressed: () async {
+                              print('select images');
+                              uploadImage();
+
+                              // if (uploadImage != '') {
+
+                              // }
+                            },
                             // onPressed: isLoaded ? null : onSendMessage,
                           ),
-                          const Expanded(
+                          Expanded(
                             child: TextField(
                               // enabled: isLoaded == false ? true : false,
-                              // controller: _textEditingController,
-                              decoration: InputDecoration(
+                              controller: _txtSendMesasge,
+                              decoration: const InputDecoration(
                                 contentPadding: EdgeInsets.all(10.0),
                                 hintText: 'Type a message...',
                                 border: InputBorder.none,
@@ -625,7 +775,25 @@ class _CasesPageState extends State<CasesPage> {
                               Icons.send,
                               color: Colors.redAccent[700],
                             ),
-                            onPressed: null,
+                            onPressed: () async {
+                              print('----------------------------id here');
+                              print(idx);
+                              Navigator.pop(context);
+                              await CasesController().insertMessages(
+                                  idx,
+                                  'agent',
+                                  _txtSendMesasge.text,
+                                  '01',
+                                  'dl01',
+                                  'unread',
+                                  'text');
+                              _txtSendMesasge.text = '';
+                              casesMessagesClass.clear();
+
+                              // _reloadMesasge(cid);
+                              // _buildMessage(casesMessagesClass[ind]);
+                            },
+
                             // onPressed: isLoaded ? null : onSendMessage,
                           ),
                         ],

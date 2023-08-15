@@ -10,7 +10,8 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 class MessagePage extends HookWidget {
   final String caseId;
   final String customerID;
-  const MessagePage({required this.caseId, required this.customerID});
+  const MessagePage(
+      {super.key, required this.caseId, required this.customerID});
 
   @override
   Widget build(BuildContext context) {
@@ -25,19 +26,19 @@ class MessagePage extends HookWidget {
         messProv.clearMessages();
         await getMessageID(context, messageID, messages);
       });
+      return null;
     }, [caseId, isRefresh]);
 
     return Expanded(
         child: Padding(
-      padding: EdgeInsets.fromLTRB(4, 10, 4, 0),
+      padding: const EdgeInsets.fromLTRB(4, 10, 4, 0),
       child: Chat(
-        
         messages: messages.value,
         // onAttachmentPressed: _handleAttachmentPressed,
         // onMessageTap: _handleMessageTap,
         // onPreviewDataFetched: _handlePreviewDataFetched,
         // onSendPressed: _handleSendPressed(messages),
-        onSendPressed: (p0) => {handleSendPressed(context,p0, messages)},
+        onSendPressed: (p0) => {handleSendPressed(context, p0, messages)},
         showUserAvatars: true,
         showUserNames: true,
         user: types.User(
@@ -47,31 +48,28 @@ class MessagePage extends HookWidget {
     ));
   }
 
-
-  handleSendPressed(BuildContext context,types.PartialText message,
+  handleSendPressed(BuildContext context, types.PartialText message,
       ValueNotifier<List<types.Message>> mymessages) {
-
     final textMessage = types.TextMessage(
-                  author: types.User(
-                    id: customerID,
-                  ),
-                  createdAt: DateTime.now().millisecondsSinceEpoch,
-                  id: customerID,
-                  text: message.text,
-                );
-    _addMessage(context,textMessage, mymessages);
-      sendMessage(context, textMessage.text);
+      author: types.User(
+        id: customerID,
+      ),
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      id: customerID,
+      text: message.text,
+    );
+    _addMessage(context, textMessage, mymessages);
+    sendMessage(context, textMessage.text);
   }
 
   void _addMessage(BuildContext context, types.TextMessage textMessage,
       ValueNotifier<List<types.Message>> mymessages) {
     context.read<MessageProvider>().addMessage(textMessage);
-  
   }
 
   getMessageID(BuildContext context, ValueNotifier messageID,
       ValueNotifier<List<types.Message>> messages) async {
-        final messProv = context.read<MessageProvider>();
+    final messProv = context.read<MessageProvider>();
     await FirebaseFirestore.instance
         .collection('caseMessages')
         .where('senderId', isEqualTo: caseId)
@@ -80,42 +78,40 @@ class MessagePage extends HookWidget {
               querySnapshot.docs.forEach((doc) async {
                 debugPrint(doc.id);
                 messageID.value = doc.id;
-               
               })
             });
     if (messageID.value != '') {
-       messProv.setMessageId(messageID.value);
+      messProv.setMessageId(messageID.value);
       print('calling messages');
       getMessages(context, messageID, messages);
     }
   }
 
-
-
   Future<void> sendMessage(BuildContext context, String textMessage) {
     final messProv = context.read<MessageProvider>();
     final String messageId = messProv.messageId;
     print(messageId);
-      CollectionReference students = FirebaseFirestore.instance.collection('caseMessages').doc(messageId).collection('message');
-      return students
-          .add({
-            'date': DateTime.fromMicrosecondsSinceEpoch(DateTime.now().microsecondsSinceEpoch), 
-            'message': textMessage, 
-            'messageFrom': 'agent',
-            'receiverId': messProv.customerId,
-            'receiverName': messProv.customerName,
-            'receiverImage': messProv.customerImage,
-            'senderId': customerID,
-            'senderName': messProv.agentName,
-            'senderImage': messProv.agentImage,
-            'type':'text'
-          })
-          .then((value) {
-              messProv.messRefresh();
-            print('Message send');
-          })
-          .catchError((error) => print("Message couldn't be sent."));
-}
+    CollectionReference students = FirebaseFirestore.instance
+        .collection('caseMessages')
+        .doc(messageId)
+        .collection('message');
+    return students.add({
+      'date': DateTime.fromMicrosecondsSinceEpoch(
+          DateTime.now().microsecondsSinceEpoch),
+      'message': textMessage,
+      'messageFrom': 'agent',
+      'receiverId': messProv.customerId,
+      'receiverName': messProv.customerName,
+      'receiverImage': messProv.customerImage,
+      'senderId': customerID,
+      'senderName': messProv.agentName,
+      'senderImage': messProv.agentImage,
+      'type': 'text'
+    }).then((value) {
+      messProv.messRefresh();
+      print('Message send');
+    }).catchError((error) => print("Message couldn't be sent."));
+  }
 
   getMessages(BuildContext context, ValueNotifier messageID,
       ValueNotifier<List<types.Message>> messages) async {
@@ -134,12 +130,10 @@ class MessagePage extends HookWidget {
                 DateTime dtStart = (doc['date'] as Timestamp).toDate();
                 print(doc['message']);
                 final textMessage = types.TextMessage(
-                  
                   author: types.User(
-                    id: doc['senderId'],
-                    firstName: doc['senderName'],
-                    imageUrl: doc['senderImage']
-                  ),
+                      id: doc['senderId'],
+                      firstName: doc['senderName'],
+                      imageUrl: doc['senderImage']),
                   createdAt: DateTime.now().millisecondsSinceEpoch,
                   id: doc['senderId'],
                   text: doc['message'],
@@ -180,22 +174,22 @@ class MessagePage extends HookWidget {
                               NetworkImage('${agentList.value[index].image}'),
                           backgroundColor: Colors.transparent,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 8,
                         ),
                         Text(
                           '${agentList.value[index].firstName.toString().toUpperCase()} ${agentList.value[index].middleName.toString().toUpperCase()} ${agentList.value[index].lastName.toString().toUpperCase()}',
-                          style: TextStyle(fontWeight: FontWeight.w700),
+                          style: const TextStyle(fontWeight: FontWeight.w700),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 4,
                         ),
                         Text('${agentList.value[index].email}'),
-                        SizedBox(
+                        const SizedBox(
                           height: 4,
                         ),
                         Text('${agentList.value[index].address}'),
-                        SizedBox(
+                        const SizedBox(
                           height: 4,
                         ),
                         Text('Employee ID: ${agentList.value[index].id}'),
