@@ -15,6 +15,7 @@ import 'package:path/path.dart' as pathx;
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
+import '../../provider/casesMessagesProvider.dart';
 import '../controller/casesMessages_controller.dart';
 import '../controller/cases_controller.dart';
 import '../data_class/cases_class.dart';
@@ -43,6 +44,9 @@ class _CasesPageState extends State<CasesPage> {
   bool isOpenMessages = false;
   String idx = '';
   String type = '';
+  bool isRefresh = false;
+  String cidx = '';
+  String objectivex = '';
 
   final _popupMenuItemIndex = 0;
   final Color _changeColorAccordingToMenuItem = Colors.red;
@@ -66,6 +70,34 @@ class _CasesPageState extends State<CasesPage> {
         ],
       ),
     );
+  }
+
+  getCasesMessages(String id) async {
+    print(id);
+
+    await casesCollection
+        .doc(id)
+        .collection('messages')
+        .get()
+        .then((QuerySnapshot snapshot) {
+      for (var item in snapshot.docs) {
+        CasesMessagesClass temp = CasesMessagesClass(
+            date: item['date'].toDate(),
+            from: item['from'] ?? '',
+            messages: item['message'] ?? '',
+            receiver: item['receiver'] ?? '',
+            sender: item['sender'] ?? '',
+            status: item['status'] ?? '',
+            type: item['type'] ?? '');
+
+        casesMessagesClass.add(temp);
+      }
+    });
+    casesMessagesClass = casesMessagesClass
+      ..sort((a, b) => b.date.compareTo(a.date));
+
+    print('-------------------casesMessagesClass');
+    print(casesMessagesClass.length);
   }
 
   // getCasesMessages(String id) async {
@@ -131,7 +163,6 @@ class _CasesPageState extends State<CasesPage> {
 
   _upload(String fileName, String types) async {
     print('ersult here');
-    Navigator.pop(context);
     final url = await FirebaseStorage.instance
         .ref()
         .child('uploads/$fileName')
@@ -139,6 +170,7 @@ class _CasesPageState extends State<CasesPage> {
 
     CasesController()
         .insertMessages(idx, 'user', url, '01', 'dl01', 'unread', types);
+    getCasesMessages(idx);
   }
 
   uploadImage() async {
@@ -487,18 +519,21 @@ class _CasesPageState extends State<CasesPage> {
                                     FloatingActionButton.small(
                                       backgroundColor: const Color(0xffef7700),
                                       tooltip: 'View conversation',
-                                      onPressed: () {
+                                      onPressed: () async {
                                         casesMessagesClass.clear();
                                         String id = casesClass[index].id;
                                         String cid = casesClass[index].caseId;
                                         String objective =
                                             casesClass[index].caseObjective;
+                                        await getCasesMessages(id);
                                         setState(() {
                                           print('------------------id here 1');
                                           print(id);
                                           idx = id;
+                                          cidx = cid;
+                                          objectivex = objective;
 
-                                          _showMessage(cid, objective);
+                                          _showMessage();
                                         });
                                       },
                                       child: const Icon(
@@ -570,37 +605,37 @@ class _CasesPageState extends State<CasesPage> {
     );
   }
 
-  _reloadMesasge(String cid) {
-    print('sddsdsds');
-    print(cid);
-    if (casesMessagesClass.isEmpty) {
-      casesMessagesClass = [];
-    }
+  // _reloadMesasge(String cid) {
+  //   print('sddsdsds');
+  //   print(cid);
+  //   if (casesMessagesClass.isEmpty) {
+  //     casesMessagesClass = [];
+  //   }
 
-    casesMessagesClass.clear();
-    casesClass = casesClass.where((item) => item.caseId == cid).toList();
-    for (var i = 0; i < casesClass.length; i++) {
-      for (var data in casesClass[i].casesMessagesClass) {
-        CasesMessagesClass temp = CasesMessagesClass(
-            date: data.date,
-            from: data.from,
-            messages: data.messages,
-            receiver: data.receiver,
-            sender: data.sender,
-            status: data.status,
-            type: data.type);
+  //   casesMessagesClass.clear();
+  //   casesClass = casesClass.where((item) => item.caseId == cid).toList();
+  //   for (var i = 0; i < casesClass.length; i++) {
+  //     for (var data in casesClass[i].casesMessagesClass) {
+  //       CasesMessagesClass temp = CasesMessagesClass(
+  //           date: data.date,
+  //           from: data.from,
+  //           messages: data.messages,
+  //           receiver: data.receiver,
+  //           sender: data.sender,
+  //           status: data.status,
+  //           type: data.type);
 
-        casesMessagesClass.add(temp);
-      }
-    }
-    print(casesMessagesClass.length);
+  //       casesMessagesClass.add(temp);
+  //     }
+  //   }
+  //   print(casesMessagesClass.length);
 
-    casesMessagesClass.sort((a, b) => b.date.compareTo(a.date));
+  //   casesMessagesClass.sort((a, b) => b.date.compareTo(a.date));
 
-    if (casesMessagesClass.isEmpty) {
-      casesMessagesClass = [];
-    }
-  }
+  //   if (casesMessagesClass.isEmpty) {
+  //     casesMessagesClass = [];
+  //   }
+  // }
 
   Future<void> _launchInBrowser(Uri url) async {
     if (!await launchUrl(
@@ -621,126 +656,98 @@ class _CasesPageState extends State<CasesPage> {
     }
   }
 
-  _showMessage(String cid, String objective) {
+  Widget _buildMessage(CasesMessagesClass message) {
+    // final dateFormated = DateFormat('yMMMMd').format(message.date);
+    final dateFormated = DateFormat('MMMM.dd hh:mm aaa').format(message.date);
+
+    File file = File(message.messages);
+    String basename = pathx.basename(file.path.split('/').last);
+    String name = '';
+    if (message.type == 'file') {
+      var start = basename.lastIndexOf('/') + 11;
+      var end = basename.indexOf('?');
+      name = basename.substring(start, end);
+    }
+
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+        child: Column(
+          crossAxisAlignment: message.from == 'user'
+              ? CrossAxisAlignment.start
+              : CrossAxisAlignment.end,
+          children: <Widget>[
+            Text(
+              message.from,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            if (message.type == 'file')
+              Row(
+                mainAxisAlignment: message.from == 'user'
+                    ? MainAxisAlignment.start
+                    : MainAxisAlignment.end,
+                children: [
+                  (const Icon(
+                    Icons.picture_as_pdf,
+                  )),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  GestureDetector(
+                    child: Tooltip(message: 'download', child: Text(name)),
+                    onTap: () {
+                      _launchInBrowser(Uri.parse(message.messages));
+                    },
+                  )
+                ],
+              )
+            else if (message.type == 'image')
+              GestureDetector(
+                child: Tooltip(
+                  message: 'view',
+                  child: (Image.network(
+                    message.messages,
+                    height: 300,
+                  )),
+                ),
+                onTap: () {
+                  _launchInBrowser(Uri.parse(message.messages));
+                },
+              )
+            else
+              (Text(message.messages)),
+
+            // else
+            //   (Image.network(
+            //     message.messages,
+            //     // width: 40,
+            //     height: 300,
+            //     errorBuilder: (BuildContext context, Object exception,
+            //         StackTrace? stackTrace) {
+            //       return Text(message.messages);
+            //     },
+            //   )),
+
+            Text(
+              dateFormated,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 8),
+            ),
+            // Image.network(
+            //   message.messages,
+            //   height: 120,
+            // ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _showMessage() {
     showDialog(
       context: context,
-      builder: (context) {
-        _reloadMesasge(cid);
+      builder: (BuildContext context) {
         int ind = 0;
-        // FirebaseStorage storage = FirebaseStorage.instance;
-        // Reference ref = storage.ref().child("image1${DateTime.now()}");
-        // bool checkIfImage(String param) {
-        //   if (param == 'image/jpeg' ||
-        //       param == 'image/png' ||
-        //       param == 'image/gif') {
-        //     return true;
-        //   }
-        //   return false;
-        // }
-
-        // Future<bool> validateImage(String imageUrl) async {
-        //   http.Response res;
-        //   try {
-        //     res = await http.get(Uri.parse(imageUrl));
-        //   } catch (e) {
-        //     return false;
-        //   }
-
-        //   if (res.statusCode != 200) return false;
-        //   Map<String, dynamic> data = res.headers;
-        //   return checkIfImage(data['content-type']);
-        // }
-
-        Widget _buildMessage(CasesMessagesClass message) {
-          // final dateFormated = DateFormat('yMMMMd').format(message.date);
-          final dateFormated =
-              DateFormat('MMMM.dd hh:mm aaa').format(message.date);
-
-          File file = File(message.messages);
-          String basename = pathx.basename(file.path.split('/').last);
-          String name = '';
-          if (message.type == 'file') {
-            var start = basename.lastIndexOf('/') + 11;
-            var end = basename.indexOf('?');
-            name = basename.substring(start, end);
-          }
-
-          return Container(
-            margin: const EdgeInsets.symmetric(vertical: 10.0),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-              child: Column(
-                crossAxisAlignment: message.from == 'user'
-                    ? CrossAxisAlignment.start
-                    : CrossAxisAlignment.end,
-                children: <Widget>[
-                  Text(
-                    message.from,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  if (message.type == 'file')
-                    Row(
-                      mainAxisAlignment: message.from == 'user'
-                          ? MainAxisAlignment.start
-                          : MainAxisAlignment.end,
-                      children: [
-                        (const Icon(
-                          Icons.picture_as_pdf,
-                        )),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                          child:
-                              Tooltip(message: 'download', child: Text(name)),
-                          onTap: () {
-                            _launchInBrowser(Uri.parse(message.messages));
-                          },
-                        )
-                      ],
-                    )
-                  else if (message.type == 'image')
-                    GestureDetector(
-                      child: Tooltip(
-                        message: 'view',
-                        child: (Image.network(
-                          message.messages,
-                          height: 300,
-                        )),
-                      ),
-                      onTap: () {
-                        _launchInBrowser(Uri.parse(message.messages));
-                      },
-                    )
-                  else
-                    (Text(message.messages)),
-
-                  // else
-                  //   (Image.network(
-                  //     message.messages,
-                  //     // width: 40,
-                  //     height: 300,
-                  //     errorBuilder: (BuildContext context, Object exception,
-                  //         StackTrace? stackTrace) {
-                  //       return Text(message.messages);
-                  //     },
-                  //   )),
-
-                  Text(
-                    dateFormated,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 8),
-                  ),
-                  // Image.network(
-                  //   message.messages,
-                  //   height: 120,
-                  // ),
-                ],
-              ),
-            ),
-          );
-        }
-
         return Dialog(
           alignment: Alignment.center,
           child: SizedBox(
@@ -758,7 +765,7 @@ class _CasesPageState extends State<CasesPage> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            'Case no. $cid : Objective: $objective',
+                            'Case no. $cidx : Objective: $objectivex',
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 18),
                           ),
@@ -788,17 +795,145 @@ class _CasesPageState extends State<CasesPage> {
                   ),
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ListView.builder(
-                        reverse: true,
-                        itemCount: casesMessagesClass.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          ind = index;
-                          return _buildMessage(casesMessagesClass[index]);
-                        },
-                      ),
-                    ),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('cases')
+                              .doc(idx)
+                              .collection('messages')
+                              .orderBy('date', descending: true)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return ListView.builder(
+                                  reverse: true,
+                                  itemCount: snapshot.data!.docs.length,
+                                  itemBuilder: (context, index) {
+                                    DocumentSnapshot doc =
+                                        snapshot.data!.docs[index];
+                                    print(doc['date']);
+                                    DateTime date =
+                                        (doc['date'] as Timestamp).toDate();
+
+                                    final dateFormated =
+                                        DateFormat('MMMM.dd hh:mm aaa')
+                                            .format(date);
+
+                                    File file = File(doc['message']);
+                                    String basename = pathx
+                                        .basename(file.path.split('/').last);
+                                    String name = '';
+                                    if (doc['type'] == 'file') {
+                                      var start =
+                                          basename.lastIndexOf('/') + 11;
+                                      var end = basename.indexOf('?');
+                                      name = basename.substring(start, end);
+                                    }
+
+                                    return Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 10.0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 5),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              doc['from'] == 'user'
+                                                  ? CrossAxisAlignment.start
+                                                  : CrossAxisAlignment.end,
+                                          children: <Widget>[
+                                            Text(
+                                              doc['from'],
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            if (doc['type'] == 'file')
+                                              Row(
+                                                mainAxisAlignment:
+                                                    doc['from'] == 'user'
+                                                        ? MainAxisAlignment
+                                                            .start
+                                                        : MainAxisAlignment.end,
+                                                children: [
+                                                  (const Icon(
+                                                    Icons.picture_as_pdf,
+                                                  )),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  GestureDetector(
+                                                    child: Tooltip(
+                                                        message: 'download',
+                                                        child: Text(name)),
+                                                    onTap: () {
+                                                      _launchInBrowser(
+                                                          Uri.parse(
+                                                              doc['message']));
+                                                    },
+                                                  )
+                                                ],
+                                              )
+                                            else if (doc['type'] == 'image')
+                                              GestureDetector(
+                                                child: Tooltip(
+                                                  message: 'view',
+                                                  child: (Image.network(
+                                                    doc['message'],
+                                                    height: 300,
+                                                  )),
+                                                ),
+                                                onTap: () {
+                                                  _launchInBrowser(Uri.parse(
+                                                      doc['message']));
+                                                },
+                                              )
+                                            else
+                                              (Text(doc['message'])),
+
+                                            // else
+                                            //   (Image.network(
+                                            //     message.messages,
+                                            //     // width: 40,
+                                            //     height: 300,
+                                            //     errorBuilder: (BuildContext context, Object exception,
+                                            //         StackTrace? stackTrace) {
+                                            //       return Text(message.messages);
+                                            //     },
+                                            //   )),
+
+                                            Text(
+                                              dateFormated,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 8),
+                                            ),
+                                            // Image.network(
+                                            //   message.messages,
+                                            //   height: 120,
+                                            // ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  });
+                            } else {
+                              return const Text("No data");
+                            }
+                          },
+                        )),
                   ),
+                  // Expanded(
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.symmetric(horizontal: 20),
+                  //     child: ListView.builder(
+                  //       reverse: true,
+                  //       itemCount: casesMessagesClass.length,
+                  //       itemBuilder: (BuildContext context, int index) {
+                  //         return _buildMessage(casesMessagesClass[index]);
+                  //       },
+                  //     ),
+                  //   ),
+                  // ),
                   const Divider(height: 1.0),
                   Container(
                     decoration:
@@ -843,10 +978,9 @@ class _CasesPageState extends State<CasesPage> {
                             onPressed: () async {
                               print('----------------------------id here');
                               print(idx);
-                              Navigator.pop(context);
                               await CasesController().insertMessages(
                                   idx,
-                                  'agent',
+                                  'user',
                                   _txtSendMesasge.text,
                                   '01',
                                   'dl01',
@@ -854,7 +988,6 @@ class _CasesPageState extends State<CasesPage> {
                                   'text');
                               _txtSendMesasge.text = '';
                               casesMessagesClass.clear();
-
                               // _reloadMesasge(cid);
                               // _buildMessage(casesMessagesClass[ind]);
                             },

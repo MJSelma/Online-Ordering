@@ -18,8 +18,8 @@ class CasesController {
 
     await casesCollection.doc(parentid).collection('messages').add(data);
 
-    DateTime dateUpdate = DateTime.now();
+    // DateTime dateUpdate = DateTime.now();
 
-    await casesCollection.doc(parentid).update({'dateEnd': dateUpdate});
+    // await casesCollection.doc(parentid).update({'dateEnd': dateUpdate});
   }
 }
