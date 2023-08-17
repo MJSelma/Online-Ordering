@@ -5,8 +5,12 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:provider/provider.dart';
 
+import '../provider/casesMessagesProvider.dart';
 import 'cases/cases.dart';
+import 'cases/casesMessages.dart';
 
 enum Options { cases, exit }
 
@@ -380,6 +384,8 @@ class _DashBoardState extends State<DashBoard> {
                         const ProductsPage()
                       ] else if (indexMenu == 6) ...[
                         const CasesPage()
+                      ] else if (indexMenu == 6) ...[
+                        // CasesMessages(id: index.toString())
                       ] else ...[
                         const widgetWall()
                       ]

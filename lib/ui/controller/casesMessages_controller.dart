@@ -5,6 +5,7 @@ class CasesMessagesController {
   final casesCollection = FirebaseFirestore.instance.collection('cases');
 
   getCasesMessages(String id) async {
+    print(id);
     List<CasesMessagesClass> casesMessagesClass = [];
 
     await casesCollection
