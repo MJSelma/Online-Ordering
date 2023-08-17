@@ -14,6 +14,7 @@ import 'package:path/path.dart' as pathx;
 
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import '../controller/casesMessages_controller.dart';
 import '../controller/cases_controller.dart';
 import '../data_class/cases_class.dart';
@@ -137,7 +138,7 @@ class _CasesPageState extends State<CasesPage> {
         .getDownloadURL();
 
     CasesController()
-        .insertMessages(idx, 'agent', url, '01', 'dl01', 'unread', types);
+        .insertMessages(idx, 'user', url, '01', 'dl01', 'unread', types);
   }
 
   uploadImage() async {
@@ -601,6 +602,25 @@ class _CasesPageState extends State<CasesPage> {
     }
   }
 
+  Future<void> _launchInBrowser(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
+  Future<void> _launchInWebViewWithoutJavaScript(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.inAppWebView,
+      webViewConfiguration: const WebViewConfiguration(enableJavaScript: false),
+    )) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
   _showMessage(String cid, String objective) {
     showDialog(
       context: context,
@@ -635,6 +655,16 @@ class _CasesPageState extends State<CasesPage> {
           // final dateFormated = DateFormat('yMMMMd').format(message.date);
           final dateFormated =
               DateFormat('MMMM.dd hh:mm aaa').format(message.date);
+
+          File file = File(message.messages);
+          String basename = pathx.basename(file.path.split('/').last);
+          String name = '';
+          if (message.type == 'file') {
+            var start = basename.lastIndexOf('/') + 11;
+            var end = basename.indexOf('?');
+            name = basename.substring(start, end);
+          }
+
           return Container(
             margin: const EdgeInsets.symmetric(vertical: 10.0),
             child: Padding(
@@ -649,17 +679,52 @@ class _CasesPageState extends State<CasesPage> {
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   if (message.type == 'file')
-                    (const Icon(Icons.picture_as_pdf))
-                  else
-                    (Image.network(
-                      message.messages,
-                      // width: 40,
-                      height: 300,
-                      errorBuilder: (BuildContext context, Object exception,
-                          StackTrace? stackTrace) {
-                        return Text(message.messages);
+                    Row(
+                      mainAxisAlignment: message.from == 'user'
+                          ? MainAxisAlignment.start
+                          : MainAxisAlignment.end,
+                      children: [
+                        (const Icon(
+                          Icons.picture_as_pdf,
+                        )),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        GestureDetector(
+                          child:
+                              Tooltip(message: 'download', child: Text(name)),
+                          onTap: () {
+                            _launchInBrowser(Uri.parse(message.messages));
+                          },
+                        )
+                      ],
+                    )
+                  else if (message.type == 'image')
+                    GestureDetector(
+                      child: Tooltip(
+                        message: 'view',
+                        child: (Image.network(
+                          message.messages,
+                          height: 300,
+                        )),
+                      ),
+                      onTap: () {
+                        _launchInBrowser(Uri.parse(message.messages));
                       },
-                    )),
+                    )
+                  else
+                    (Text(message.messages)),
+
+                  // else
+                  //   (Image.network(
+                  //     message.messages,
+                  //     // width: 40,
+                  //     height: 300,
+                  //     errorBuilder: (BuildContext context, Object exception,
+                  //         StackTrace? stackTrace) {
+                  //       return Text(message.messages);
+                  //     },
+                  //   )),
 
                   Text(
                     dateFormated,
