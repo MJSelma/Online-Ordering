@@ -202,7 +202,7 @@ class _CasesMenuState extends State<CasesMenu> {
                   child: ListView.builder(
                     itemCount: casesClass.length,
                     itemBuilder: (context, index) {
-                      var statuscolor = Colors.red;
+                      var statuscolor = Colors.transparent;
                       if (casesClass[index].status.toLowerCase() == 'active') {
                         statuscolor = Colors.green;
                       } else if (casesClass[index].status.toLowerCase() ==
@@ -439,9 +439,9 @@ class _CasesMenuState extends State<CasesMenu> {
                                               if (doc['type'] == 'file')
                                                 Container(
                                                   decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors.red,
-                                                        width: 0.1),
+                                                    // border: Border.all(
+                                                    //     color: Colors.red,
+                                                    //     width: 0.1),
                                                     borderRadius:
                                                         const BorderRadius.all(
                                                             Radius.circular(5)),
@@ -510,9 +510,9 @@ class _CasesMenuState extends State<CasesMenu> {
                                               else
                                                 Container(
                                                   decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors.red,
-                                                        width: 0.1),
+                                                    // border: Border.all(
+                                                    //     color: Colors.red,
+                                                    //     width: 0.1),
                                                     borderRadius:
                                                         const BorderRadius.all(
                                                             Radius.circular(5)),
