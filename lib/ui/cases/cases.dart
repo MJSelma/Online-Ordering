@@ -24,6 +24,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'casesMessages.dart';
+
 enum Options { forward, take }
 
 class CasesPage extends StatefulWidget {
@@ -169,7 +171,7 @@ class _CasesPageState extends State<CasesPage> {
         .getDownloadURL();
 
     CasesController()
-        .insertMessages(idx, 'user', url, '01', 'dl01', 'unread', types);
+        .insertMessages(idx, 'agent', url, '01', 'dl01', 'unread', types);
     getCasesMessages(idx);
   }
 
@@ -532,9 +534,15 @@ class _CasesPageState extends State<CasesPage> {
                                           idx = id;
                                           cidx = cid;
                                           objectivex = objective;
-
+                                          // _showCasesMessage();
                                           _showMessage();
                                         });
+                                        // Navigator.pushReplacement(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //       builder: (context) =>
+                                        //           const CasesMessages(),
+                                        //     ));
                                       },
                                       child: const Icon(
                                         Icons.message,
@@ -716,7 +724,18 @@ class _CasesPageState extends State<CasesPage> {
                 },
               )
             else
-              (Text(message.messages)),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color:
+                      (message.from == 'user' ? Colors.grey : Colors.blue[200]),
+                ),
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  message.messages,
+                  style: const TextStyle(fontSize: 15),
+                ),
+              ),
 
             // else
             //   (Image.network(
@@ -743,21 +762,47 @@ class _CasesPageState extends State<CasesPage> {
     );
   }
 
+  _showCasesMessage() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          alignment: Alignment.center,
+          child: SizedBox(
+            height: MediaQuery.sizeOf(context).height,
+            width: MediaQuery.sizeOf(context).width - 300,
+            child: CasesMessages(
+              idx: idx,
+              caseId: cidx,
+              objective: objectivex,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   _showMessage() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         int ind = 0;
         return Dialog(
-          alignment: Alignment.center,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          // alignment: Alignment.center,
           child: SizedBox(
-              height: 600,
-              width: 700,
+              height: MediaQuery.sizeOf(context).height,
+              width: MediaQuery.sizeOf(context).width - 300,
               child: Column(
                 children: [
                   Container(
-                    height: 65,
-                    color: const Color(0xffbef7700),
+                    decoration: const BoxDecoration(
+                        color: Color(0xffbef7700),
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(20))),
+                    // height: 65,
+
                     alignment: Alignment.center,
                     child: Padding(
                       padding: const EdgeInsets.all(10.0),
@@ -769,21 +814,13 @@ class _CasesPageState extends State<CasesPage> {
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 18),
                           ),
-                          // const SizedBox(
-                          //   width: 20,
-                          // ),
-                          // Text(
-                          //   'Objective :$objective',
-                          //   style: const TextStyle(
-                          //       color: Colors.white, fontSize: 28),
-                          // ),
                           Expanded(
                             child: Container(
                               alignment: Alignment.centerRight,
                               child: IconButton(
                                 onPressed: () => Navigator.pop(context),
                                 icon: const Icon(
-                                  Icons.exit_to_app,
+                                  Icons.close,
                                   color: Colors.white,
                                 ),
                               ),
@@ -848,30 +885,32 @@ class _CasesPageState extends State<CasesPage> {
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             if (doc['type'] == 'file')
-                                              Row(
-                                                mainAxisAlignment:
-                                                    doc['from'] == 'user'
-                                                        ? MainAxisAlignment
-                                                            .start
-                                                        : MainAxisAlignment.end,
-                                                children: [
-                                                  (const Icon(
-                                                    Icons.picture_as_pdf,
-                                                  )),
-                                                  const SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  GestureDetector(
-                                                    child: Tooltip(
-                                                        message: 'download',
-                                                        child: Text(name)),
-                                                    onTap: () {
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  color: (doc['from'] == 'user'
+                                                      ? Colors.grey.shade200
+                                                      : const Color(
+                                                          0xffbef7700)),
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.all(8),
+                                                child: TextButton.icon(
+                                                    style: TextButton.styleFrom(
+                                                      foregroundColor:
+                                                          Colors.white,
+                                                    ),
+                                                    onPressed: () {
                                                       _launchInBrowser(
                                                           Uri.parse(
                                                               doc['message']));
                                                     },
-                                                  )
-                                                ],
+                                                    icon: const Icon(
+                                                      Icons.picture_as_pdf,
+                                                      size: 22,
+                                                    ),
+                                                    label: Text(name)),
                                               )
                                             else if (doc['type'] == 'image')
                                               GestureDetector(
@@ -879,7 +918,7 @@ class _CasesPageState extends State<CasesPage> {
                                                   message: 'view',
                                                   child: (Image.network(
                                                     doc['message'],
-                                                    height: 300,
+                                                    height: 500,
                                                   )),
                                                 ),
                                                 onTap: () {
@@ -888,29 +927,33 @@ class _CasesPageState extends State<CasesPage> {
                                                 },
                                               )
                                             else
-                                              (Text(doc['message'])),
-
-                                            // else
-                                            //   (Image.network(
-                                            //     message.messages,
-                                            //     // width: 40,
-                                            //     height: 300,
-                                            //     errorBuilder: (BuildContext context, Object exception,
-                                            //         StackTrace? stackTrace) {
-                                            //       return Text(message.messages);
-                                            //     },
-                                            //   )),
-
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  color: (doc['from'] == 'user'
+                                                      ? Colors.grey.shade200
+                                                      : const Color(
+                                                          0xffbef7700)),
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.all(16),
+                                                child: Text(
+                                                  doc['message'],
+                                                  style: TextStyle(
+                                                      color:
+                                                          doc['from'] == 'user'
+                                                              ? Colors.black54
+                                                              : Colors.white,
+                                                      fontSize: 15),
+                                                ),
+                                              ),
                                             Text(
                                               dateFormated,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 8),
                                             ),
-                                            // Image.network(
-                                            //   message.messages,
-                                            //   height: 120,
-                                            // ),
                                           ],
                                         ),
                                       ),
@@ -934,7 +977,7 @@ class _CasesPageState extends State<CasesPage> {
                   //     ),
                   //   ),
                   // ),
-                  const Divider(height: 1.0),
+                  const Divider(height: 25.0),
                   Container(
                     decoration:
                         BoxDecoration(color: Theme.of(context).cardColor),
@@ -980,7 +1023,7 @@ class _CasesPageState extends State<CasesPage> {
                               print(idx);
                               await CasesController().insertMessages(
                                   idx,
-                                  'user',
+                                  'agent',
                                   _txtSendMesasge.text,
                                   '01',
                                   'dl01',

@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import '../provider/casesMessagesProvider.dart';
 import 'cases/cases.dart';
 import 'cases/casesMessages.dart';
+import 'cases/cases_menu.dart';
 
 enum Options { cases, exit }
 
@@ -109,7 +110,7 @@ class _DashBoardState extends State<DashBoard> {
                                 fontWeight: FontWeight.w300),
                           ),
                           Text(
-                            'John Custom',
+                            'Lucas',
                             style: TextStyle(
                                 fontFamily: 'SFPro',
                                 color: Color(0xF8737474),
@@ -383,7 +384,7 @@ class _DashBoardState extends State<DashBoard> {
                       ] else if (indexMenu == 2) ...[
                         const ProductsPage()
                       ] else if (indexMenu == 6) ...[
-                        const CasesPage()
+                        const CasesMenu()
                       ] else if (indexMenu == 6) ...[
                         // CasesMessages(id: index.toString())
                       ] else ...[
