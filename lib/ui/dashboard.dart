@@ -431,14 +431,16 @@ class _DashBoardState extends State<DashBoard> {
         ),
         floatingActionButton: Visibility(
           visible: !showChat,
-          child: FloatingActionButton(
+          child: FloatingActionButton.small(
             onPressed: () {
               setState(() {
                 showChat = true;
               });
             },
             backgroundColor: const Color(0xffef7700),
-            child: const Icon(Icons.message),
+            child: const Icon(
+              Icons.message,
+            ),
           ),
         ));
   }
