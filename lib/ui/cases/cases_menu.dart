@@ -35,6 +35,8 @@ class _CasesMenuState extends State<CasesMenu> {
   bool isSelected = false;
   int selectedIndex = -0;
 
+  var statuscolor = Colors.red;
+
   final _defaultColor = const Color(0xffbef7700);
 
   final TextEditingController txtSendMesasge = TextEditingController();
@@ -63,10 +65,10 @@ class _CasesMenuState extends State<CasesMenu> {
         casesClass = caseClasss;
       }
 
-      casesClass = casesClass..sort((a, b) => a.status.compareTo(b.status));
       if (casesClass.isEmpty) {
         casesClass = [];
       }
+      casesClass = casesClass..sort((a, b) => a.status.compareTo(b.status));
     }
 
     Future<void> _launchInBrowser(Uri url) async {
@@ -202,14 +204,14 @@ class _CasesMenuState extends State<CasesMenu> {
                   child: ListView.builder(
                     itemCount: casesClass.length,
                     itemBuilder: (context, index) {
-                      var statuscolor = Colors.transparent;
+                      var statuscolorx = Colors.red;
                       if (casesClass[index].status.toLowerCase() == 'active') {
-                        statuscolor = Colors.green;
+                        statuscolorx = Colors.green;
                       } else if (casesClass[index].status.toLowerCase() ==
                           'in-active') {
-                        statuscolor = Colors.grey;
+                        statuscolorx = Colors.grey;
                       } else {
-                        statuscolor = statuscolor;
+                        statuscolorx = statuscolorx;
                       }
 
                       DateTime date = casesClass[index].deteStart;
@@ -245,7 +247,7 @@ class _CasesMenuState extends State<CasesMenu> {
                                           height: 50,
                                           decoration: BoxDecoration(
                                             border: Border.all(
-                                                width: 3, color: statuscolor),
+                                                width: 3, color: statuscolorx),
                                             borderRadius:
                                                 BorderRadius.circular(113.0),
                                             image: DecorationImage(
@@ -264,7 +266,7 @@ class _CasesMenuState extends State<CasesMenu> {
                                         Container(
                                           alignment: Alignment.topRight,
                                           child: Icon(Icons.circle,
-                                              size: 16, color: statuscolor),
+                                              size: 16, color: statuscolorx),
                                         ),
                                       ],
                                     ),
@@ -356,6 +358,7 @@ class _CasesMenuState extends State<CasesMenu> {
                             String agentNamex = casesClass[index].agentName;
                             String statusx = casesClass[index].status;
                             String image = casesClass[index].customerImage;
+
                             setState(() {
                               selectedIndex = index;
                               isSelected = true;
@@ -367,6 +370,18 @@ class _CasesMenuState extends State<CasesMenu> {
                                 isClose = false;
                               } else {
                                 isClose = true;
+                              }
+
+                              if (casesClass[index].status.toLowerCase() ==
+                                  'active') {
+                                statuscolor = Colors.green;
+                              } else if (casesClass[index]
+                                      .status
+                                      .toLowerCase() ==
+                                  'in-active') {
+                                statuscolor = Colors.grey;
+                              } else {
+                                statuscolor = statuscolorx;
                               }
 
                               print('${idx}888888888888888');
@@ -436,134 +451,225 @@ class _CasesMenuState extends State<CasesMenu> {
                                                     ? CrossAxisAlignment.start
                                                     : CrossAxisAlignment.end,
                                             children: <Widget>[
-                                              if (doc['type'] == 'file')
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    // border: Border.all(
-                                                    //     color: Colors.red,
-                                                    //     width: 0.1),
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                            Radius.circular(5)),
-                                                    color: (doc['from'] ==
-                                                            'user'
-                                                        ? Colors.grey.shade200
-                                                        : const Color(
-                                                            0xffbef7700)),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    doc['from'] == 'user'
+                                                        ? MainAxisAlignment
+                                                            .start
+                                                        : MainAxisAlignment.end,
+                                                children: [
+                                                  Visibility(
+                                                    visible: doc['from']
+                                                            .toString()
+                                                            .toLowerCase() ==
+                                                        'user',
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              top: 40),
+                                                      child: Container(
+                                                        alignment: Alignment
+                                                            .bottomLeft,
+                                                        width: 50,
+                                                        height: 50,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                            width: 3,
+                                                            color: statuscolor,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      113.0),
+                                                          image:
+                                                              const DecorationImage(
+                                                            alignment: Alignment
+                                                                .bottomLeft,
+                                                            image: AssetImage(
+                                                                'assets/images/user_sample.png'),
+                                                            fit: BoxFit.fill,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
-                                                  padding:
-                                                      const EdgeInsets.all(8),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        doc['from'] == 'user'
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  if (doc['type'] == 'file')
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        // border: Border.all(
+                                                        //     color: Colors.red,
+                                                        //     width: 0.1),
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                    .all(
+                                                                Radius.circular(
+                                                                    5)),
+                                                        color: (doc['from'] ==
+                                                                'user'
+                                                            ? Colors
+                                                                .grey.shade200
+                                                            : const Color(
+                                                                0xffbef7700)),
+                                                      ),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8),
+                                                      child: Column(
+                                                        crossAxisAlignment: doc[
+                                                                    'from'] ==
+                                                                'user'
                                                             ? CrossAxisAlignment
                                                                 .start
                                                             : CrossAxisAlignment
                                                                 .end,
-                                                    children: [
-                                                      Text(
-                                                        doc['from'] == 'user'
-                                                            ? customerName
-                                                            : agentName,
-                                                        style: const TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      TextButton.icon(
-                                                          style: TextButton
-                                                              .styleFrom(
-                                                            foregroundColor:
-                                                                Colors.white,
+                                                        children: [
+                                                          Text(
+                                                            doc['from'] ==
+                                                                    'user'
+                                                                ? customerName
+                                                                : agentName,
+                                                            style: const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .blue),
                                                           ),
-                                                          onPressed: () {
-                                                            _launchInBrowser(
-                                                                Uri.parse(doc[
-                                                                    'message']));
-                                                          },
-                                                          icon: const Icon(
-                                                            Icons
-                                                                .picture_as_pdf,
-                                                            size: 22,
+                                                          const SizedBox(
+                                                            height: 10,
                                                           ),
-                                                          label: Text(name)),
-                                                    ],
-                                                  ),
-                                                )
-                                              else if (doc['type'] == 'image')
-                                                GestureDetector(
-                                                  child: Tooltip(
-                                                    message: 'view',
-                                                    child: (Image.network(
-                                                      doc['message'],
-                                                      height: 500,
-                                                    )),
-                                                  ),
-                                                  onTap: () {
-                                                    _launchInBrowser(Uri.parse(
-                                                        doc['message']));
-                                                  },
-                                                )
-                                              else
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                    // border: Border.all(
-                                                    //     color: Colors.red,
-                                                    //     width: 0.1),
-                                                    borderRadius:
-                                                        const BorderRadius.all(
-                                                            Radius.circular(5)),
-                                                    color: (doc['from'] ==
-                                                            'user'
-                                                        ? Colors.grey.shade200
-                                                        : const Color(
-                                                            0xffbef7700)),
-                                                  ),
-                                                  padding:
-                                                      const EdgeInsets.all(16),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        doc['from'] == 'user'
+                                                          TextButton.icon(
+                                                              style: TextButton
+                                                                  .styleFrom(
+                                                                foregroundColor:
+                                                                    Colors
+                                                                        .white,
+                                                              ),
+                                                              onPressed: () {
+                                                                _launchInBrowser(
+                                                                    Uri.parse(doc[
+                                                                        'message']));
+                                                              },
+                                                              icon: const Icon(
+                                                                Icons
+                                                                    .picture_as_pdf,
+                                                                size: 22,
+                                                              ),
+                                                              label:
+                                                                  Text(name)),
+                                                          Text(
+                                                            dateFormated,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: doc['from'] ==
+                                                                        'user'
+                                                                    ? Colors
+                                                                        .black54
+                                                                    : Colors
+                                                                        .grey
+                                                                        .shade300,
+                                                                fontSize: 8),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  else if (doc['type'] ==
+                                                      'image')
+                                                    GestureDetector(
+                                                      child: Tooltip(
+                                                        message: 'view',
+                                                        child: (Image.network(
+                                                          doc['message'],
+                                                          height: 500,
+                                                        )),
+                                                      ),
+                                                      onTap: () {
+                                                        _launchInBrowser(
+                                                            Uri.parse(doc[
+                                                                'message']));
+                                                      },
+                                                    )
+                                                  else
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        // border: Border.all(
+                                                        //     color: Colors.red,
+                                                        //     width: 0.1),
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                    .all(
+                                                                Radius.circular(
+                                                                    5)),
+                                                        color: (doc['from'] ==
+                                                                'user'
+                                                            ? Colors
+                                                                .grey.shade200
+                                                            : const Color(
+                                                                0xffbef7700)),
+                                                      ),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              16),
+                                                      child: Column(
+                                                        crossAxisAlignment: doc[
+                                                                    'from'] ==
+                                                                'user'
                                                             ? CrossAxisAlignment
                                                                 .start
                                                             : CrossAxisAlignment
                                                                 .end,
-                                                    children: [
-                                                      Text(
-                                                        doc['from'] == 'user'
-                                                            ? customerName
-                                                            : agentName,
-                                                        style: const TextStyle(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Text(
-                                                        doc['message'],
-                                                        style: TextStyle(
-                                                            color:
-                                                                doc['from'] ==
+                                                        children: [
+                                                          Text(
+                                                            doc['from'] ==
+                                                                    'user'
+                                                                ? customerName
+                                                                : agentName,
+                                                            style: const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .blue),
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          Text(
+                                                            doc['message'],
+                                                            style: TextStyle(
+                                                                color: doc['from'] ==
                                                                         'user'
                                                                     ? Colors
                                                                         .black54
                                                                     : Colors
                                                                         .white,
-                                                            fontSize: 15),
+                                                                fontSize: 15),
+                                                          ),
+                                                          Text(
+                                                            dateFormated,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: doc['from'] ==
+                                                                        'user'
+                                                                    ? Colors
+                                                                        .black54
+                                                                    : Colors
+                                                                        .grey
+                                                                        .shade300,
+                                                                fontSize: 8),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              Text(
-                                                dateFormated,
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 8),
+                                                    ),
+                                                ],
                                               ),
                                             ],
                                           ),
