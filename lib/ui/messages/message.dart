@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class MessagePage extends HookWidget {
@@ -144,62 +143,62 @@ class MessagePage extends HookWidget {
             });
   }
 
-  Widget _buildReaderList(BuildContext context, ValueNotifier agentList) {
-    return Expanded(
-      child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4),
-          itemCount: agentList.value.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Container(
-                width: 200,
-                height: 330,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 60.0,
-                          backgroundImage:
-                              NetworkImage('${agentList.value[index].image}'),
-                          backgroundColor: Colors.transparent,
-                        ),
-                        const SizedBox(
-                          height: 8,
-                        ),
-                        Text(
-                          '${agentList.value[index].firstName.toString().toUpperCase()} ${agentList.value[index].middleName.toString().toUpperCase()} ${agentList.value[index].lastName.toString().toUpperCase()}',
-                          style: const TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        Text('${agentList.value[index].email}'),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        Text('${agentList.value[index].address}'),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        Text('Employee ID: ${agentList.value[index].id}'),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            );
-          }),
-    );
-  }
+  // Widget _buildReaderList(BuildContext context, ValueNotifier agentList) {
+  //   return Expanded(
+  //     child: GridView.builder(
+  //         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  //             crossAxisCount: 4),
+  //         itemCount: agentList.value.length,
+  //         itemBuilder: (context, index) {
+  //           return Padding(
+  //             padding: const EdgeInsets.all(12.0),
+  //             child: Container(
+  //               width: 200,
+  //               height: 330,
+  //               decoration: BoxDecoration(
+  //                 color: Colors.grey.shade200,
+  //                 borderRadius: BorderRadius.circular(8),
+  //               ),
+  //               child: GestureDetector(
+  //                 onTap: () {},
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+  //                   child: Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.center,
+  //                     mainAxisAlignment: MainAxisAlignment.center,
+  //                     children: [
+  //                       CircleAvatar(
+  //                         radius: 60.0,
+  //                         backgroundImage:
+  //                             NetworkImage('${agentList.value[index].image}'),
+  //                         backgroundColor: Colors.transparent,
+  //                       ),
+  //                       const SizedBox(
+  //                         height: 8,
+  //                       ),
+  //                       Text(
+  //                         '${agentList.value[index].firstName.toString().toUpperCase()} ${agentList.value[index].middleName.toString().toUpperCase()} ${agentList.value[index].lastName.toString().toUpperCase()}',
+  //                         style: const TextStyle(fontWeight: FontWeight.w700),
+  //                       ),
+  //                       const SizedBox(
+  //                         height: 4,
+  //                       ),
+  //                       Text('${agentList.value[index].email}'),
+  //                       const SizedBox(
+  //                         height: 4,
+  //                       ),
+  //                       Text('${agentList.value[index].address}'),
+  //                       const SizedBox(
+  //                         height: 4,
+  //                       ),
+  //                       Text('Employee ID: ${agentList.value[index].id}'),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           );
+  //         }),
+  //   );
+  // }
 }
