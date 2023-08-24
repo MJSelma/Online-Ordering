@@ -110,7 +110,7 @@ class _DashBoardState extends State<DashBoard> {
                                 fontWeight: FontWeight.w300),
                           ),
                           Text(
-                            'Lucas',
+                            'Coffe Project ',
                             style: TextStyle(
                                 fontFamily: 'SFPro',
                                 color: Color(0xF8737474),
@@ -129,7 +129,7 @@ class _DashBoardState extends State<DashBoard> {
                             borderRadius: BorderRadius.circular(113.0),
                             image: const DecorationImage(
                               image:
-                                  AssetImage('assets/images/user_sample.png'),
+                                  AssetImage('assets/images/sample_logo.png'),
                               fit: BoxFit.fill,
                             ),
                           ),
@@ -188,7 +188,7 @@ class _DashBoardState extends State<DashBoard> {
                               ),
                               child: Center(
                                 child: Text(
-                                  'Your wall',
+                                  'Coffe Project',
                                   style: TextStyle(
                                     fontFamily: 'SFPro',
                                     fontSize: 18,
