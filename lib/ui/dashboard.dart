@@ -110,7 +110,7 @@ class _DashBoardState extends State<DashBoard> {
                                 fontWeight: FontWeight.w300),
                           ),
                           Text(
-                            'Coffe Project ',
+                            'GOODFUN ',
                             style: TextStyle(
                                 fontFamily: 'SFPro',
                                 color: Color(0xF8737474),
@@ -188,7 +188,7 @@ class _DashBoardState extends State<DashBoard> {
                               ),
                               child: Center(
                                 child: Text(
-                                  'Coffe Project',
+                                  'GOODFUN',
                                   style: TextStyle(
                                     fontFamily: 'SFPro',
                                     fontSize: 18,
