@@ -111,7 +111,7 @@ class _DashBoardState extends State<DashBoard> {
                                 fontWeight: FontWeight.w300),
                           ),
                           Text(
-                            'GOODFUN ',
+                            'GOODFUN HOSPITALITY ',
                             style: TextStyle(
                                 fontFamily: 'SFPro',
                                 color: Color(0xF8737474),
@@ -129,8 +129,7 @@ class _DashBoardState extends State<DashBoard> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(113.0),
                             image: const DecorationImage(
-                              image:
-                                  AssetImage('assets/images/sample_logo.png'),
+                              image: AssetImage('assets/images/Goodfun.jpg'),
                               fit: BoxFit.fill,
                             ),
                           ),
@@ -178,7 +177,8 @@ class _DashBoardState extends State<DashBoard> {
                                 indexMenu = 0;
                               });
                             },
-                            child: MenuButton('Select Business', 0, Icons.business,40),
+                            child: MenuButton(
+                                'Select Business', 0, Icons.business, 40),
                           ),
                           const SizedBox(
                             height: 12,
@@ -189,7 +189,8 @@ class _DashBoardState extends State<DashBoard> {
                                 indexMenu = 1;
                               });
                             },
-                            child:  MenuButton('Table Bookings', 1, Icons.book,40), 
+                            child:
+                                MenuButton('Table Bookings', 1, Icons.book, 40),
                           ),
                           const SizedBox(
                             height: 12,
@@ -200,7 +201,8 @@ class _DashBoardState extends State<DashBoard> {
                                 indexMenu = 2;
                               });
                             },
-                            child: MenuButton('Consultation Menu', 2, Icons.menu_book,40),  
+                            child: MenuButton(
+                                'Consultation Menu', 2, Icons.menu_book, 40),
                           ),
                           const SizedBox(
                             height: 12,
@@ -211,7 +213,8 @@ class _DashBoardState extends State<DashBoard> {
                                 indexMenu = 3;
                               });
                             },
-                            child: MenuButton('Smart Menu', 3, Icons.menu_book_rounded,40), 
+                            child: MenuButton(
+                                'Smart Menu', 3, Icons.menu_book_rounded, 40),
                           ),
                           const SizedBox(
                             height: 12,
@@ -222,7 +225,8 @@ class _DashBoardState extends State<DashBoard> {
                                 indexMenu = 4;
                               });
                             },
-                            child: MenuButton('Explore Venue', 4,Icons.explore,40),  
+                            child: MenuButton(
+                                'Explore Venue', 4, Icons.explore, 40),
                           ),
                           const SizedBox(
                             height: 12,
@@ -233,7 +237,8 @@ class _DashBoardState extends State<DashBoard> {
                                 indexMenu = 5;
                               });
                             },
-                            child: MenuButton('Events/Weekly \nPrograms', 5,Icons.calendar_month,50), 
+                            child: MenuButton('Events/Weekly \nPrograms', 5,
+                                Icons.calendar_month, 50),
                           ),
                           const SizedBox(
                             height: 12,
@@ -244,9 +249,10 @@ class _DashBoardState extends State<DashBoard> {
                                 indexMenu = 6;
                               });
                             },
-                            child: MenuButton('Media Content', 6,Icons.image,40),
+                            child:
+                                MenuButton('Media Content', 6, Icons.image, 40),
                           ),
-                           const SizedBox(
+                          const SizedBox(
                             height: 12,
                           ),
                           GestureDetector(
@@ -255,9 +261,10 @@ class _DashBoardState extends State<DashBoard> {
                                 indexMenu = 7;
                               });
                             },
-                            child: MenuButton('Experience', 7,Icons.history,40),
+                            child:
+                                MenuButton('Experience', 7, Icons.history, 40),
                           ),
-                           const SizedBox(
+                          const SizedBox(
                             height: 12,
                           ),
                           GestureDetector(
@@ -266,9 +273,10 @@ class _DashBoardState extends State<DashBoard> {
                                 indexMenu = 8;
                               });
                             },
-                            child: MenuButton('Your Ads', 8,Icons.branding_watermark,40),
+                            child: MenuButton(
+                                'Your Ads', 8, Icons.branding_watermark, 40),
                           ),
-                           const SizedBox(
+                          const SizedBox(
                             height: 12,
                           ),
                           GestureDetector(
@@ -277,9 +285,10 @@ class _DashBoardState extends State<DashBoard> {
                                 indexMenu = 9;
                               });
                             },
-                            child: MenuButton('Your Staff', 9,Icons.person_add,40),  
+                            child: MenuButton(
+                                'Your Staff', 9, Icons.person_add, 40),
                           ),
-                           const SizedBox(
+                          const SizedBox(
                             height: 12,
                           ),
                           GestureDetector(
@@ -288,9 +297,10 @@ class _DashBoardState extends State<DashBoard> {
                                 indexMenu = 10;
                               });
                             },
-                            child: MenuButton('Report', 10,Icons.bar_chart_outlined,40), 
+                            child: MenuButton(
+                                'Report', 10, Icons.bar_chart_outlined, 40),
                           ),
-                           const SizedBox(
+                          const SizedBox(
                             height: 12,
                           ),
                           GestureDetector(
@@ -299,9 +309,9 @@ class _DashBoardState extends State<DashBoard> {
                                 indexMenu = 11;
                               });
                             },
-                            child: MenuButton('Payment', 11,Icons.payment,40), 
+                            child: MenuButton('Payment', 11, Icons.payment, 40),
                           ),
-                           const SizedBox(
+                          const SizedBox(
                             height: 12,
                           ),
                           GestureDetector(
@@ -310,25 +320,31 @@ class _DashBoardState extends State<DashBoard> {
                                 indexMenu = 12;
                               });
                             },
-                            child: MenuButton('Business Contact', 12,Icons.contact_mail_rounded,40),
+                            child: MenuButton('Business Contact', 12,
+                                Icons.contact_mail_rounded, 40),
                           ),
                         ],
                       ),
-                      
-                      Column(children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: (){
-                              setState(() {
-                                isMenuOpen = !isMenuOpen;
-                              });
-                            },
-                            child: Icon(isMenuOpen ? Icons.arrow_back_ios:Icons.arrow_forward_ios, color: Color(0xffbef7700),),
-                          ),
-                        )
-                      ],),
-                    
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isMenuOpen = !isMenuOpen;
+                                });
+                              },
+                              child: Icon(
+                                isMenuOpen
+                                    ? Icons.arrow_back_ios
+                                    : Icons.arrow_forward_ios,
+                                color: const Color(0xffbef7700),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                       if (indexMenu == 0) ...[
                         const widgetWall()
                       ] else if (indexMenu == 1) ...[
@@ -399,42 +415,44 @@ class _DashBoardState extends State<DashBoard> {
 
   Container MenuButton(String text, int val, IconData iconMenu, double height) {
     return Container(
-                            width: isMenuOpen ? 200:50,
-                            height: height,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              color: indexMenu == val
-                                  ? const Color(0xffef7700)
-                                  : Colors.grey.shade200,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                  child: Icon(iconMenu,color:indexMenu == val
-                                          ? Colors.white
-                                          : const Color.fromARGB(255, 66, 64, 64),),
-                                ),
-                                Visibility(
-                                  visible: isMenuOpen,
-                                  child: Text(
-                                    text,
-                                    style: TextStyle(
-                                      fontFamily: 'SFPro',
-                                      fontSize: 18,
-                                      color: indexMenu == val
-                                          ? Colors.white
-                                          : const Color.fromARGB(255, 66, 64, 64),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
+      width: isMenuOpen ? 200 : 50,
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color:
+            indexMenu == val ? const Color(0xffef7700) : Colors.grey.shade200,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+            child: Icon(
+              iconMenu,
+              color: indexMenu == val
+                  ? Colors.white
+                  : const Color.fromARGB(255, 66, 64, 64),
+            ),
+          ),
+          Visibility(
+            visible: isMenuOpen,
+            child: Text(
+              text,
+              style: TextStyle(
+                fontFamily: 'SFPro',
+                fontSize: 18,
+                color: indexMenu == val
+                    ? Colors.white
+                    : const Color.fromARGB(255, 66, 64, 64),
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -514,7 +532,7 @@ class widgetWall extends StatelessWidget {
                     fit: BoxFit.fill,
                   ),
                 ),
-                 Row(
+                const Row(
                   children: [],
                 )
               ],
@@ -546,7 +564,7 @@ class widgetWall extends StatelessWidget {
                     fit: BoxFit.fill,
                   ),
                 ),
-                 Row(
+                const Row(
                   children: [],
                 )
               ],
