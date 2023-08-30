@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:drinklinkmerchant/ui/merchant/merchant.dart';
 import 'package:drinklinkmerchant/ui/messages/message.dart';
 import 'package:drinklinkmerchant/ui/products/products.dart';
@@ -12,6 +14,8 @@ import '../provider/casesMessagesProvider.dart';
 import 'cases/cases.dart';
 import 'cases/casesMessages.dart';
 import 'cases/cases_menu.dart';
+import 'data_class/businesses_class.dart';
+import 'merchant/outlets.dart';
 
 enum Options { cases, exit }
 
@@ -23,9 +27,15 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
-  int indexMenu = 0;
+  int indexMenu = 100;
   bool showChat = false;
   bool isMenuOpen = true;
+
+  String currentItem = 'Select Business';
+
+  BusinessesClass? dropDownValue;
+
+  List<BusinessesClass> businessesClass = [];
 
   var _popupMenuItemIndex = 0;
   Color _changeColorAccordingToMenuItem = Colors.red;
@@ -68,8 +78,54 @@ class _DashBoardState extends State<DashBoard> {
     }
   }
 
+  _getProvider(context) {
+    final businessesData = Provider.of<List<BusinessesClass>>(context);
+    businessesClass = businessesData;
+  }
+
+  List<DropdownMenuItem<BusinessesClass>> _createList() {
+    return businessesClass
+        .map<DropdownMenuItem<BusinessesClass>>(
+          (e) => DropdownMenuItem(
+            value: e,
+            child: Container(
+              // color: Colors.grey[900],
+              child: Center(
+                child: Text(
+                  e.name,
+                  style: const TextStyle(
+                    color: Color(0xffbef7700),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        )
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    _getProvider(context);
+
+    final dropdown = DropdownButton<BusinessesClass>(
+      items: _createList(),
+      underline: const SizedBox(),
+      iconSize: 0,
+      isExpanded: false,
+      borderRadius: BorderRadius.circular(20),
+      hint: Center(
+        child: MenuButton(currentItem, 0, Icons.business, 45),
+      ),
+      onChanged: (BusinessesClass? value) {
+        setState(() {
+          indexMenu = 0;
+          currentItem = value!.name;
+          dropDownValue = value;
+        });
+      },
+    );
+
     return Scaffold(
         body: Stack(
           children: [
@@ -90,7 +146,7 @@ class _DashBoardState extends State<DashBoard> {
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            'marketing words here',
+                            'MORE TIMES FOR FUN',
                             style: TextStyle(
                                 fontFamily: 'SFPro',
                                 color: Color.fromRGBO(115, 115, 114, 0.976),
@@ -177,8 +233,10 @@ class _DashBoardState extends State<DashBoard> {
                                 indexMenu = 0;
                               });
                             },
-                            child: MenuButton(
-                                'Select Business', 0, Icons.business, 40),
+                            child: isMenuOpen
+                                ? dropdown
+                                : MenuButton(
+                                    currentItem, 0, Icons.business, 45),
                           ),
                           const SizedBox(
                             height: 12,
@@ -346,7 +404,7 @@ class _DashBoardState extends State<DashBoard> {
                         ],
                       ),
                       if (indexMenu == 0) ...[
-                        const widgetWall()
+                        const OutletsPage()
                       ] else if (indexMenu == 1) ...[
                         const MerchantPage()
                       ] else if (indexMenu == 2) ...[
