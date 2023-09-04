@@ -8,6 +8,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'provider/businessOutletProvider.dart';
+import 'ui/data_class/businesses_class.dart';
+import 'ui/services/businesses_services.dart';
 import 'ui/services/cases_services.dart';
 
 bool isFlutterLocalNotificationsInitialized = false;
@@ -42,8 +45,11 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => MessageProvider()),
+      ChangeNotifierProvider(create: (_) => BusinessOutletProvider()),
       StreamProvider<List<CasesClass>>.value(
           value: CasesServices().getCasesList, initialData: const []),
+      StreamProvider<List<BusinessesClass>>.value(
+          value: BusinessesServices().businessesList, initialData: const []),
       // StreamProvider<List<CasesMessagesClass>>.value(
       //     value: CasesMessagesServices().getCasesMessagesList,
       //     initialData: const []),

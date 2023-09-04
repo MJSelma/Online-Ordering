@@ -561,11 +561,14 @@ class _CasesMenuState extends State<CasesMenu> {
                                                                       .circular(
                                                                           113.0),
                                                               image:
-                                                                  const DecorationImage(
+                                                                  DecorationImage(
                                                                 alignment: Alignment
                                                                     .bottomLeft,
-                                                                image: AssetImage(
-                                                                    'assets/images/sample_logo.png'),
+                                                                image:
+                                                                    NetworkImage(
+                                                                        imageUrl),
+                                                                // image: AssetImage(
+                                                                //     imageUrl),
                                                                 fit:
                                                                     BoxFit.fill,
                                                               ),
@@ -991,14 +994,14 @@ class _CasesMenuState extends State<CasesMenu> {
                                         Expanded(
                                             child: Center(
                                           child: Image.asset(
-                                            'assets/images/sample_logo.png',
+                                            'assets/images/bluemoon.png',
                                             height: 54,
                                           ),
                                         )),
                                         const Expanded(
                                           child: Center(
                                             child: Text(
-                                              'Coffe Project Corporation',
+                                              'GOODFUN HOSPITALITY',
                                               style: TextStyle(fontSize: 12),
                                             ),
                                           ),
@@ -1006,7 +1009,7 @@ class _CasesMenuState extends State<CasesMenu> {
                                         const Expanded(
                                           child: Center(
                                             child: Text(
-                                              'Coffe Shop',
+                                              '',
                                               style: TextStyle(fontSize: 12),
                                             ),
                                           ),
@@ -1082,7 +1085,7 @@ class _CasesMenuState extends State<CasesMenu> {
                                                         setState(() {
                                                           pageIndex = 1;
                                                           pageName =
-                                                              'Coffe Project Corporation';
+                                                              'GOODFUN HOSPITALITY';
                                                         });
                                                       },
                                                       child: const Text(
