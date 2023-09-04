@@ -294,132 +294,255 @@ class _OutletsPageState extends State<OutletsPage> {
                                 ],
                               ),
                               const Spacer(),
-                              Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      RatingBarIndicator(
-                                        rating: 1,
-                                        itemBuilder: (context, index) =>
-                                            const Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                        ),
-                                        itemCount: 1,
-                                        itemSize: 50.0,
-                                        direction: Axis.horizontal,
-                                      ),
-                                      Container(
-                                        child: Text(
-                                          '$intStar Star-Points',
-                                          style: const TextStyle(
-                                            fontStyle: FontStyle.italic,
-                                            color: Colors.black54,
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold,
+                              Visibility(
+                                visible: currentOutletName != '',
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        RatingBarIndicator(
+                                          rating: 1,
+                                          itemBuilder: (context, index) =>
+                                              const Icon(
+                                            Icons.star,
+                                            color: Colors.amber,
                                           ),
+                                          itemCount: 1,
+                                          itemSize: 50.0,
+                                          direction: Axis.horizontal,
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ],
+                                        Container(
+                                          child: Text(
+                                            '$intStar Star-Points',
+                                            style: const TextStyle(
+                                              fontStyle: FontStyle.italic,
+                                              color: Colors.black54,
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               )
                             ],
                           ),
                         ),
-                        AbsorbPointer(
-                          absorbing: isAbsorb,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 40.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: MediaQuery.sizeOf(context).width / 2,
-                                  child: Column(
+                        Visibility(
+                          visible: currentOutletName != '',
+                          child: AbsorbPointer(
+                            absorbing: isAbsorb,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 40.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: MediaQuery.sizeOf(context).width / 2,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        const Text(
+                                          'location',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                        const Text(
+                                          'Is your store inside any Airport/Mall/Hotel/Theme Park',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Checkbox(
+                                              checkColor: Colors.white,
+                                              fillColor: MaterialStateProperty
+                                                  .resolveWith(getColor),
+                                              value: indexYesNo == 0
+                                                  ? true
+                                                  : false,
+                                              onChanged: (bool? value) {
+                                                setState(() {
+                                                  indexYesNo = 0;
+                                                });
+                                              },
+                                            ),
+                                            const Text('Yes'),
+                                            Checkbox(
+                                              checkColor: Colors.white,
+                                              fillColor: MaterialStateProperty
+                                                  .resolveWith(getColor),
+                                              value: indexYesNo == 1
+                                                  ? true
+                                                  : false,
+                                              onChanged: (bool? value) {
+                                                setState(() {
+                                                  indexYesNo = 1;
+                                                });
+                                              },
+                                            ),
+                                            const Text('No'),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        Container(
+                                            child: saveEditButton == 'SAVE'
+                                                ? SizedBox(
+                                                    width: 600,
+                                                    child: TextField(
+                                                      controller: txtLocation,
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                    ),
+                                                  )
+                                                : Text(
+                                                    strLocation,
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.black54,
+                                                    ),
+                                                  )),
+                                        const SizedBox(
+                                          height: 30,
+                                        ),
+                                        const Text(
+                                          'Contacts',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                        Container(
+                                          child: saveEditButton == 'SAVE'
+                                              ? Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 600,
+                                                      child: TextField(
+                                                        controller: txtNumber,
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 600,
+                                                      child: TextField(
+                                                        controller: txtEmail,
+                                                        textAlign:
+                                                            TextAlign.start,
+                                                      ),
+                                                    )
+                                                  ],
+                                                )
+                                              : Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      strNumber,
+                                                      style: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black54,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      strEmail,
+                                                      style: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black54,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                        ),
+                                        const SizedBox(
+                                          height: 30,
+                                        ),
+                                        const Text(
+                                          'Schedule',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                        const Text(
+                                          'Mon-Fri',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                        const Text(
+                                          '09:00-21:30',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                        const Text(
+                                          'Sat-Sun',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                        const Text(
+                                          '07:30-22:30',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black54,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       const Text(
-                                        'location',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black54,
-                                        ),
-                                      ),
-                                      const Text(
-                                        'Is your store inside any Airport/Mall/Hotel/Theme Park',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black54,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Checkbox(
-                                            checkColor: Colors.white,
-                                            fillColor: MaterialStateProperty
-                                                .resolveWith(getColor),
-                                            value:
-                                                indexYesNo == 0 ? true : false,
-                                            onChanged: (bool? value) {
-                                              setState(() {
-                                                indexYesNo = 0;
-                                              });
-                                            },
-                                          ),
-                                          const Text('Yes'),
-                                          Checkbox(
-                                            checkColor: Colors.white,
-                                            fillColor: MaterialStateProperty
-                                                .resolveWith(getColor),
-                                            value:
-                                                indexYesNo == 1 ? true : false,
-                                            onChanged: (bool? value) {
-                                              setState(() {
-                                                indexYesNo = 1;
-                                              });
-                                            },
-                                          ),
-                                          const Text('No'),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      Container(
-                                          child: saveEditButton == 'SAVE'
-                                              ? SizedBox(
-                                                  width: 600,
-                                                  child: TextField(
-                                                    controller: txtLocation,
-                                                    textAlign: TextAlign.start,
-                                                  ),
-                                                )
-                                              : Text(
-                                                  strLocation,
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black54,
-                                                  ),
-                                                )),
-                                      const SizedBox(
-                                        height: 30,
-                                      ),
-                                      const Text(
-                                        'Contacts',
+                                        'Category',
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
@@ -428,360 +551,254 @@ class _OutletsPageState extends State<OutletsPage> {
                                       ),
                                       Container(
                                         child: saveEditButton == 'SAVE'
-                                            ? Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  SizedBox(
-                                                    width: 600,
-                                                    child: TextField(
-                                                      controller: txtNumber,
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 600,
-                                                    child: TextField(
-                                                      controller: txtEmail,
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                    ),
-                                                  )
-                                                ],
+                                            ? SizedBox(
+                                                width: 300,
+                                                child: TextField(
+                                                  controller: txtDescription,
+                                                  textAlign: TextAlign.start,
+                                                ),
                                               )
-                                            : Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    strNumber,
-                                                    style: const TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black54,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    strEmail,
-                                                    style: const TextStyle(
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black54,
-                                                    ),
-                                                  ),
-                                                ],
+                                            : Text(
+                                                strDescription,
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black54,
+                                                ),
                                               ),
                                       ),
+                                      // const Text(
+                                      //   'Bar',
+                                      //   style: TextStyle(
+                                      //     fontSize: 16,
+                                      //     fontWeight: FontWeight.bold,
+                                      //     color: Colors.black54,
+                                      //   ),
+                                      // ),
                                       const SizedBox(
-                                        height: 30,
+                                        height: 20,
                                       ),
                                       const Text(
-                                        'Schedule',
+                                        'CUISINE',
                                         style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black54,
                                         ),
                                       ),
+                                      DropdownMenu<String>(
+                                        // initialSelection: list.first,
+                                        width: 200,
+                                        hintText: 'CHOOSE REGION',
+                                        textStyle: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                        ),
+                                        onSelected: (String? value) {
+                                          // This is called when the user selects an item.
+                                          setState(() {
+                                            dropdownValueRegion = value!;
+                                          });
+                                        },
+                                        dropdownMenuEntries: listRegion
+                                            .map<DropdownMenuEntry<String>>(
+                                                (String value) {
+                                          return DropdownMenuEntry<String>(
+                                              value: value, label: value);
+                                        }).toList(),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      DropdownMenu<String>(
+                                        // initialSelection: list.first,
+                                        width: 200,
+                                        hintText: 'CHOOSE CUISINE',
+                                        textStyle: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black,
+                                        ),
+                                        onSelected: (String? value) {
+                                          // This is called when the user selects an item.
+                                          setState(() {
+                                            dropdownValueCuisine = value!;
+                                          });
+                                        },
+                                        dropdownMenuEntries: listCuisine
+                                            .map<DropdownMenuEntry<String>>(
+                                                (String value) {
+                                          return DropdownMenuEntry<String>(
+                                              value: value, label: value);
+                                        }).toList(),
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
                                       const Text(
-                                        'Mon-Fri',
+                                        'CUISINE STYLE',
                                         style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black54,
                                         ),
                                       ),
+                                      DropdownMenu<String>(
+                                        // initialSelection: list.first,
+                                        width: 200,
+                                        hintText: 'NIL',
+                                        textStyle: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.black54,
+                                        ),
+                                        onSelected: (String? value) {
+                                          // This is called when the user selects an item.
+                                          setState(() {
+                                            dropdownValuex = value!;
+                                          });
+                                        },
+                                        dropdownMenuEntries: list
+                                            .map<DropdownMenuEntry<String>>(
+                                                (String value) {
+                                          return DropdownMenuEntry<String>(
+                                              value: value, label: value);
+                                        }).toList(),
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
                                       const Text(
-                                        '09:00-21:30',
+                                        'Currency',
                                         style: TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black54,
                                         ),
                                       ),
-                                      const Text(
-                                        'Sat-Sun',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black54,
-                                        ),
-                                      ),
-                                      const Text(
-                                        '07:30-22:30',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black54,
-                                        ),
+                                      Container(
+                                        child: saveEditButton == 'SAVE'
+                                            ? SizedBox(
+                                                width: 300,
+                                                child: TextField(
+                                                  controller: txtCurrency,
+                                                  textAlign: TextAlign.start,
+                                                ),
+                                              )
+                                            : Text(
+                                                strCurrency,
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black54,
+                                                ),
+                                              ),
                                       ),
                                     ],
-                                  ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'Category',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black54,
-                                      ),
-                                    ),
-                                    Container(
-                                      child: saveEditButton == 'SAVE'
-                                          ? SizedBox(
-                                              width: 300,
-                                              child: TextField(
-                                                controller: txtDescription,
-                                                textAlign: TextAlign.start,
-                                              ),
-                                            )
-                                          : Text(
-                                              strDescription,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black54,
-                                              ),
-                                            ),
-                                    ),
-                                    // const Text(
-                                    //   'Bar',
-                                    //   style: TextStyle(
-                                    //     fontSize: 16,
-                                    //     fontWeight: FontWeight.bold,
-                                    //     color: Colors.black54,
-                                    //   ),
-                                    // ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    const Text(
-                                      'CUISINE',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black54,
-                                      ),
-                                    ),
-                                    DropdownMenu<String>(
-                                      // initialSelection: list.first,
-                                      width: 200,
-                                      hintText: 'CHOOSE REGION',
-                                      textStyle: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.black,
-                                      ),
-                                      onSelected: (String? value) {
-                                        // This is called when the user selects an item.
-                                        setState(() {
-                                          dropdownValueRegion = value!;
-                                        });
-                                      },
-                                      dropdownMenuEntries: listRegion
-                                          .map<DropdownMenuEntry<String>>(
-                                              (String value) {
-                                        return DropdownMenuEntry<String>(
-                                            value: value, label: value);
-                                      }).toList(),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    DropdownMenu<String>(
-                                      // initialSelection: list.first,
-                                      width: 200,
-                                      hintText: 'CHOOSE CUISINE',
-                                      textStyle: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.black,
-                                      ),
-                                      onSelected: (String? value) {
-                                        // This is called when the user selects an item.
-                                        setState(() {
-                                          dropdownValueCuisine = value!;
-                                        });
-                                      },
-                                      dropdownMenuEntries: listCuisine
-                                          .map<DropdownMenuEntry<String>>(
-                                              (String value) {
-                                        return DropdownMenuEntry<String>(
-                                            value: value, label: value);
-                                      }).toList(),
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    const Text(
-                                      'CUISINE STYLE',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black54,
-                                      ),
-                                    ),
-                                    DropdownMenu<String>(
-                                      // initialSelection: list.first,
-                                      width: 200,
-                                      hintText: 'NIL',
-                                      textStyle: const TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.black54,
-                                      ),
-                                      onSelected: (String? value) {
-                                        // This is called when the user selects an item.
-                                        setState(() {
-                                          dropdownValuex = value!;
-                                        });
-                                      },
-                                      dropdownMenuEntries: list
-                                          .map<DropdownMenuEntry<String>>(
-                                              (String value) {
-                                        return DropdownMenuEntry<String>(
-                                            value: value, label: value);
-                                      }).toList(),
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    const Text(
-                                      'Currency',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black54,
-                                      ),
-                                    ),
-                                    Container(
-                                      child: saveEditButton == 'SAVE'
-                                          ? SizedBox(
-                                              width: 300,
-                                              child: TextField(
-                                                controller: txtCurrency,
-                                                textAlign: TextAlign.start,
-                                              ),
-                                            )
-                                          : Text(
-                                              strCurrency,
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black54,
-                                              ),
-                                            ),
-                                    ),
-                                  ],
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
                         const SizedBox(
                           height: 30,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(20.0),
+                        Visibility(
+                          visible: currentOutletName != '',
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 15.0),
-                            child: Row(
-                              children: [
-                                const Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'SEASONAL BREAK',
-                                      style: TextStyle(
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.red,
+                            padding: const EdgeInsets.all(20.0),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 15.0),
+                              child: Row(
+                                children: [
+                                  const Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'SEASONAL BREAK',
+                                        style: TextStyle(
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red,
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      'CLOSE LOCATION',
-                                      style: TextStyle(
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.red,
+                                      SizedBox(
+                                        height: 5,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                const Spacer(),
-                                Column(
-                                  children: [
-                                    Container(
-                                      width: 150,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        color: const Color(0xffef7700),
+                                      Text(
+                                        'CLOSE LOCATION',
+                                        style: TextStyle(
+                                          fontStyle: FontStyle.italic,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.red,
+                                        ),
                                       ),
-                                      child: Container(
-                                        child: TextButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              if (isAbsorb == false) {
-                                                save();
-                                              } else {
-                                                update();
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  Column(
+                                    children: [
+                                      Container(
+                                        width: 150,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          color: const Color(0xffef7700),
+                                        ),
+                                        child: Container(
+                                          child: TextButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                if (isAbsorb == false) {
+                                                  save();
+                                                } else {
+                                                  update();
 
-                                                // txtLocation.text =
-                                                //     'Queen Elizabeth Ave. 12, 20-233 Angel Town';
-                                              }
-                                            });
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        5, 0, 5, 0),
-                                                child: Icon(
-                                                  isAbsorb == true
-                                                      ? Icons.edit
-                                                      : Icons.save,
-                                                  color: Colors.white,
+                                                  // txtLocation.text =
+                                                  //     'Queen Elizabeth Ave. 12, 20-233 Angel Town';
+                                                }
+                                              });
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          5, 0, 5, 0),
+                                                  child: Icon(
+                                                    isAbsorb == true
+                                                        ? Icons.edit
+                                                        : Icons.save,
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
-                                              ),
-                                              Text(
-                                                saveEditButton,
-                                                style: const TextStyle(
-                                                  fontFamily: 'SFPro',
-                                                  fontSize: 18,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500,
+                                                Text(
+                                                  saveEditButton,
+                                                  style: const TextStyle(
+                                                    fontFamily: 'SFPro',
+                                                    fontSize: 18,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                  textAlign: TextAlign.center,
                                                 ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                )
-                              ],
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         )
