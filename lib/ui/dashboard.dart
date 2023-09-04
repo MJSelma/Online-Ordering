@@ -7,9 +7,11 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/businessOutletProvider.dart';
 import '../provider/casesMessagesProvider.dart';
 import 'cases/cases.dart';
 import 'cases/casesMessages.dart';
@@ -32,6 +34,7 @@ class _DashBoardState extends State<DashBoard> {
   bool isMenuOpen = true;
 
   String currentItem = 'Select Business';
+  String businessDocId = '';
 
   BusinessesClass? dropDownValue;
 
@@ -108,6 +111,9 @@ class _DashBoardState extends State<DashBoard> {
   Widget build(BuildContext context) {
     _getProvider(context);
 
+    final businessProvider = context.read<BusinessOutletProvider>();
+    // final businessProvider = Provider.of<BusinessOutletProvider>(context);
+
     final dropdown = DropdownButton<BusinessesClass>(
       items: _createList(),
       underline: const SizedBox(),
@@ -115,13 +121,17 @@ class _DashBoardState extends State<DashBoard> {
       isExpanded: false,
       borderRadius: BorderRadius.circular(20),
       hint: Center(
-        child: MenuButton(currentItem, 0, Icons.business, 45),
+        child: MenuButton(currentItem, 0, Icons.business, 40),
       ),
       onChanged: (BusinessesClass? value) {
         setState(() {
           indexMenu = 0;
-          currentItem = value!.name;
+          businessDocId = value!.docId;
+          currentItem = value.name;
           dropDownValue = value;
+          businessProvider.setDocId(businessDocId);
+          print(currentItem);
+          businessProvider.setBusinessName(currentItem);
         });
       },
     );
@@ -129,314 +139,317 @@ class _DashBoardState extends State<DashBoard> {
     return Scaffold(
         body: Stack(
           children: [
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                  child: Row(
-                    children: [
-                      const Column(
-                        children: [
-                          Text(
-                            'DRINKLINK',
-                            style: TextStyle(
-                                fontFamily: 'SFPro',
-                                color: Color(0xffbef7700),
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            'MORE TIMES FOR FUN',
-                            style: TextStyle(
-                                fontFamily: 'SFPro',
-                                color: Color.fromRGBO(115, 115, 114, 0.976),
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      const Column(
-                        children: [
-                          Text(
-                            'Welcome',
-                            style: TextStyle(
-                                fontFamily: 'SFPro',
-                                color: Color(0xF8737474),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300),
-                          ),
-                          Text(
-                            'GOODFUN HOSPITALITY ',
-                            style: TextStyle(
-                                fontFamily: 'SFPro',
-                                color: Color(0xF8737474),
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(113.0),
-                            image: const DecorationImage(
-                              image: AssetImage('assets/images/Goodfun.jpg'),
-                              fit: BoxFit.fill,
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                    child: Row(
+                      children: [
+                        const Column(
+                          children: [
+                            Text(
+                              'DRINKLINK',
+                              style: TextStyle(
+                                  fontFamily: 'SFPro',
+                                  color: Color(0xffbef7700),
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold),
                             ),
-                          ),
-                          child: PopupMenuButton(
-                            onSelected: (value) {
-                              _onMenuItemSelected(value as int);
-                            },
-                            tooltip: '',
-                            iconSize: 0.0,
-                            offset: Offset(0.0, appBarHeight),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(8.0),
-                                bottomRight: Radius.circular(8.0),
-                                topLeft: Radius.circular(8.0),
-                                topRight: Radius.circular(8.0),
+                            Text(
+                              'MORE TIMES FOR FUN',
+                              style: TextStyle(
+                                  fontFamily: 'SFPro',
+                                  color: Color.fromRGBO(115, 115, 114, 0.976),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        const Column(
+                          children: [
+                            Text(
+                              'Welcome',
+                              style: TextStyle(
+                                  fontFamily: 'SFPro',
+                                  color: Color(0xF8737474),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                            Text(
+                              'GOODFUN HOSPITALITY ',
+                              style: TextStyle(
+                                  fontFamily: 'SFPro',
+                                  color: Color(0xF8737474),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(113.0),
+                              image: const DecorationImage(
+                                image: AssetImage('assets/images/Goodfun.jpg'),
+                                fit: BoxFit.fill,
                               ),
                             ),
-                            itemBuilder: (ctx) => [
-                              _buildPopupMenuItem(
-                                  'My Cases', Icons.chat, Options.cases.index),
-                              _buildPopupMenuItem(
-                                  'New Buiseness', Icons.business, 3),
-                              _buildPopupMenuItem(
-                                  'New Manager', Icons.manage_accounts, 4),
-                              _buildPopupMenuItem(
-                                  'Settings', Icons.settings, 5),
-                              _buildPopupMenuItem('Exit', Icons.exit_to_app,
-                                  Options.exit.index),
-                            ],
-                          ))
-                    ],
+                            child: PopupMenuButton(
+                              onSelected: (value) {
+                                _onMenuItemSelected(value as int);
+                              },
+                              tooltip: '',
+                              iconSize: 0.0,
+                              offset: Offset(0.0, appBarHeight),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(8.0),
+                                  bottomRight: Radius.circular(8.0),
+                                  topLeft: Radius.circular(8.0),
+                                  topRight: Radius.circular(8.0),
+                                ),
+                              ),
+                              itemBuilder: (ctx) => [
+                                _buildPopupMenuItem('My Cases', Icons.chat,
+                                    Options.cases.index),
+                                _buildPopupMenuItem(
+                                    'New Buiseness', Icons.business, 3),
+                                _buildPopupMenuItem(
+                                    'New Manager', Icons.manage_accounts, 4),
+                                _buildPopupMenuItem(
+                                    'Settings', Icons.settings, 5),
+                                _buildPopupMenuItem('Exit', Icons.exit_to_app,
+                                    Options.exit.index),
+                              ],
+                            ))
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                indexMenu = 0;
-                              });
-                            },
-                            child: isMenuOpen
-                                ? dropdown
-                                : MenuButton(
-                                    currentItem, 0, Icons.business, 45),
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                indexMenu = 1;
-                              });
-                            },
-                            child:
-                                MenuButton('Table Bookings', 1, Icons.book, 40),
-                          ),
-                          // const SizedBox(
-                          //   height: 4,
-                          // ),
-                          // Divider(thickness: 2, color: Colors.black, ),
-                          // const SizedBox(
-                          //   height: 4,
-                          // ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                            child: Container(
-                              height: 2,
-                              color: Colors.black45,
-                              width: isMenuOpen ? 200 : 50,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                indexMenu = 2;
-                              });
-                            },
-                            child: MenuButton(
-                                'Consultation Menu', 2, Icons.menu_book, 40),
-                          ),
-                          const SizedBox(
-                            height: 6,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                indexMenu = 3;
-                              });
-                            },
-                            child: MenuButton(
-                                'Smart Menu', 3, Icons.menu_book_rounded, 40),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                            child: Container(
-                              height: 2,
-                              color: Colors.black45,
-                              width: isMenuOpen ? 200 : 50,
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                indexMenu = 4;
-                              });
-                            },
-                            child: MenuButton(
-                                'Explore Venue', 4, Icons.explore, 40),
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                indexMenu = 5;
-                              });
-                            },
-                            child: MenuButton('Events/Weekly \nPrograms', 5,
-                                Icons.calendar_month, 50),
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                indexMenu = 6;
-                              });
-                            },
-                            child:
-                                MenuButton('Media Content', 6, Icons.image, 40),
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                indexMenu = 7;
-                              });
-                            },
-                            child:
-                                MenuButton('Experience', 7, Icons.history, 40),
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                indexMenu = 8;
-                              });
-                            },
-                            child: MenuButton(
-                                'Your Ads', 8, Icons.branding_watermark, 40),
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                indexMenu = 9;
-                              });
-                            },
-                            child: MenuButton(
-                                'Your Staff', 9, Icons.person_add, 40),
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                indexMenu = 10;
-                              });
-                            },
-                            child: MenuButton(
-                                'Report', 10, Icons.bar_chart_outlined, 40),
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                indexMenu = 11;
-                              });
-                            },
-                            child: MenuButton('Payment', 11, Icons.payment, 40),
-                          ),
-                          const SizedBox(
-                            height: 12,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                indexMenu = 12;
-                              });
-                            },
-                            child: MenuButton('Business Contact', 12,
-                                Icons.contact_mail_rounded, 40),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  isMenuOpen = !isMenuOpen;
+                                  indexMenu = 0;
                                 });
                               },
-                              child: Icon(
-                                isMenuOpen
-                                    ? Icons.arrow_back_ios
-                                    : Icons.arrow_forward_ios,
-                                color: const Color(0xffbef7700),
+                              child: isMenuOpen
+                                  ? dropdown
+                                  : MenuButton(
+                                      currentItem, 0, Icons.business, 40),
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  indexMenu = 1;
+                                });
+                              },
+                              child: MenuButton(
+                                  'Table Bookings', 1, Icons.book, 40),
+                            ),
+                            // const SizedBox(
+                            //   height: 4,
+                            // ),
+                            // Divider(thickness: 2, color: Colors.black, ),
+                            // const SizedBox(
+                            //   height: 4,
+                            // ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                              child: Container(
+                                height: 2,
+                                color: Colors.black45,
+                                width: isMenuOpen ? 200 : 50,
                               ),
                             ),
-                          )
-                        ],
-                      ),
-                      if (indexMenu == 0) ...[
-                        const OutletsPage()
-                      ] else if (indexMenu == 1) ...[
-                        const MerchantPage()
-                      ] else if (indexMenu == 2) ...[
-                        const ProductsPage()
-                      ] else if (indexMenu == 6) ...[
-                        const CasesMenu()
-                      ] else if (indexMenu == 6) ...[
-                        // CasesMessages(id: index.toString())
-                      ] else ...[
-                        const widgetWall()
-                      ]
-                    ],
-                  ),
-                )
-              ],
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  indexMenu = 2;
+                                });
+                              },
+                              child: MenuButton(
+                                  'Consultation Menu', 2, Icons.menu_book, 40),
+                            ),
+                            const SizedBox(
+                              height: 6,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  indexMenu = 3;
+                                });
+                              },
+                              child: MenuButton(
+                                  'Smart Menu', 3, Icons.menu_book_rounded, 40),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                              child: Container(
+                                height: 2,
+                                color: Colors.black45,
+                                width: isMenuOpen ? 200 : 50,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  indexMenu = 4;
+                                });
+                              },
+                              child: MenuButton(
+                                  'Explore Venue', 4, Icons.explore, 40),
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  indexMenu = 5;
+                                });
+                              },
+                              child: MenuButton('Events/Weekly \nPrograms', 5,
+                                  Icons.calendar_month, 50),
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  indexMenu = 6;
+                                });
+                              },
+                              child: MenuButton(
+                                  'Media Content', 6, Icons.image, 40),
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  indexMenu = 7;
+                                });
+                              },
+                              child: MenuButton(
+                                  'Experience', 7, Icons.history, 40),
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  indexMenu = 8;
+                                });
+                              },
+                              child: MenuButton(
+                                  'Your Ads', 8, Icons.branding_watermark, 40),
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  indexMenu = 9;
+                                });
+                              },
+                              child: MenuButton(
+                                  'Your Staff', 9, Icons.person_add, 40),
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  indexMenu = 10;
+                                });
+                              },
+                              child: MenuButton(
+                                  'Report', 10, Icons.bar_chart_outlined, 40),
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  indexMenu = 11;
+                                });
+                              },
+                              child:
+                                  MenuButton('Payment', 11, Icons.payment, 40),
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  indexMenu = 12;
+                                });
+                              },
+                              child: MenuButton('Business Contact', 12,
+                                  Icons.contact_mail_rounded, 40),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    isMenuOpen = !isMenuOpen;
+                                  });
+                                },
+                                child: Icon(
+                                  isMenuOpen
+                                      ? Icons.arrow_back_ios
+                                      : Icons.arrow_forward_ios,
+                                  color: const Color(0xffbef7700),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        if (indexMenu == 0) ...[
+                          const OutletsPage()
+                        ] else if (indexMenu == 1) ...[
+                          const MerchantPage()
+                        ] else if (indexMenu == 2) ...[
+                          const ProductsPage()
+                        ] else if (indexMenu == 6) ...[
+                          const CasesMenu()
+                        ] else if (indexMenu == 6) ...[
+                          // CasesMessages(id: index.toString())
+                        ] else ...[
+                          const widgetWall()
+                        ]
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
             if (showChat)
               Align(

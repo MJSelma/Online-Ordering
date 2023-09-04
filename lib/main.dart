@@ -8,6 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'provider/businessOutletProvider.dart';
 import 'ui/data_class/businesses_class.dart';
 import 'ui/services/businesses_services.dart';
 import 'ui/services/cases_services.dart';
@@ -44,6 +45,7 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => MessageProvider()),
+      ChangeNotifierProvider(create: (_) => BusinessOutletProvider()),
       StreamProvider<List<CasesClass>>.value(
           value: CasesServices().getCasesList, initialData: const []),
       StreamProvider<List<BusinessesClass>>.value(

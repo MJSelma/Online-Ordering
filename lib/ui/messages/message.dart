@@ -22,6 +22,7 @@ class MessagePage extends HookWidget {
     useEffect(() {
       Future.microtask(() async {
         final messProv = context.read<MessageProvider>();
+
         messProv.clearMessages();
         await getMessageID(context, messageID, messages);
       });
