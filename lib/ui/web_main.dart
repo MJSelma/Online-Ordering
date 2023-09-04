@@ -21,18 +21,18 @@ class _WebMainPageState extends State<WebMainPage> {
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
           child: Row(
             children: [
-              Column(
+              const Column(
                 children: [
                   Text(
                     'DRINKLINK',
                     style: TextStyle(
                         fontFamily: 'SFPro',
-                        color: Color(0xFFBEF7700),
+                        color: Color(0xffbef7700),
                         fontSize: 30,
                         fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    'marketing words here',
+                    'MORE TIMES FOR FUN',
                     style: TextStyle(
                         fontFamily: 'SFPro',
                         color: Color.fromRGBO(115, 115, 114, 0.976),
@@ -41,9 +41,9 @@ class _WebMainPageState extends State<WebMainPage> {
                   ),
                 ],
               ),
-              Spacer(),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              const Spacer(),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: Text(
                   'Home',
                   style: TextStyle(
@@ -52,8 +52,8 @@ class _WebMainPageState extends State<WebMainPage> {
                       fontWeight: FontWeight.w600),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: Text(
                   'About Us',
                   style: TextStyle(
@@ -62,8 +62,8 @@ class _WebMainPageState extends State<WebMainPage> {
                       fontWeight: FontWeight.w600),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: Text(
                   'Contact Us',
                   style: TextStyle(
@@ -79,16 +79,16 @@ class _WebMainPageState extends State<WebMainPage> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(32.0),
                     color: const Color(0xffef7700),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
-                        color: const Color(0x29000000),
+                        color: Color(0x29000000),
                         offset: Offset(0, 3),
                         blurRadius: 6,
                       ),
                     ],
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: Text(
                       'Sign Up',
                       textAlign: TextAlign.center,
@@ -112,9 +112,9 @@ class _WebMainPageState extends State<WebMainPage> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(55.0),
               color: const Color(0xffe9f9fc),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
-                  color: const Color(0x29000000),
+                  color: Color(0x29000000),
                   offset: Offset(0, 3),
                   blurRadius: 6,
                 ),
@@ -126,7 +126,7 @@ class _WebMainPageState extends State<WebMainPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Order Your Best \nFood Anytime ',
                       textAlign: TextAlign.left,
                       style: TextStyle(
@@ -135,16 +135,16 @@ class _WebMainPageState extends State<WebMainPage> {
                           color: Color.fromARGB(255, 131, 131, 133),
                           fontWeight: FontWeight.w600),
                     ),
-                    Text(
+                    const Text(
                       '\nLorem ipsum dolor sit amet, consectetur adipiscing elit. \nAliquam ligula ipsum, sollicitudin eget erat a, sollicitudin lobortis augue.\n Sed in tristique justo. Class aptent taciti sociosqu ad litora torquent per \nconubia nostra, per inceptos himenaeos. ',
                       style: TextStyle(
                         fontFamily: 'SFPro',
                         fontSize: 14,
-                        color: const Color(0x5e4b4b4b),
+                        color: Color(0x5e4b4b4b),
                         fontWeight: FontWeight.w700,
                         shadows: [
                           Shadow(
-                            color: const Color(0x29000000),
+                            color: Color(0x29000000),
                             offset: Offset(0, 3),
                             blurRadius: 6,
                           )
@@ -152,7 +152,7 @@ class _WebMainPageState extends State<WebMainPage> {
                       ),
                       textAlign: TextAlign.left,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Row(
@@ -161,16 +161,16 @@ class _WebMainPageState extends State<WebMainPage> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(13.0),
                             color: const Color(0xffef7700),
-                            boxShadow: [
+                            boxShadow: const [
                               BoxShadow(
-                                color: const Color(0x29000000),
+                                color: Color(0x29000000),
                                 offset: Offset(0, 3),
                                 blurRadius: 6,
                               ),
                             ],
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                          child: const Padding(
+                            padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
                             child: Text(
                               'Download App',
                               textAlign: TextAlign.left,
@@ -182,10 +182,10 @@ class _WebMainPageState extends State<WebMainPage> {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
-                        Text(
+                        const Text(
                           'Android',
                           textAlign: TextAlign.left,
                           style: TextStyle(
@@ -194,10 +194,10 @@ class _WebMainPageState extends State<WebMainPage> {
                               color: Color.fromARGB(255, 77, 76, 76),
                               fontWeight: FontWeight.w400),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
-                        Text(
+                        const Text(
                           'iOS',
                           textAlign: TextAlign.left,
                           style: TextStyle(
@@ -211,9 +211,9 @@ class _WebMainPageState extends State<WebMainPage> {
                     Container(
                       width: 430,
                       height: 250,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         image: DecorationImage(
-                          image: const AssetImage('assets/images/drinks.png'),
+                          image: AssetImage('assets/images/drinks.png'),
                           fit: BoxFit.fill,
                         ),
                       ),
@@ -221,13 +221,13 @@ class _WebMainPageState extends State<WebMainPage> {
                   ],
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Padding(
                 padding: const EdgeInsets.fromLTRB(100, 100, 100, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'Sing In',
                       textAlign: TextAlign.left,
                       style: TextStyle(
@@ -236,7 +236,7 @@ class _WebMainPageState extends State<WebMainPage> {
                           color: Color.fromARGB(255, 104, 104, 104),
                           fontWeight: FontWeight.w600),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Container(
@@ -247,9 +247,9 @@ class _WebMainPageState extends State<WebMainPage> {
                         color: const Color(0xffffffff),
                         border: Border.all(
                             width: 1.0, color: const Color(0xff707070)),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
-                            color: const Color(0x29000000),
+                            color: Color(0x29000000),
                             offset: Offset(0, 3),
                             blurRadius: 6,
                           ),
@@ -260,13 +260,13 @@ class _WebMainPageState extends State<WebMainPage> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextField(
                             controller: userController,
-                            decoration:
-                                InputDecoration.collapsed(hintText: 'Username'),
+                            decoration: const InputDecoration.collapsed(
+                                hintText: 'Username'),
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     Container(
@@ -277,9 +277,9 @@ class _WebMainPageState extends State<WebMainPage> {
                         color: const Color(0xffffffff),
                         border: Border.all(
                             width: 1.0, color: const Color(0xff707070)),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
-                            color: const Color(0x29000000),
+                            color: Color(0x29000000),
                             offset: Offset(0, 3),
                             blurRadius: 6,
                           ),
@@ -289,30 +289,29 @@ class _WebMainPageState extends State<WebMainPage> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: TextField(
-                            
                             controller: passController,
                             obscureText: true,
-                            decoration:
-                                InputDecoration.collapsed(hintText: 'Password'),
+                            decoration: const InputDecoration.collapsed(
+                                hintText: 'Password'),
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 14,
                     ),
-                    Text(
+                    const Text(
                       'Forgot password',
                       style: TextStyle(
                         fontFamily: 'SFPro',
                         fontSize: 18,
-                        color: const Color(0xff696767),
+                        color: Color(0xff696767),
                         fontStyle: FontStyle.italic,
                         fontWeight: FontWeight.w500,
                       ),
                       textAlign: TextAlign.left,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     GestureDetector(
@@ -326,9 +325,9 @@ class _WebMainPageState extends State<WebMainPage> {
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
                               title: const Text('Drinklink'),
-                              content: const Text('Incorrect username or password. Please try again.'),
+                              content: const Text(
+                                  'Incorrect username or password. Please try again.'),
                               actions: <Widget>[
-                                
                                 TextButton(
                                   onPressed: () => Navigator.pop(context, 'OK'),
                                   child: const Text('OK'),
@@ -344,16 +343,16 @@ class _WebMainPageState extends State<WebMainPage> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(13.0),
                           color: const Color(0xffef7700),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
-                              color: const Color(0x29000000),
+                              color: Color(0x29000000),
                               offset: Offset(0, 3),
                               blurRadius: 6,
                             ),
                           ],
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
+                        child: const Padding(
+                          padding: EdgeInsets.all(10.0),
                           child: Center(
                             child: Text(
                               'Sign In',
@@ -375,7 +374,6 @@ class _WebMainPageState extends State<WebMainPage> {
           ),
         )
       ]),
-      
     );
   }
 }

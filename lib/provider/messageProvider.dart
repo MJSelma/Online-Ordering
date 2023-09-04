@@ -3,7 +3,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class MessageProvider with ChangeNotifier {
   bool refresh = false;
-  List<types.Message> _message = [];
+  final List<types.Message> _message = [];
   String _messageId = '';
 
   String _customerId = '';
@@ -47,7 +47,7 @@ class MessageProvider with ChangeNotifier {
     notifyListeners();
   }
 
-    void clearMessages() {
+  void clearMessages() {
     _message.clear();
     notifyListeners();
   }
