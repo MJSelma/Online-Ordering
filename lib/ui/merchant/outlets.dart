@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +35,7 @@ class _OutletsPageState extends State<OutletsPage> {
   String currentOutletName = '';
   String currentRegion = 'Choose Region';
   String currentRegionId = '';
-  String currentCusine = 'Choose Cusine';
+  String currentCusine = 'Choose Cuisine';
   String currentCusineId = '';
 
   OutletClass? dropDownValue;
@@ -217,6 +218,9 @@ class _OutletsPageState extends State<OutletsPage> {
           dropDownValue = value;
           isSelectedOutlet = true;
           isSetDefaultWall = false;
+
+          currentRegion = 'Choose Region';
+          currentCusine = 'Choose Cuisine';
         });
       },
     );
@@ -983,7 +987,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                     Column(
                                       children: [
                                         Container(
-                                          width: 150,
+                                          width: 100,
                                           height: 40,
                                           decoration: BoxDecoration(
                                             borderRadius:
@@ -1113,7 +1117,7 @@ class _OutletsPageState extends State<OutletsPage> {
     String name,
   ) async {
     await regionCollection.add({
-      'id': 'dlr003',
+      'id': 'dlr004',
       'name': name,
       'outletId': outletId,
       'status': true,
@@ -1238,7 +1242,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                   setState(() {
                                     currentRegionId = documentsx[index]['id'];
                                     currentRegion = documentsx[index]['name'];
-
+                                    currentCusine = 'Choose Cuisine';
+                                    currentCusineId = '';
                                     // isEditRegion = true;
                                   });
                                   Navigator.pop(context);
@@ -1254,23 +1259,30 @@ class _OutletsPageState extends State<OutletsPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: TextField(
-                    controller: txtaddRegion,
-                    decoration: InputDecoration(
-                        hintText: 'Enter region here...',
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              if (txtaddRegion.text.isEmpty) return;
-                              saveRegion(txtaddRegion.text);
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.save,
-                            color: Color(0xffbef7700),
-                          ),
-                        )),
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(20.0)),
+                    child: TextField(
+                      controller: txtaddRegion,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Enter region here...',
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                if (txtaddRegion.text.isEmpty) return;
+                                saveRegion(txtaddRegion.text);
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.save,
+                              color: Color(0xffbef7700),
+                            ),
+                          )),
+                    ),
                   ),
                 )
                 // Row(
@@ -1424,23 +1436,30 @@ class _OutletsPageState extends State<OutletsPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: TextField(
-                    controller: txtAddCuisine,
-                    decoration: InputDecoration(
-                        hintText: 'Enter cuisine here...',
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              if (txtAddCuisine.text.isEmpty) return;
-                              // saveRegion(txtaddRegion.text);
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.save,
-                            color: Color(0xffbef7700),
-                          ),
-                        )),
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(20.0)),
+                    child: TextField(
+                      controller: txtAddCuisine,
+                      decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Enter cuisine here...',
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                if (txtAddCuisine.text.isEmpty) return;
+                                // saveRegion(txtAddCuisine.text);
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.save,
+                              color: Color(0xffbef7700),
+                            ),
+                          )),
+                    ),
                   ),
                 )
               ],
