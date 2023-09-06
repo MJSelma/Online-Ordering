@@ -6,6 +6,7 @@ class BusinessesClass {
   String description;
   String image;
   DateTime date;
+  String defaultOutletId;
   BusinessesClass(
       {required this.docId,
       required this.merchantId,
@@ -13,5 +14,6 @@ class BusinessesClass {
       required this.name,
       required this.description,
       required this.image,
-      required this.date});
+      required this.date,
+      required this.defaultOutletId});
 }

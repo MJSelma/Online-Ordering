@@ -8,13 +8,15 @@ class BusinessesServices {
   List<BusinessesClass> getBusinessesInfo(QuerySnapshot snapshot) {
     return snapshot.docs.map((data) {
       return BusinessesClass(
-          docId: data.id,
-          merchantId: data['merchantId'],
-          id: data['id'],
-          name: data['name'],
-          description: data['description'],
-          image: data['image'],
-          date: data['date'].toDate());
+        docId: data.id,
+        merchantId: data['merchantId'],
+        id: data['id'],
+        name: data['name'],
+        description: data['description'],
+        image: data['image'],
+        date: data['date'].toDate(),
+        defaultOutletId: data['defaultOutletId'],
+      );
     }).toList();
   }
 

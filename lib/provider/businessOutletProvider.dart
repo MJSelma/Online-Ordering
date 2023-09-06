@@ -1,21 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:drinklinkmerchant/ui/data_class/region_class.dart';
 import 'package:flutter/material.dart';
 
 import '../ui/data_class/outlet_class.dart';
 
 class BusinessOutletProvider with ChangeNotifier {
   final List<OutletClass> _outletClass = [];
+  final List<RegionClass> _regionClass = [];
 
   String _docId = '';
   String _businessName = '';
   bool _isBusinessSelected = false;
+  String _defaultOutletId = '';
 
   String get docId => _docId;
+  List<OutletClass> get outletClass => _outletClass;
+  List<RegionClass> get regionClass => _regionClass;
+
+  bool get isBusinessSelected => _isBusinessSelected;
+  String get businessName => _businessName;
+  String get defaultOutletId => _defaultOutletId;
 
   void setDocId(String id) {
     clear();
     _docId = id;
     _getOutlet();
+    // _getRegion();
     setIsBusinessSelected(true);
     notifyListeners();
   }
@@ -56,19 +66,38 @@ class BusinessOutletProvider with ChangeNotifier {
     });
   }
 
-  List<OutletClass> get outletClass => _outletClass;
-
-  bool get isBusinessSelected => _isBusinessSelected;
+  // Future<void> _getRegion() async {
+  //   await FirebaseFirestore.instance
+  //       .collection('region')
+  //       .get()
+  //       .then((QuerySnapshot snapshot) {
+  //     for (var item in snapshot.docs) {
+  //       // DateTime date = (item['date'] as Timestamp).toDate();
+  //       RegionClass regionClassx = RegionClass(
+  //         docId: item.id,
+  //         id: item['id'],
+  //         name: item['name'],
+  //         outletId: item['outletId'],
+  //         status: item['status'],
+  //         defaultCuisineStyleId: item['defaultCuisineStyleId'],
+  //       );
+  //       _regionClass.add(regionClassx);
+  //     }
+  //   });
+  // }
 
   void setIsBusinessSelected(bool isSelected) {
     _isBusinessSelected = isSelected;
     notifyListeners();
   }
 
-  //Businesses
-  String get businessName => _businessName;
   void setBusinessName(String name) {
     _businessName = name;
+    notifyListeners();
+  }
+
+  void setDefaultOutletId(String str) {
+    _defaultOutletId = str;
     notifyListeners();
   }
 }

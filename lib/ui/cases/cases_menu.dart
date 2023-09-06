@@ -121,7 +121,9 @@ class _CasesMenuState extends State<CasesMenu> {
             case TaskState.running:
               progress = 100.0 * (event.bytesTransferred / event.totalBytes);
               if (progress == 100) {
-                _upload(fileName, types);
+                Future.delayed(const Duration(seconds: 2), () {
+                  _upload(fileName, types);
+                });
               }
               print("Upload is $progress% complete.");
               break;
