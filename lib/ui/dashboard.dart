@@ -132,6 +132,7 @@ class _DashBoardState extends State<DashBoard> {
           businessProvider.setDocId(businessDocId);
           print(currentItem);
           businessProvider.setBusinessName(currentItem);
+          businessProvider.setDefaultOutletId(value.defaultOutletId);
         });
       },
     );
