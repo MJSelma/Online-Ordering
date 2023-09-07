@@ -110,6 +110,7 @@ class _OutletsPageState extends State<OutletsPage> {
         context.select((BusinessOutletProvider p) => p.businessName);
     final defaultOutletIdProvider =
         context.select((BusinessOutletProvider p) => p.defaultOutletId);
+
     final outletClassx =
         context.select((BusinessOutletProvider p) => p.outletClass);
     final regionClassx =
@@ -217,8 +218,10 @@ class _OutletsPageState extends State<OutletsPage> {
 
           dropDownValue = value;
           isSelectedOutlet = true;
-          isSetDefaultWall = false;
-
+          print('$defaultOutletIdProvider + $outletId');
+          defaultOutletIdProvider.toLowerCase() == outletId.toLowerCase()
+              ? isSetDefaultWall = true
+              : isSetDefaultWall = false;
           currentRegion = 'Choose Region';
           currentCusine = 'Choose Cuisine';
         });
@@ -248,27 +251,30 @@ class _OutletsPageState extends State<OutletsPage> {
     }
 
     void getDefaultOutlet() {
-      outletClass.where((item) => item.id == defaultOutletIdProvider);
+      // outletClass.where((item) =>
+      //     item.id.toLowerCase() == defaultOutletIdProvider.toLowerCase());
+
       for (var data in outletClass) {
-        currentItem = data.name;
-        currentOutletName = data.name;
-        strLocation = data.location;
-        indexYesNo = data.isLocatedAt == true ? 0 : 1;
-        strNumber = data.contactNumber;
-        strEmail = data.email;
-        strDescription = data.description;
-        strCurrency = data.currency;
-        intStar = data.star;
-
-        txtLocation.text = strLocation;
-        txtNumber.text = strNumber;
-        txtEmail.text = strEmail;
-        txtDescription.text = strDescription;
-        txtCurrency.text = strCurrency;
-
-        // dropDownValue = outletClass;
-        isSelectedOutlet = true;
-        isSetDefaultWall = true;
+        if (data.id.toLowerCase() == defaultOutletIdProvider.toLowerCase()) {
+          currentItem = data.name;
+          currentOutletName = data.name;
+          strLocation = data.location;
+          indexYesNo = data.isLocatedAt == true ? 0 : 1;
+          strNumber = data.contactNumber;
+          strEmail = data.email;
+          strDescription = data.description;
+          strCurrency = data.currency;
+          intStar = data.star;
+          txtLocation.text = strLocation;
+          txtNumber.text = strNumber;
+          txtEmail.text = strEmail;
+          txtDescription.text = strDescription;
+          txtCurrency.text = strCurrency;
+          outletId = defaultOutletIdProvider;
+          // dropDownValue = outletClass;
+          isSelectedOutlet = true;
+          isSetDefaultWall = true;
+        }
       }
     }
 
@@ -1117,11 +1123,47 @@ class _OutletsPageState extends State<OutletsPage> {
     String name,
   ) async {
     await regionCollection.add({
-      'id': 'dlr004',
+      'id': 'dlr005',
       'name': name,
       'outletId': outletId,
       'status': true,
       'defaultCuisineStyleId': '',
+    });
+  }
+
+  void deleteRegion(String id) async {
+    await regionCollection
+        .where('id', isEqualTo: id)
+        .get()
+        .then((QuerySnapshot value) {
+      for (var item in value.docs) {
+        print(item.id);
+        cusineCollection.doc(item.id).delete();
+      }
+    });
+  }
+
+  void saveCuisine(
+    String name,
+  ) async {
+    await cusineCollection.add({
+      'id': 'dlc006',
+      'name': name,
+      'regionId': currentRegionId,
+      'status': true,
+      // 'defaultCuisineStyleId': '',
+    });
+  }
+
+  void deleCuisine(String id) async {
+    await cusineCollection
+        .where('id', isEqualTo: id)
+        .get()
+        .then((QuerySnapshot value) {
+      for (var item in value.docs) {
+        print(item.id);
+        cusineCollection.doc(item.id).delete();
+      }
     });
   }
 
@@ -1218,13 +1260,17 @@ class _OutletsPageState extends State<OutletsPage> {
                                 //   color: Colors.redAccent[700],
                                 //   height: 24,
                                 // ),
-                                trailing: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        print('delete region');
-                                      });
-                                    },
-                                    icon: const Icon(Icons.delete)),
+                                trailing: Tooltip(
+                                  message: 'delete',
+                                  child: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          deleteRegion(documentsx[index]['id']);
+                                          print('delete region');
+                                        });
+                                      },
+                                      icon: const Icon(Icons.delete)),
+                                ),
                                 title: Padding(
                                   padding: const EdgeInsets.only(left: 5),
                                   child: SingleChildScrollView(
@@ -1240,10 +1286,12 @@ class _OutletsPageState extends State<OutletsPage> {
                                 ),
                                 onTap: () async {
                                   setState(() {
+                                    currentRegionId = '';
                                     currentRegionId = documentsx[index]['id'];
                                     currentRegion = documentsx[index]['name'];
                                     currentCusine = 'Choose Cuisine';
                                     currentCusineId = '';
+
                                     // isEditRegion = true;
                                   });
                                   Navigator.pop(context);
@@ -1270,16 +1318,19 @@ class _OutletsPageState extends State<OutletsPage> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Enter region here...',
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                if (txtaddRegion.text.isEmpty) return;
-                                saveRegion(txtaddRegion.text);
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.save,
-                              color: Color(0xffbef7700),
+                          suffixIcon: Tooltip(
+                            message: 'save',
+                            child: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  if (txtaddRegion.text.isEmpty) return;
+                                  saveRegion(txtaddRegion.text);
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.save,
+                                color: Color(0xffbef7700),
+                              ),
                             ),
                           )),
                     ),
@@ -1347,7 +1398,7 @@ class _OutletsPageState extends State<OutletsPage> {
                     child: TextField(
                       onChanged: (value) {
                         setState(() {
-                          strSearchRegion = value;
+                          strSearchCusine = value;
                         });
                       },
                       controller: txtSearchCusine,
@@ -1373,7 +1424,7 @@ class _OutletsPageState extends State<OutletsPage> {
                       if (snapshot.hasData) {
                         documentsx = snapshot.data!.docs;
                         print(strSearchCusine);
-                        if (strSearchRegion.isNotEmpty) {
+                        if (strSearchCusine.isNotEmpty) {
                           documentsx = documentsx.where((element) {
                             return element
                                 .get('name')
@@ -1397,13 +1448,17 @@ class _OutletsPageState extends State<OutletsPage> {
                                 //   color: Colors.redAccent[700],
                                 //   height: 24,
                                 // ),
-                                trailing: IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        print('delete region');
-                                      });
-                                    },
-                                    icon: const Icon(Icons.delete)),
+                                trailing: Tooltip(
+                                  message: 'delete',
+                                  child: IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          print(documentsx[index]['id']);
+                                          deleCuisine(documentsx[index]['id']);
+                                        });
+                                      },
+                                      icon: const Icon(Icons.delete)),
+                                ),
                                 title: Padding(
                                   padding: const EdgeInsets.only(left: 5),
                                   child: SingleChildScrollView(
@@ -1421,6 +1476,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                   setState(() {
                                     currentCusineId = documentsx[index]['id'];
                                     currentCusine = documentsx[index]['name'];
+
                                     // isEditRegion = true;
                                   });
                                   Navigator.pop(context);
@@ -1447,16 +1503,19 @@ class _OutletsPageState extends State<OutletsPage> {
                       decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Enter cuisine here...',
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                if (txtAddCuisine.text.isEmpty) return;
-                                // saveRegion(txtAddCuisine.text);
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.save,
-                              color: Color(0xffbef7700),
+                          suffixIcon: Tooltip(
+                            message: 'save',
+                            child: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  if (txtAddCuisine.text.isEmpty) return;
+                                  saveCuisine(txtAddCuisine.text);
+                                });
+                              },
+                              icon: const Icon(
+                                Icons.save,
+                                color: Color(0xffbef7700),
+                              ),
                             ),
                           )),
                     ),
