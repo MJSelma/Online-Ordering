@@ -1562,6 +1562,23 @@ class _OutletsPageState extends State<OutletsPage> {
                           width: 150,
                           height: 30,
                           decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade300,
+                                  offset: const Offset(
+                                    0.0,
+                                    5.0,
+                                  ),
+                                  blurRadius: 10.0,
+                                  spreadRadius: 2.0,
+                                ), //BoxShadow
+                                // BoxShadow(
+                                //   color: Colors.white,
+                                //   offset: Offset(0.0, 0.0),
+                                //   blurRadius: 0.0,
+                                //   spreadRadius: 0.0,
+                                // ), //BoxShadow
+                              ],
                               color: const Color(0xffbef7700),
                               borderRadius: BorderRadius.circular(20.0)),
                           child: const Row(
@@ -1762,6 +1779,23 @@ class _OutletsPageState extends State<OutletsPage> {
                           width: 150,
                           height: 30,
                           decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade300,
+                                  offset: const Offset(
+                                    0.0,
+                                    5.0,
+                                  ),
+                                  blurRadius: 10.0,
+                                  spreadRadius: 2.0,
+                                ), //BoxShadow
+                                // BoxShadow(
+                                //   color: Colors.white,
+                                //   offset: Offset(0.0, 0.0),
+                                //   blurRadius: 0.0,
+                                //   spreadRadius: 0.0,
+                                // ), //BoxShadow
+                              ],
                               color: const Color(0xffbef7700),
                               borderRadius: BorderRadius.circular(20.0)),
                           child: const Row(
@@ -1966,6 +2000,23 @@ class _OutletsPageState extends State<OutletsPage> {
                           width: 150,
                           height: 30,
                           decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade300,
+                                  offset: const Offset(
+                                    0.0,
+                                    5.0,
+                                  ),
+                                  blurRadius: 10.0,
+                                  spreadRadius: 2.0,
+                                ), //BoxShadow
+                                // BoxShadow(
+                                //   color: Colors.white,
+                                //   offset: Offset(0.0, 0.0),
+                                //   blurRadius: 0.0,
+                                //   spreadRadius: 0.0,
+                                // ), //BoxShadow
+                              ],
                               color: const Color(0xffbef7700),
                               borderRadius: BorderRadius.circular(20.0)),
                           child: const Row(
