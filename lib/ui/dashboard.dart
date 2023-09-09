@@ -1,6 +1,8 @@
+import 'package:drinklinkmerchant/ui/consultation/consultation_menu.dart';
 import 'package:drinklinkmerchant/ui/merchant/merchant.dart';
 import 'package:drinklinkmerchant/ui/messages/message.dart';
 import 'package:drinklinkmerchant/ui/products/products.dart';
+import 'package:drinklinkmerchant/ui/smart_menu/smart_menu.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -206,6 +208,16 @@ class _DashBoardState extends State<DashBoard> {
                               width: isMenuOpen ? 200:50,
                             ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Choose one',style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, fontFamily: 'SFPro',),),
+                              ],
+                            ),
+                          ),
                           GestureDetector(
                             onTap: () {
                               setState(() {
@@ -351,11 +363,11 @@ class _DashBoardState extends State<DashBoard> {
                       ] else if (indexMenu == 1) ...[
                         const MerchantPage()
                       ] else if (indexMenu == 2) ...[
-                        const ProductsPage()
+                         ConsultationMenu()
+                      ] else if (indexMenu == 3) ...[
+                        const SmartMenu()
                       ] else if (indexMenu == 6) ...[
-                        const CasesMenu()
-                      ] else if (indexMenu == 6) ...[
-                        // CasesMessages(id: index.toString())
+                        CasesMenu()
                       ] else ...[
                         const widgetWall()
                       ]
@@ -427,11 +439,11 @@ class _DashBoardState extends State<DashBoard> {
                                     : Colors.grey.shade200,
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                    padding: const EdgeInsets.fromLTRB(12, 0, 5, 0),
                                     child: Icon(iconMenu,color:indexMenu == val
                                             ? Colors.white
                                             : const Color.fromARGB(255, 66, 64, 64),),
