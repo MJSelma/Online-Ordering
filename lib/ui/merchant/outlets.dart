@@ -25,6 +25,9 @@ class _OutletsPageState extends State<OutletsPage> {
       FirebaseFirestore.instance.collection('region');
   CollectionReference cusineCollection =
       FirebaseFirestore.instance.collection('cuisine');
+  CollectionReference cusineStyleCollection =
+      FirebaseFirestore.instance.collection('cuisineStyle');
+
   List<DocumentSnapshot> documentsx = [];
 
   List<OutletClass> outletClass = [];
@@ -37,9 +40,12 @@ class _OutletsPageState extends State<OutletsPage> {
   String currentRegionId = '';
   String currentCusine = 'Choose Cuisine';
   String currentCusineId = '';
+  String currentCusineStyle = 'Choose Cuisine Style';
+  String currentCusineStylId = '';
 
   OutletClass? dropDownValue;
   String businessName = '';
+  String businessId = '';
   bool isSelectedOutlet = false;
   int indexYesNo = 0;
   bool isSetDefaultWall = false;
@@ -52,6 +58,9 @@ class _OutletsPageState extends State<OutletsPage> {
 
   TextEditingController txtSearchCusine = TextEditingController();
   String strSearchCusine = '';
+
+  TextEditingController txtSearchCusineStyle = TextEditingController();
+  String strSearchCusineStyle = '';
 
   TextEditingController txtLocation = TextEditingController();
   String strLocation = '';
@@ -101,11 +110,18 @@ class _OutletsPageState extends State<OutletsPage> {
         .toList();
   }
 
+  List<DropdownMenuEntry<OutletClass>> _createListOutlet() {
+    return outletClass.map<DropdownMenuEntry<OutletClass>>((e) {
+      return DropdownMenuEntry(value: e, label: e.name);
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     final businessProviderRead = context.read<BusinessOutletProvider>();
 
     final docId = context.select((BusinessOutletProvider p) => p.docId);
+
     final businessNamex =
         context.select((BusinessOutletProvider p) => p.businessName);
     final defaultOutletIdProvider =
@@ -120,6 +136,7 @@ class _OutletsPageState extends State<OutletsPage> {
 
     outletClass = outletClassx;
     businessName = businessNamex;
+    businessId = docId;
     // regionClass = regionClassx;
     print(regionClass.length);
     print('${outletId}outlet id here');
@@ -229,6 +246,7 @@ class _OutletsPageState extends State<OutletsPage> {
     );
 
     void save() async {
+      print('saveOutlet');
       saveEditButton = 'EDIT';
       isAbsorb = true;
       strLocation = txtLocation.text;
@@ -237,6 +255,7 @@ class _OutletsPageState extends State<OutletsPage> {
       strDescription = txtDescription.text;
       strCurrency = txtCurrency.text;
       addHeight = 100;
+      await saveOutlet();
     }
 
     void update() async {
@@ -332,7 +351,92 @@ class _OutletsPageState extends State<OutletsPage> {
                           fontWeight: FontWeight.bold,
                           color: Color(0xffef7700)),
                     ),
-                    SizedBox(width: 200, child: dropdown),
+                    SizedBox(
+                      width: 230,
+                      child: outletClass.isEmpty
+                          ? Container()
+                          : Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20.0),
+                              decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(20.0)),
+                              child: DropdownMenu<OutletClass>(
+                                enableSearch: true,
+                                enableFilter: true,
+
+                                inputDecorationTheme:
+                                    const InputDecorationTheme(
+                                        border: InputBorder.none,
+                                        fillColor: Color(0xffef7700),
+                                        hintStyle: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            color: Color(0xffef7700))
+                                        // border: UnderlineInputBorder(
+
+                                        // border: OutlineInputBorder(
+                                        //   borderRadius: BorderRadius.all(
+                                        //     Radius.circular(20.0),
+                                        //   ),
+                                        // ),
+                                        ),
+
+                                // menuStyle: const MenuStyle(
+                                //   surfaceTintColor: MaterialStatePropertyAll<Color>( Color(0xffef7700))
+                                // ),
+                                // initialSelection: list.first,
+                                trailingIcon: const Icon(
+                                  Icons.search,
+                                  color: Color(0xffef7700),
+                                ),
+                                // selectedTrailingIcon: null,
+                                width: 200,
+                                hintText: currentItem,
+                                textStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Color(0xffef7700)),
+
+                                onSelected: (OutletClass? value) {
+                                  // This is called when the user selects an item.
+                                  setState(() {
+                                    currentItem = value!.name;
+                                    currentOutletName = value.name;
+                                    strLocation = value.location;
+                                    indexYesNo =
+                                        value.isLocatedAt == true ? 0 : 1;
+                                    strNumber = value.contactNumber;
+                                    strEmail = value.email;
+                                    strDescription = value.description;
+                                    strCurrency = value.currency;
+                                    intStar = value.star;
+                                    outletId = value.id;
+                                    txtLocation.text = strLocation;
+                                    txtNumber.text = strNumber;
+                                    txtEmail.text = strEmail;
+                                    txtDescription.text = strDescription;
+                                    txtCurrency.text = strCurrency;
+
+                                    dropDownValue = value;
+                                    isSelectedOutlet = true;
+                                    print(
+                                        '$defaultOutletIdProvider + $outletId');
+                                    defaultOutletIdProvider.toLowerCase() ==
+                                            outletId.toLowerCase()
+                                        ? isSetDefaultWall = true
+                                        : isSetDefaultWall = false;
+                                    currentRegion = 'Choose Region';
+                                    currentCusine = 'Choose Cuisine';
+                                  });
+                                },
+                                dropdownMenuEntries: _createListOutlet(),
+                                // menuStyle: MenuStyle(
+
+                                // ),
+                              ),
+                            ),
+                    ),
                   ],
                 ),
               ),
@@ -443,52 +547,9 @@ class _OutletsPageState extends State<OutletsPage> {
                                               color: Colors.black54,
                                             ),
                                           ),
-                                          const Text(
-                                            'Is your store inside any Airport/Mall/Hotel/Theme Park',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black54,
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Checkbox(
-                                                checkColor: Colors.white,
-                                                fillColor: MaterialStateProperty
-                                                    .resolveWith(getColor),
-                                                value: indexYesNo == 0
-                                                    ? true
-                                                    : false,
-                                                onChanged: (bool? value) {
-                                                  setState(() {
-                                                    indexYesNo = 0;
-                                                  });
-                                                },
-                                              ),
-                                              const Text('Yes'),
-                                              Checkbox(
-                                                checkColor: Colors.white,
-                                                fillColor: MaterialStateProperty
-                                                    .resolveWith(getColor),
-                                                value: indexYesNo == 1
-                                                    ? true
-                                                    : false,
-                                                onChanged: (bool? value) {
-                                                  setState(() {
-                                                    indexYesNo = 1;
-                                                  });
-                                                },
-                                              ),
-                                              const Text('No'),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 20,
-                                          ),
+                                          // const SizedBox(
+                                          //   height: 20,
+                                          // ),
                                           Container(
                                               child: saveEditButton == 'SAVE'
                                                   ? SizedBox(
@@ -508,6 +569,64 @@ class _OutletsPageState extends State<OutletsPage> {
                                                         color: Colors.black54,
                                                       ),
                                                     )),
+                                          Row(
+                                            children: [
+                                              const Text(
+                                                'Is your store inside any Airport/Mall/Hotel/Theme Park',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black54,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              Tooltip(
+                                                  message: strLocation,
+                                                  child: const Icon(
+                                                      Icons.location_pin))
+                                            ],
+                                          ),
+                                          // const SizedBox(
+                                          //   height: 10,
+                                          // ),
+                                          Row(
+                                            children: [
+                                              Checkbox(
+                                                shape: const CircleBorder(
+                                                    eccentricity: 1.0),
+                                                checkColor: Colors.white,
+                                                fillColor: MaterialStateProperty
+                                                    .resolveWith(getColor),
+                                                value: indexYesNo == 0
+                                                    ? true
+                                                    : false,
+                                                onChanged: (bool? value) {
+                                                  setState(() {
+                                                    indexYesNo = 0;
+                                                  });
+                                                },
+                                              ),
+                                              const Text('Yes'),
+                                              Checkbox(
+                                                shape: const CircleBorder(
+                                                    eccentricity: 1.0),
+                                                checkColor: Colors.white,
+                                                fillColor: MaterialStateProperty
+                                                    .resolveWith(getColor),
+                                                value: indexYesNo == 1
+                                                    ? true
+                                                    : false,
+                                                onChanged: (bool? value) {
+                                                  setState(() {
+                                                    indexYesNo = 1;
+                                                  });
+                                                },
+                                              ),
+                                              const Text('No'),
+                                            ],
+                                          ),
                                           const SizedBox(
                                             height: 30,
                                           ),
@@ -834,9 +953,9 @@ class _OutletsPageState extends State<OutletsPage> {
                                           child: Row(
                                             children: [
                                               const Icon(Icons.arrow_right),
-                                              const Text(
-                                                'NIL',
-                                                style: TextStyle(
+                                              Text(
+                                                currentCusineStyle,
+                                                style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
                                                   color: Colors.black54,
@@ -847,7 +966,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                                       saveEditButton == 'SAVE',
                                                   child: TextButton(
                                                       onHover: (value) {},
-                                                      onPressed: null,
+                                                      onPressed: () =>
+                                                          showCuisineStyleDialog(),
                                                       child: const Text(
                                                         'change',
                                                         style: TextStyle(
@@ -969,6 +1089,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                     AbsorbPointer(
                                       absorbing: isAbsorb,
                                       child: Checkbox(
+                                        shape: const CircleBorder(
+                                            eccentricity: 1.0),
                                         checkColor: Colors.white,
                                         fillColor:
                                             MaterialStateProperty.resolveWith(
@@ -993,8 +1115,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                     Column(
                                       children: [
                                         Container(
-                                          width: 100,
-                                          height: 40,
+                                          width: 80,
+                                          height: 30,
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(10.0),
@@ -1028,13 +1150,14 @@ class _OutletsPageState extends State<OutletsPage> {
                                                           ? Icons.edit
                                                           : Icons.save,
                                                       color: Colors.white,
+                                                      size: 14,
                                                     ),
                                                   ),
                                                   Text(
                                                     saveEditButton,
                                                     style: const TextStyle(
                                                       fontFamily: 'SFPro',
-                                                      fontSize: 18,
+                                                      fontSize: 16,
                                                       color: Colors.white,
                                                       fontWeight:
                                                           FontWeight.w500,
@@ -1047,6 +1170,9 @@ class _OutletsPageState extends State<OutletsPage> {
                                           ),
                                         ),
                                       ],
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
                                     ),
                                     // const SizedBox(
                                     //   width: 20,
@@ -1167,6 +1293,117 @@ class _OutletsPageState extends State<OutletsPage> {
     });
   }
 
+  void saveCuisineStyle(
+    String name,
+  ) async {
+    await cusineStyleCollection.add({
+      'id': 'dlcs010',
+      'outletId': outletId,
+      'name': name,
+      'refId': '',
+      'status': true,
+    });
+  }
+
+  saveOutlet() async {
+    // DateTime now = DateTime.now();
+    Map<String, dynamic> data = {
+      // 'id': outletId,
+      // 'name': 'Sample Outlet 1',
+      // 'description': '',
+      // 'image': '',
+      'email': txtEmail.text,
+      'contactNumber': txtNumber.text,
+      'location': txtLocation.text,
+      'isLocatedAt': indexYesNo == 0 ? true : false,
+      // 'country': 'Philippines',
+      'currency': txtCurrency.text,
+      // 'date': now,
+      // 'star': 100,
+    };
+
+    //Update per item only works
+    // Map<String, dynamic> data = {
+    //   'name': 'Sample Outlet',
+    // };
+
+    //Save .set(data)
+    // DateTime now = DateTime.now();
+    // Map<String, dynamic> data = {
+    //   'id': 'dlo001234',
+    //   'name': 'Sample Outlet 1',
+    //   'description': '',
+    //   'image': '',
+    //   'email': 'sample@gmail.com 1',
+    //   'contactNumber': '09123223232323',
+    //   'location': 'Pasay City',
+    //   'isLocatedAt': true,
+    //   'country': 'Philippines',
+    //   'currency': 'php',
+    //   'date': now,
+    //   'star': 100,
+    // };
+
+    final collectionOutlet =
+        FirebaseFirestore.instance.collection('businesses');
+    print(businessId);
+    await collectionOutlet
+        .doc(businessId)
+        .collection('outlets')
+        .where('id', isEqualTo: outletId)
+        .get()
+        .then((QuerySnapshot value) {
+      for (var item in value.docs) {
+        print('zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz');
+        print(item.id);
+        collectionOutlet
+            .doc(businessId)
+            .collection('outlets')
+            .doc(item.id)
+            .update(data);
+      }
+    });
+  }
+
+  // void saveOutlet() async {
+  //   final collectionOutlet =
+  //       FirebaseFirestore.instance.collection('businesses');
+
+  //   await collectionOutlet
+  //       .where('id', isEqualTo: businessId)
+  //       .get()
+  //       .then((QuerySnapshot value) {
+  //     for (var item in value.docs) {
+  //       collectionOutlet
+  //           .doc(item.id)
+  //           .collection('outlets')
+  //           .where('id', isEqualTo: outletId)
+  //           .get()
+  //           .then((QuerySnapshot value) {
+  //         for (var item2 in value.docs) {
+  //           collectionOutlet
+  //               .doc(item.id)
+  //               .collection('outlets')
+  //               .doc(item2.id)
+  //               .update(data);
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
+
+  void deleCuisineStyle(String id) async {
+    await cusineStyleCollection
+        .where('id', isEqualTo: id)
+        .get()
+        .then((QuerySnapshot value) {
+      for (var item in value.docs) {
+        print(item.id);
+        cusineStyleCollection.doc(item.id).delete();
+      }
+    });
+  }
+
   Color getColor(Set<MaterialState> states) {
     const Set<MaterialState> interactiveStates = <MaterialState>{
       MaterialState.pressed,
@@ -1260,17 +1497,17 @@ class _OutletsPageState extends State<OutletsPage> {
                                 //   color: Colors.redAccent[700],
                                 //   height: 24,
                                 // ),
-                                trailing: Tooltip(
-                                  message: 'delete',
-                                  child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          deleteRegion(documentsx[index]['id']);
-                                          print('delete region');
-                                        });
-                                      },
-                                      icon: const Icon(Icons.delete)),
-                                ),
+                                // trailing: Tooltip(
+                                //   message: 'delete',
+                                //   child: IconButton(
+                                //       onPressed: () {
+                                //         setState(() {
+                                //           deleteRegion(documentsx[index]['id']);
+                                //           print('delete region');
+                                //         });
+                                //       },
+                                //       icon: const Icon(Icons.delete)),
+                                // ),
                                 title: Padding(
                                   padding: const EdgeInsets.only(left: 5),
                                   child: SingleChildScrollView(
@@ -1306,33 +1543,36 @@ class _OutletsPageState extends State<OutletsPage> {
                     },
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20.0)),
-                    child: TextField(
-                      controller: txtaddRegion,
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Enter region here...',
-                          suffixIcon: Tooltip(
-                            message: 'save',
-                            child: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  if (txtaddRegion.text.isEmpty) return;
-                                  saveRegion(txtaddRegion.text);
-                                });
-                              },
-                              icon: const Icon(
-                                Icons.save,
-                                color: Color(0xffbef7700),
+                Visibility(
+                  visible: false,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(20.0)),
+                      child: TextField(
+                        controller: txtaddRegion,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Enter region here...',
+                            suffixIcon: Tooltip(
+                              message: 'save',
+                              child: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    if (txtaddRegion.text.isEmpty) return;
+                                    saveRegion(txtaddRegion.text);
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.save,
+                                  color: Color(0xffbef7700),
+                                ),
                               ),
-                            ),
-                          )),
+                            )),
+                      ),
                     ),
                   ),
                 )
@@ -1448,17 +1688,17 @@ class _OutletsPageState extends State<OutletsPage> {
                                 //   color: Colors.redAccent[700],
                                 //   height: 24,
                                 // ),
-                                trailing: Tooltip(
-                                  message: 'delete',
-                                  child: IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          print(documentsx[index]['id']);
-                                          deleCuisine(documentsx[index]['id']);
-                                        });
-                                      },
-                                      icon: const Icon(Icons.delete)),
-                                ),
+                                // trailing: Tooltip(
+                                //   message: 'delete',
+                                //   child: IconButton(
+                                //       onPressed: () {
+                                //         setState(() {
+                                //           print(documentsx[index]['id']);
+                                //           deleCuisine(documentsx[index]['id']);
+                                //         });
+                                //       },
+                                //       icon: const Icon(Icons.delete)),
+                                // ),
                                 title: Padding(
                                   padding: const EdgeInsets.only(left: 5),
                                   child: SingleChildScrollView(
@@ -1491,33 +1731,195 @@ class _OutletsPageState extends State<OutletsPage> {
                     },
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20.0)),
-                    child: TextField(
-                      controller: txtAddCuisine,
-                      decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Enter cuisine here...',
-                          suffixIcon: Tooltip(
-                            message: 'save',
-                            child: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  if (txtAddCuisine.text.isEmpty) return;
-                                  saveCuisine(txtAddCuisine.text);
-                                });
-                              },
-                              icon: const Icon(
-                                Icons.save,
-                                color: Color(0xffbef7700),
+                Visibility(
+                  visible: false,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(20.0)),
+                      child: TextField(
+                        controller: txtAddCuisine,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Enter cuisine here...',
+                            suffixIcon: Tooltip(
+                              message: 'save',
+                              child: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    if (txtAddCuisine.text.isEmpty) return;
+                                    saveCuisine(txtAddCuisine.text);
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.save,
+                                  color: Color(0xffbef7700),
+                                ),
                               ),
-                            ),
-                          )),
+                            )),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  showCuisineStyleDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, StateSetter setState) {
+            TextEditingController txtAddCuisineStyle = TextEditingController();
+
+            return SimpleDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0)),
+              title: const Text(
+                'Cuisine Style',
+                textAlign: TextAlign.center,
+              ),
+              children: [
+                Container(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: TextField(
+                      onChanged: (value) {
+                        setState(() {
+                          strSearchCusineStyle = value;
+                        });
+                      },
+                      controller: txtSearchCusineStyle,
+                      decoration: const InputDecoration(hintText: 'Search'),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  height: 400,
+                  width: 300,
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: cusineStyleCollection
+                        .where('outletId', isEqualTo: outletId)
+                        // .where('outletId',
+                        //     arrayContains: txtSearchRegion.text != ''
+                        //         ? outletId
+                        //         : txtSearchRegion.text)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        documentsx = snapshot.data!.docs;
+                        print(strSearchCusineStyle);
+                        if (strSearchCusineStyle.isNotEmpty) {
+                          documentsx = documentsx.where((element) {
+                            return element
+                                .get('name')
+                                .toString()
+                                .toLowerCase()
+                                .contains(strSearchCusineStyle.toLowerCase());
+                          }).toList();
+                        }
+
+                        return ListView.builder(
+                          itemCount: documentsx.length,
+                          itemBuilder: (context, index) {
+                            // var doc = snapshot.data!.docs;
+                            print(strSearchCusineStyle);
+                            // doc.contains(strSearchRegion);
+                            return SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: ListTile(
+                                // leading: Image.asset(
+                                //   'assets/chat.png',
+                                //   color: Colors.redAccent[700],
+                                //   height: 24,
+                                // ),
+                                // trailing: Tooltip(
+                                //   message: 'delete',
+                                //   child: IconButton(
+                                //       onPressed: () {
+                                //         setState(() {
+                                //           print(documentsx[index]['id']);
+                                //           deleCuisineStyle(
+                                //               documentsx[index]['id']);
+                                //         });
+                                //       },
+                                //       icon: const Icon(Icons.delete)),
+                                // ),
+                                title: Padding(
+                                  padding: const EdgeInsets.only(left: 5),
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          documentsx[index]['name'],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                onTap: () async {
+                                  setState(() {
+                                    currentCusineStylId =
+                                        documentsx[index]['id'];
+                                    currentCusineStyle =
+                                        documentsx[index]['name'];
+
+                                    // isEditRegion = true;
+                                  });
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        return const Center(child: Text("No data"));
+                      }
+                    },
+                  ),
+                ),
+                Visibility(
+                  visible: false,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(20.0)),
+                      child: TextField(
+                        controller: txtAddCuisineStyle,
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Enter cuisine here...',
+                            suffixIcon: Tooltip(
+                              message: 'save',
+                              child: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    if (txtAddCuisineStyle.text.isEmpty) return;
+                                    saveCuisineStyle(txtAddCuisineStyle.text);
+                                  });
+                                },
+                                icon: const Icon(
+                                  Icons.save,
+                                  color: Color(0xffbef7700),
+                                ),
+                              ),
+                            )),
+                      ),
                     ),
                   ),
                 )
