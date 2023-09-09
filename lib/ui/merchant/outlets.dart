@@ -9,6 +9,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/businessOutletProvider.dart';
+import '../data_class/businesses_class.dart';
 import '../data_class/outlet_class.dart';
 import '../data_class/region_class.dart';
 
@@ -29,11 +30,12 @@ class _OutletsPageState extends State<OutletsPage> {
       FirebaseFirestore.instance.collection('cuisineStyle');
 
   List<DocumentSnapshot> documentsx = [];
-
+  List<BusinessesClass> businessesClass = [];
   List<OutletClass> outletClass = [];
   List<RegionClass> regionClass = [];
 
   String outletId = '';
+  String outletIdProvider = '';
   String currentItem = 'Select Outlet';
   String currentOutletName = '';
   String currentRegion = '';
@@ -135,9 +137,17 @@ class _OutletsPageState extends State<OutletsPage> {
     final isSelected =
         context.select((BusinessOutletProvider p) => p.isBusinessSelected);
 
+    final businessesData = Provider.of<List<BusinessesClass>>(context);
+    businessesClass = businessesData
+        .where((item) =>
+            item.defaultOutletId.toLowerCase() == outletId.toLowerCase())
+        .toList();
+
     outletClass = outletClassx;
     businessName = businessNamex;
     businessId = docId;
+    outletIdProvider = defaultOutletIdProvider;
+
     // regionClass = regionClassx;
     print(regionClass.length);
     print('${outletId}outlet id here');
@@ -237,11 +247,16 @@ class _OutletsPageState extends State<OutletsPage> {
           dropDownValue = value;
           isSelectedOutlet = true;
           print('$defaultOutletIdProvider + $outletId');
-          defaultOutletIdProvider.toLowerCase() == outletId.toLowerCase()
-              ? isSetDefaultWall = true
-              : isSetDefaultWall = false;
+          // defaultOutletIdProvider.toLowerCase() == outletId.toLowerCase()
+          //     ? isSetDefaultWall = true
+          //     : isSetDefaultWall = false;
           currentRegion = '';
           currentCusine = '';
+
+          businessesClass[0].defaultOutletId.toLowerCase() ==
+                  outletId.toLowerCase()
+              ? isSetDefaultWall = true
+              : isSetDefaultWall = false;
         });
       },
     );
@@ -268,35 +283,6 @@ class _OutletsPageState extends State<OutletsPage> {
       txtDescription.text = strDescription;
       txtCurrency.text = strCurrency;
       addHeight = 0;
-    }
-
-    void getDefaultOutlet() {
-      // outletClass.where((item) =>
-      //     item.id.toLowerCase() == defaultOutletIdProvider.toLowerCase());
-
-      for (var data in outletClass) {
-        if (data.id.toLowerCase() == defaultOutletIdProvider.toLowerCase()) {
-          currentItem = data.name;
-          currentOutletName = data.name;
-          strLocation = data.location;
-          indexYesNo = data.isLocatedAt == true ? 0 : 1;
-          strNumber = data.contactNumber;
-          strEmail = data.email;
-          strDescription = data.description;
-          strCurrency = data.currency;
-          intStar = data.star;
-          txtLocation.text = strLocation;
-          txtNumber.text = strNumber;
-          txtEmail.text = strEmail;
-          txtDescription.text = strDescription;
-          txtCurrency.text = strCurrency;
-          outletId = defaultOutletIdProvider;
-          // dropDownValue = outletClass;
-          isSelectedOutlet = true;
-          isSetDefaultWall = true;
-          isPostbackLoad = true;
-        }
-      }
     }
 
     isSelectedOutlet == false
@@ -411,12 +397,26 @@ class _OutletsPageState extends State<OutletsPage> {
                                   dropDownValue = value;
                                   isSelectedOutlet = true;
                                   print('$defaultOutletIdProvider + $outletId');
-                                  defaultOutletIdProvider.toLowerCase() ==
-                                          outletId.toLowerCase()
-                                      ? isSetDefaultWall = true
-                                      : isSetDefaultWall = false;
+                                  // defaultOutletIdProvider.toLowerCase() ==
+                                  //         outletId.toLowerCase()
+                                  //     ? isSetDefaultWall = true
+                                  //     : isSetDefaultWall = false;
                                   currentRegion = '';
                                   currentCusine = '';
+                                  print(businessesClass.length);
+                                  for (var item in businessesClass) {
+                                    item.defaultOutletId.toLowerCase() ==
+                                            outletId.toLowerCase()
+                                        ? isSetDefaultWall = true
+                                        : isSetDefaultWall = false;
+                                  }
+
+                                  // businessesClass[0]
+                                  //             .defaultOutletId
+                                  //             .toLowerCase() ==
+                                  //         outletId.toLowerCase()
+                                  //     ? isSetDefaultWall = true
+                                  //     : isSetDefaultWall = false;
                                 });
                               },
                               dropdownMenuEntries: _createListOutlet(),
@@ -942,7 +942,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                             const Icon(Icons.arrow_right),
                                             Text(
                                               currentCusineStyle == ''
-                                                  ? 'Choose Cuisine Stle'
+                                                  ? 'Choose Cuisine Style'
                                                   : currentCusineStyle,
                                               style: const TextStyle(
                                                 fontSize: 16,
@@ -1292,6 +1292,35 @@ class _OutletsPageState extends State<OutletsPage> {
     });
   }
 
+  void getDefaultOutlet() {
+    // outletClass.where((item) =>
+    //     item.id.toLowerCase() == defaultOutletIdProvider.toLowerCase());
+
+    for (var data in outletClass) {
+      if (data.id.toLowerCase() == outletIdProvider.toLowerCase()) {
+        currentItem = data.name;
+        currentOutletName = data.name;
+        strLocation = data.location;
+        indexYesNo = data.isLocatedAt == true ? 0 : 1;
+        strNumber = data.contactNumber;
+        strEmail = data.email;
+        strDescription = data.description;
+        strCurrency = data.currency;
+        intStar = data.star;
+        txtLocation.text = strLocation;
+        txtNumber.text = strNumber;
+        txtEmail.text = strEmail;
+        txtDescription.text = strDescription;
+        txtCurrency.text = strCurrency;
+        outletId = outletIdProvider;
+        // dropDownValue = outletClass;
+        isSelectedOutlet = true;
+        isSetDefaultWall = true;
+        isPostbackLoad = true;
+      }
+    }
+  }
+
   saveOutlet() async {
     // DateTime now = DateTime.now();
     Map<String, dynamic> data = {
@@ -1364,6 +1393,7 @@ class _OutletsPageState extends State<OutletsPage> {
             setState(() {});
           },
           onExit: (event) {
+            print('exitttttttttttttttttt');
             setState(() {});
           },
           child: StatefulBuilder(
@@ -1521,7 +1551,61 @@ class _OutletsPageState extends State<OutletsPage> {
                         ),
                       ),
                     ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      InkWell(
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: 150,
+                          height: 30,
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade300,
+                                  offset: const Offset(
+                                    0.0,
+                                    5.0,
+                                  ),
+                                  blurRadius: 10.0,
+                                  spreadRadius: 2.0,
+                                ), //BoxShadow
+                                // BoxShadow(
+                                //   color: Colors.white,
+                                //   offset: Offset(0.0, 0.0),
+                                //   blurRadius: 0.0,
+                                //   spreadRadius: 0.0,
+                                // ), //BoxShadow
+                              ],
+                              color: const Color(0xffbef7700),
+                              borderRadius: BorderRadius.circular(20.0)),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.exit_to_app,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                'Close',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
                   )
+
                   // Row(
                   //   children: [
                   //     SizedBox(width: 100, child: const TextField()),
@@ -1684,6 +1768,59 @@ class _OutletsPageState extends State<OutletsPage> {
                         }
                       },
                     ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      InkWell(
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: 150,
+                          height: 30,
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade300,
+                                  offset: const Offset(
+                                    0.0,
+                                    5.0,
+                                  ),
+                                  blurRadius: 10.0,
+                                  spreadRadius: 2.0,
+                                ), //BoxShadow
+                                // BoxShadow(
+                                //   color: Colors.white,
+                                //   offset: Offset(0.0, 0.0),
+                                //   blurRadius: 0.0,
+                                //   spreadRadius: 0.0,
+                                // ), //BoxShadow
+                              ],
+                              color: const Color(0xffbef7700),
+                              borderRadius: BorderRadius.circular(20.0)),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.exit_to_app,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                'Close',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
                   ),
                   Visibility(
                     visible: false,
@@ -1853,6 +1990,59 @@ class _OutletsPageState extends State<OutletsPage> {
                       },
                     ),
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      InkWell(
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: 150,
+                          height: 30,
+                          decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade300,
+                                  offset: const Offset(
+                                    0.0,
+                                    5.0,
+                                  ),
+                                  blurRadius: 10.0,
+                                  spreadRadius: 2.0,
+                                ), //BoxShadow
+                                // BoxShadow(
+                                //   color: Colors.white,
+                                //   offset: Offset(0.0, 0.0),
+                                //   blurRadius: 0.0,
+                                //   spreadRadius: 0.0,
+                                // ), //BoxShadow
+                              ],
+                              color: const Color(0xffbef7700),
+                              borderRadius: BorderRadius.circular(20.0)),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.exit_to_app,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                'Close',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
                   Visibility(
                     visible: false,
                     child: Padding(
@@ -1872,8 +2062,9 @@ class _OutletsPageState extends State<OutletsPage> {
                                 child: IconButton(
                                   onPressed: () {
                                     setState(() {
-                                      if (txtAddCuisineStyle.text.isEmpty)
+                                      if (txtAddCuisineStyle.text.isEmpty) {
                                         return;
+                                      }
                                       saveCuisineStyle(txtAddCuisineStyle.text);
                                     });
                                   },

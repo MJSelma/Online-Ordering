@@ -112,6 +112,7 @@ class _DashBoardState extends State<DashBoard> {
     _getProvider(context);
 
     final businessProvider = context.read<BusinessOutletProvider>();
+
     // final businessProvider = Provider.of<BusinessOutletProvider>(context);
 
     final dropdown = DropdownButton<BusinessesClass>(
