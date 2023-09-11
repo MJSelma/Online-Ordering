@@ -1,16 +1,14 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:drinklinkmerchant/provider/menu_provider.dart';
 import 'package:drinklinkmerchant/ui/consultation/menu_list.dart';
 import 'package:drinklinkmerchant/widgets/icon_button.dart';
-import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class ConsultationMenu extends StatefulWidget {
   ConsultationMenu({super.key});
@@ -20,13 +18,14 @@ class ConsultationMenu extends StatefulWidget {
 }
 
 class _ConsultationMenuState extends State<ConsultationMenu> {
-  String urlImage =
-      'https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/129614613/original/f212f9ae0b155df29408578b685bae83727e0f89/design-modern-restaurant-menu.jpg';
-
   PlatformFile? uploadimage; //variable for choosed file
   String fileName = '';
+  String fileType = '';
   FilePickerResult? results;
+  TextEditingController menuName = TextEditingController();
 
+  TextEditingController menuNameUpdate = TextEditingController();
+  String menuUpdateUrl = '';
 
   Future<void> chooseImage() async {
     final result = await FilePicker.platform.pickFiles(
@@ -38,10 +37,12 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
       print(result.files.first.name);
       fileName = result.files.first.name;
       results = result;
+      fileType = fileName.split('.')[1];
+      menuUpdateUrl = result.files.first.name;
     });
   }
 
-  Future<void> uploadImage() async {
+  Future<void> uploadImage(int menuCount) async {
     //show your own loading or progressing code here
 
     String uploadurl = "http://192.168.1.7/uploads/image.php";
@@ -61,23 +62,65 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
 
       print(response.toString());
 
-      // if (response.statusCode == 200) {
-      //   var jsondata = json.decode(response.body); //decode json data
-      //   if (jsondata["error"]) {
-      //     //check error sent from server
-      //     print(jsondata["msg"]);
-      //     //if error return from server, show message from server
-      //   } else {
-      //     print("Upload successful");
-      //   }
-      // } else {
-      //   print("Error during connection to server");
-      //   //there is error during connecting to server,
-      //   //status code might be 404 = url not found
-      // }
+      if (response.statusCode == 200) {
+      } else {
+        print("Error during connection to server");
+      }
     } catch (e) {
       print(e.toString());
       //there is error during converting file image to base64 encoding.
+    }
+
+    createMenu(menuCount);
+  }
+
+  Future<void> uploadImageUpdate() async {
+    //show your own loading or progressing code here
+
+    String uploadurl = "http://192.168.1.7/uploads/image.php";
+    //dont use http://localhost , because emulator don't get that address
+    //insted use your local IP address or use live URL
+    //hit "ipconfig" in windows or "ip a" in linux to get you local IP
+
+    try {
+      List<int>? imageBytes = await uploadimage!.bytes;
+      String baseimage = base64Encode(imageBytes!);
+      print(baseimage.length);
+      //convert file image to Base64 encoding
+      var response = await http.post(Uri.parse(uploadurl), body: {
+        'file_name': fileName,
+        'base64_data': baseimage,
+      });
+
+      print(response.toString());
+
+      if (response.statusCode == 200) {
+      } else {
+        print("Error during connection to server");
+      }
+    } catch (e) {
+      print(e.toString());
+      //there is error during converting file image to base64 encoding.
+    }
+  }
+
+  Future<void> createMenu(int menuCount) async {
+    if (menuName.text != '' && fileName != '') {
+      FirebaseFirestore.instance
+          .collection('merchant')
+          .doc('X6odvQ5gqesAzwtJLaFl')
+          .collection('consultationMenu')
+          .add({
+        'order': menuCount,
+        'date': DateTime.now(),
+        'fileName': fileName,
+        'image': 'http://192.168.1.7/uploads/uploads/$fileName',
+        'name': menuName.text,
+        'status': true,
+        'type': fileType,
+      }).then((value) async {
+        context.read<MenuProvider>().menuRefresh();
+      });
     }
   }
 
@@ -132,46 +175,94 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   }
 
   menuViewer() {
+    final String menuID = context.select((MenuProvider p) => p.menuID);
+    final String menuName = context.select((MenuProvider p) => p.menuName);
+    final String imageUrl = context.select((MenuProvider p) => p.imageUrl);
+    final String type = context.select((MenuProvider p) => p.type);
+    final String pdfData = context.select((MenuProvider p) => p.pdfData);
+
     return SizedBox(
-      width: 500,
+      width: 450,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
         child: Stack(
           children: [
-            SizedBox(
-                width: 500,
-                child: Image.network(
-                  urlImage,
-                  fit: BoxFit.fitWidth,
-                )),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: GestureDetector(
-                    child: IconButtonMenu(
-                  text: 'Edit',
-                  iconMenu: Icons.edit,
-                  width: 100,
-                  height: 30,
-                  backColor: Color.fromARGB(255, 186, 186, 186),
-                )),
+            if (imageUrl != '')
+              if (type != 'pdf') ...[
+                SizedBox(
+                    width: 500,
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.fitWidth,
+                    )),
+              ] else ...[
+                SizedBox(
+                  width: 500,
+                  child: HtmlWidget(
+                    pdfData,
+                    // customStylesBuilder: (element) {
+                    //   if (element.classes.contains('foo')) {
+                    //     return {'color': 'red'};
+                    //   }
+                    //   return null;
+                    // },
+                    onErrorBuilder: (context, element, error) =>
+                        Text('$element error: $error'),
+                    onLoadingBuilder: (context, element, loadingProgress) =>
+                        CircularProgressIndicator(),
+                    textStyle: TextStyle(fontSize: 14),
+                    webView: true,
+                  ),
+                )
+              ],
+            if (imageUrl != '')
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: GestureDetector(
+                      onTap: () async {
+                        setState(() {
+                          menuNameUpdate.text = menuName;
+                          menuUpdateUrl = imageUrl;
+                        });
+                        await showDialog<bool>(
+                          context: context,
+                          builder: (context) =>
+                              updateMenuDialog(context, menuID),
+                        );
+                      },
+                      child: IconButtonMenu(
+                        text: 'Edit',
+                        iconMenu: Icons.edit,
+                        width: 100,
+                        height: 30,
+                        backColor: Color.fromARGB(255, 186, 186, 186),
+                      )),
+                ),
               ),
-            ),
-            Align(
-              alignment: Alignment.topRight,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: GestureDetector(
-                    child: IconButtonMenu(
-                  text: 'Delete',
-                  iconMenu: Icons.delete,
-                  width: 100,
-                  height: 30,
-                  backColor: Color.fromARGB(255, 210, 69, 69),
-                )),
-              ),
-            )
+            if (imageUrl != '')
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: GestureDetector(
+                      onTap: ()async {
+                         await showDialog<bool>(
+                          context: context,
+                          builder: (context) =>
+                              deleteMenuDialog(context, menuID, menuName),
+                        );
+                      },
+                      child: IconButtonMenu(
+                        text: 'Delete',
+                        iconMenu: Icons.delete,
+                        width: 100,
+                        height: 30,
+                        backColor: Color.fromARGB(255, 210, 69, 69),
+                      )),
+                ),
+              )
           ],
         ),
       ),
@@ -179,6 +270,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   }
 
   outletWidget() {
+    final int menuCount = context.select((MenuProvider p) => p.menuCount);
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
       child: Column(
@@ -197,7 +289,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
-                  // controller: userController,
+                  controller: menuName,
                   decoration: InputDecoration.collapsed(hintText: 'Menu name'),
                 ),
               ),
@@ -238,7 +330,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
           ),
           GestureDetector(
               onTap: () {
-                uploadImage();
+                uploadImage(menuCount);
               },
               child: IconButtonMenu(
                 text: 'ADD',
@@ -398,6 +490,218 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
             child: ConsultMenuPage(),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget updateMenuDialog(BuildContext context, String mID) {
+    return AlertDialog(
+      title: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: SizedBox(
+          width: 400,
+          height: 330,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Update Menu',
+              ),
+              const SizedBox(height: 15),
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: [
+                      const Text(
+                        'Name',
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              maxLines: 1,
+                              controller: menuNameUpdate,
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                menuUpdateUrl,
+                style: TextStyle(fontStyle: FontStyle.italic, fontSize: 14),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              GestureDetector(
+                  onTap: () {
+                    chooseImage();
+                  },
+                  child: IconButtonMenu(
+                    text: 'Upload new menu',
+                    iconMenu: Icons.upload,
+                    width: 200,
+                    height: 30,
+                    backColor: Color.fromARGB(255, 120, 120, 120),
+                  )),
+              SizedBox(
+                height: 30,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: IconButtonMenu(
+                            text: 'Cancel',
+                            iconMenu: Icons.close,
+                            width: 200,
+                            height: 35,
+                            backColor: Color.fromARGB(255, 120, 120, 120),
+                          )),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: GestureDetector(
+                          onTap: () async {
+                            uploadImageUpdate();
+                            FirebaseFirestore.instance
+                                .collection('merchant')
+                                .doc('X6odvQ5gqesAzwtJLaFl')
+                                .collection('consultationMenu')
+                                .doc(mID)
+                                .update({
+                              'name': menuNameUpdate.text,
+                              'image':
+                                  'http://192.168.1.7/uploads/uploads/$menuUpdateUrl',
+                              'type': fileType
+                            }).then((value) async {
+                              context.read<MenuProvider>().menuRefresh();
+                              Navigator.of(context).pop();
+                            });
+                          },
+                          child: IconButtonMenu(
+                            text: 'Update',
+                            iconMenu: Icons.edit,
+                            width: 200,
+                            height: 35,
+                            backColor: const Color(0xffef7700),
+                          )),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget deleteMenuDialog(BuildContext context, String mID, menuName) {
+    return AlertDialog(
+      title: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: SizedBox(
+          width: 300,
+          height: 170,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Delete Menu',
+              ),
+              const SizedBox(height: 15),
+              Text(
+                'Are you sure you want to delete this menu $menuName ?',
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: IconButtonMenu(
+                            text: 'Cancel',
+                            iconMenu: Icons.close,
+                            width: 200,
+                            height: 35,
+                            backColor: Color.fromARGB(255, 120, 120, 120),
+                          )),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: GestureDetector(
+                          onTap: () async {
+                            uploadImageUpdate();
+                            FirebaseFirestore.instance
+                                .collection('merchant')
+                                .doc('X6odvQ5gqesAzwtJLaFl')
+                                .collection('consultationMenu')
+                                .doc(mID)
+                                .delete()
+                                .then((value) async {
+                              context.read<MenuProvider>().menuRefresh();
+                              Navigator.of(context).pop();
+                            });
+                          },
+                          child: IconButtonMenu(
+                            text: 'Delete',
+                            iconMenu: Icons.delete,
+                            width: 200,
+                            height: 35,
+                            backColor:  Color.fromARGB(255, 210, 69, 69),
+                          )),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

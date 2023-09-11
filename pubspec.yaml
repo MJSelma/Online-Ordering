@@ -37,6 +37,8 @@ dependencies:
   firebase_messaging: ^14.1.1
   sqflite: ^2.0.3
   flutter_chat_ui: ^1.5.8
+  flutter_widget_from_html: ^0.8.5
+  reorderable_grid: ^1.0.7
 
 
   #state management
@@ -52,7 +54,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   dropdown_button2: ^2.3.7
-  http: ^1.1.0
+  http: ^0.13.4
   image_picker: ^1.0.2
   firebase_storage: ^11.2.5
   permission_handler: ^10.4.3
