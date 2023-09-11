@@ -87,6 +87,12 @@ class _OutletsPageState extends State<OutletsPage> {
   String strCurrency = '';
   // String strCurrency = 'USD';
 
+  TextEditingController txtMondayStart = TextEditingController();
+  String strMondayStart = '';
+
+  TextEditingController txtMondayEnd = TextEditingController();
+  String strMondayEnd = '';
+
   int intStar = 0;
 
   List<String> categoryList = <String>[
@@ -780,15 +786,16 @@ class _OutletsPageState extends State<OutletsPage> {
                                         ),
                                         Visibility(
                                           visible: saveEditButton == 'SAVE',
-                                          child: const Text(
-                                            'Edit schedule',
-                                            style: TextStyle(
-                                              fontStyle: FontStyle.italic,
-                                              fontSize: 12,
-                                              // fontWeight: FontWeight.bold,
-                                              color: Colors.red,
-                                            ),
-                                          ),
+                                          child: TextButton(
+                                              onHover: (value) {},
+                                              onPressed: () =>
+                                                  showScheduleDialog(),
+                                              child: const Text(
+                                                'Edit schedule',
+                                                style: TextStyle(
+                                                    fontStyle: FontStyle.italic,
+                                                    color: Colors.red),
+                                              )),
                                         ),
                                       ],
                                     ),
@@ -2089,4 +2096,1126 @@ class _OutletsPageState extends State<OutletsPage> {
       },
     );
   }
+
+  showScheduleDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return MouseRegion(
+          // onHover: (event) {
+          //   setState(() {});
+          // },
+          // onExit: (event) {
+          //   setState(() {});
+          // },
+          child: StatefulBuilder(
+            builder: (context, StateSetter setState) {
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 400.0),
+                child: Dialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: Column(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Center(
+                          child:
+                              Text('Schedule', style: TextStyle(fontSize: 26)),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 550,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: SingleChildScrollView(
+                            // scrollDirection: Axis.vertical,
+                            child: Column(children: [
+                              Column(
+                                children: [
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: 150,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: const Offset(
+                                              0.0,
+                                              5.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 2.0,
+                                          ), //BoxShadow
+                                        ],
+                                        color: Colors.grey.shade400,
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    child: const Text(
+                                      'Monday',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'Start',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtMondayStart,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              txtMondayStart.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text('To'),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'End',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtMondayEnd,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              txtMondayEnd.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Divider(),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: 150,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: const Offset(
+                                              0.0,
+                                              5.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 2.0,
+                                          ), //BoxShadow
+                                        ],
+                                        color: Colors.grey.shade400,
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    child: const Text(
+                                      'Tuesday',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'Start',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtMondayStart,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              txtMondayStart.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text('To'),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'End',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtMondayEnd,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              txtMondayEnd.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Divider(),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: 150,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: const Offset(
+                                              0.0,
+                                              5.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 2.0,
+                                          ), //BoxShadow
+                                        ],
+                                        color: Colors.grey.shade400,
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    child: const Text(
+                                      'Wednesday',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'Start',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtMondayStart,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              txtMondayStart.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text('To'),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'End',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtMondayEnd,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              txtMondayEnd.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Divider(),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: 150,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: const Offset(
+                                              0.0,
+                                              5.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 2.0,
+                                          ), //BoxShadow
+                                        ],
+                                        color: Colors.grey.shade400,
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    child: const Text(
+                                      'Thursday',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'Start',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtMondayStart,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              txtMondayStart.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text('To'),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'End',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtMondayEnd,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              txtMondayEnd.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Divider(),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: 150,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: const Offset(
+                                              0.0,
+                                              5.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 2.0,
+                                          ), //BoxShadow
+                                        ],
+                                        color: Colors.grey.shade400,
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    child: const Text(
+                                      'Friday',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'Start',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtMondayStart,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              txtMondayStart.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text('To'),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'End',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtMondayEnd,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              txtMondayEnd.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Divider(),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: 150,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: const Offset(
+                                              0.0,
+                                              5.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 2.0,
+                                          ), //BoxShadow
+                                        ],
+                                        color: Colors.grey.shade400,
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    child: const Text(
+                                      'Saturday',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'Start',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtMondayStart,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              txtMondayStart.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text('To'),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'End',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtMondayEnd,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              txtMondayEnd.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Divider(),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: 150,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: const Offset(
+                                              0.0,
+                                              5.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 2.0,
+                                          ), //BoxShadow
+                                        ],
+                                        color: Colors.grey.shade400,
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    child: const Text(
+                                      'Sunday',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'Start',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtMondayStart,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              txtMondayStart.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text('To'),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'End',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtMondayEnd,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              txtMondayEnd.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Divider(),
+                                  const SizedBox(height: 10),
+                                ],
+                              ),
+                            ]),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: 150,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: const Offset(
+                                          0.0,
+                                          5.0,
+                                        ),
+                                        blurRadius: 10.0,
+                                        spreadRadius: 2.0,
+                                      ), //BoxShadow
+                                      // BoxShadow(
+                                      //   color: Colors.white,
+                                      //   offset: Offset(0.0, 0.0),
+                                      //   blurRadius: 0.0,
+                                      //   spreadRadius: 0.0,
+                                      // ), //BoxShadow
+                                    ],
+                                    color: const Color(0xffbef7700),
+                                    borderRadius: BorderRadius.circular(20.0)),
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.exit_to_app,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      'Close',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            InkWell(
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: 150,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        offset: const Offset(
+                                          0.0,
+                                          5.0,
+                                        ),
+                                        blurRadius: 10.0,
+                                        spreadRadius: 2.0,
+                                      ), //BoxShadow
+                                      // BoxShadow(
+                                      //   color: Colors.white,
+                                      //   offset: Offset(0.0, 0.0),
+                                      //   blurRadius: 0.0,
+                                      //   spreadRadius: 0.0,
+                                      // ), //BoxShadow
+                                    ],
+                                    color: const Color(0xffbef7700),
+                                    borderRadius: BorderRadius.circular(20.0)),
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.exit_to_app,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      'Save',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  // showScheduleDialog() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return MouseRegion(
+  //         // onHover: (event) {
+  //         //   setState(() {});
+  //         // },
+  //         // onExit: (event) {
+  //         //   setState(() {});
+  //         // },
+  //         child: StatefulBuilder(
+  //           builder: (context, StateSetter setState) {
+  //             return SimpleDialog(
+  //               shape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.circular(20.0)),
+  //               title: const Text(
+  //                 'Schedule',
+  //                 textAlign: TextAlign.center,
+  //               ),
+  //               contentPadding: const EdgeInsets.all(20.0),
+  //               alignment: Alignment.center,
+  //               children: [
+  //                 SingleChildScrollView(
+  //                   // scrollDirection: Axis.vertical,
+  //                   child: Column(children: [
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.center,
+  //                       children: [
+  //                         Container(
+  //                           alignment: Alignment.center,
+  //                           width: 150,
+  //                           height: 50,
+  //                           decoration: BoxDecoration(
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                   color: Colors.grey.shade300,
+  //                                   offset: const Offset(
+  //                                     0.0,
+  //                                     5.0,
+  //                                   ),
+  //                                   blurRadius: 10.0,
+  //                                   spreadRadius: 2.0,
+  //                                 ), //BoxShadow
+  //                               ],
+  //                               color: const Color(0xffbef7700),
+  //                               borderRadius: BorderRadius.circular(20.0)),
+  //                           child: const Text(
+  //                             'Monday',
+  //                             style: TextStyle(color: Colors.white),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     Row(
+  //                       children: [
+  //                         Expanded(
+  //                           child: TextField(
+  //                             textAlign: TextAlign.center,
+  //                             decoration: const InputDecoration(
+  //                                 hintText: 'Start',
+  //                                 hintTextDirection: TextDirection.ltr),
+  //                             controller: txtMondayStart,
+  //                             onTap: () async {
+  //                               final TimeOfDay? newTime = await showTimePicker(
+  //                                 context: context,
+  //                                 initialTime:
+  //                                     const TimeOfDay(hour: 7, minute: 15),
+  //                               );
+  //                               var hour = newTime!.hour;
+  //                               var minute = newTime.minute;
+
+  //                               setState(() {
+  //                                 txtMondayStart.text = '$hour:$minute';
+  //                               });
+  //                             },
+  //                           ),
+  //                         ),
+  //                         const SizedBox(width: 5),
+  //                         const Text('To'),
+  //                         const SizedBox(width: 5),
+  //                         Expanded(
+  //                           child: TextField(
+  //                             textAlign: TextAlign.center,
+  //                             decoration: const InputDecoration(
+  //                                 hintText: 'End',
+  //                                 hintTextDirection: TextDirection.ltr),
+  //                             controller: txtMondayEnd,
+  //                             onTap: () async {
+  //                               final TimeOfDay? newTime = await showTimePicker(
+  //                                 context: context,
+  //                                 initialTime:
+  //                                     const TimeOfDay(hour: 7, minute: 15),
+  //                               );
+  //                               var hour = newTime!.hour;
+  //                               var minute = newTime.minute;
+
+  //                               setState(() {
+  //                                 txtMondayEnd.text = '$hour:$minute';
+  //                               });
+  //                             },
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const Divider(),
+  //                     const SizedBox(height: 10),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.center,
+  //                       children: [
+  //                         Container(
+  //                           alignment: Alignment.center,
+  //                           width: 150,
+  //                           height: 50,
+  //                           decoration: BoxDecoration(
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                   color: Colors.grey.shade300,
+  //                                   offset: const Offset(
+  //                                     0.0,
+  //                                     5.0,
+  //                                   ),
+  //                                   blurRadius: 10.0,
+  //                                   spreadRadius: 2.0,
+  //                                 ), //BoxShadow
+  //                               ],
+  //                               color: const Color(0xffbef7700),
+  //                               borderRadius: BorderRadius.circular(20.0)),
+  //                           child: const Text(
+  //                             'Tuesday',
+  //                             style: TextStyle(color: Colors.white),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     const Divider(),
+  //                     const SizedBox(height: 10),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.center,
+  //                       children: [
+  //                         Container(
+  //                           alignment: Alignment.center,
+  //                           width: 150,
+  //                           height: 50,
+  //                           decoration: BoxDecoration(
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                   color: Colors.grey.shade300,
+  //                                   offset: const Offset(
+  //                                     0.0,
+  //                                     5.0,
+  //                                   ),
+  //                                   blurRadius: 10.0,
+  //                                   spreadRadius: 2.0,
+  //                                 ), //BoxShadow
+  //                               ],
+  //                               color: const Color(0xffbef7700),
+  //                               borderRadius: BorderRadius.circular(20.0)),
+  //                           child: const Text(
+  //                             'Wednesday',
+  //                             style: TextStyle(color: Colors.white),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     const Divider(),
+  //                     const SizedBox(height: 10),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.center,
+  //                       children: [
+  //                         Container(
+  //                           alignment: Alignment.center,
+  //                           width: 150,
+  //                           height: 50,
+  //                           decoration: BoxDecoration(
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                   color: Colors.grey.shade300,
+  //                                   offset: const Offset(
+  //                                     0.0,
+  //                                     5.0,
+  //                                   ),
+  //                                   blurRadius: 10.0,
+  //                                   spreadRadius: 2.0,
+  //                                 ), //BoxShadow
+  //                               ],
+  //                               color: const Color(0xffbef7700),
+  //                               borderRadius: BorderRadius.circular(20.0)),
+  //                           child: const Text(
+  //                             'Thursday',
+  //                             style: TextStyle(color: Colors.white),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     const Divider(),
+  //                     const SizedBox(height: 10),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.center,
+  //                       children: [
+  //                         Container(
+  //                           alignment: Alignment.center,
+  //                           width: 150,
+  //                           height: 50,
+  //                           decoration: BoxDecoration(
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                   color: Colors.grey.shade300,
+  //                                   offset: const Offset(
+  //                                     0.0,
+  //                                     5.0,
+  //                                   ),
+  //                                   blurRadius: 10.0,
+  //                                   spreadRadius: 2.0,
+  //                                 ), //BoxShadow
+  //                               ],
+  //                               color: const Color(0xffbef7700),
+  //                               borderRadius: BorderRadius.circular(20.0)),
+  //                           child: const Text(
+  //                             'Friday',
+  //                             style: TextStyle(color: Colors.white),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     const Divider(),
+  //                     const SizedBox(height: 10),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.center,
+  //                       children: [
+  //                         Container(
+  //                           alignment: Alignment.center,
+  //                           width: 150,
+  //                           height: 50,
+  //                           decoration: BoxDecoration(
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                   color: Colors.grey.shade300,
+  //                                   offset: const Offset(
+  //                                     0.0,
+  //                                     5.0,
+  //                                   ),
+  //                                   blurRadius: 10.0,
+  //                                   spreadRadius: 2.0,
+  //                                 ), //BoxShadow
+  //                               ],
+  //                               color: const Color(0xffbef7700),
+  //                               borderRadius: BorderRadius.circular(20.0)),
+  //                           child: const Text(
+  //                             'Saturday',
+  //                             style: TextStyle(color: Colors.white),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     const Divider(),
+  //                     const SizedBox(height: 10),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.center,
+  //                       children: [
+  //                         Container(
+  //                           alignment: Alignment.center,
+  //                           width: 150,
+  //                           height: 50,
+  //                           decoration: BoxDecoration(
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                   color: Colors.grey.shade300,
+  //                                   offset: const Offset(
+  //                                     0.0,
+  //                                     5.0,
+  //                                   ),
+  //                                   blurRadius: 10.0,
+  //                                   spreadRadius: 2.0,
+  //                                 ), //BoxShadow
+  //                               ],
+  //                               color: const Color(0xffbef7700),
+  //                               borderRadius: BorderRadius.circular(20.0)),
+  //                           child: const Text(
+  //                             'Sunday',
+  //                             style: TextStyle(color: Colors.white),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     const Divider(),
+  //                     const SizedBox(height: 10),
+  //                   ]),
+  //                 ),
+  //                 Container(
+  //                   alignment: Alignment.bottomCenter,
+  //                   child: Row(
+  //                     mainAxisAlignment: MainAxisAlignment.center,
+  //                     crossAxisAlignment: CrossAxisAlignment.center,
+  //                     children: [
+  //                       InkWell(
+  //                         child: Container(
+  //                           alignment: Alignment.center,
+  //                           width: 150,
+  //                           height: 30,
+  //                           decoration: BoxDecoration(
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                   color: Colors.grey.shade300,
+  //                                   offset: const Offset(
+  //                                     0.0,
+  //                                     5.0,
+  //                                   ),
+  //                                   blurRadius: 10.0,
+  //                                   spreadRadius: 2.0,
+  //                                 ), //BoxShadow
+  //                                 // BoxShadow(
+  //                                 //   color: Colors.white,
+  //                                 //   offset: Offset(0.0, 0.0),
+  //                                 //   blurRadius: 0.0,
+  //                                 //   spreadRadius: 0.0,
+  //                                 // ), //BoxShadow
+  //                               ],
+  //                               color: const Color(0xffbef7700),
+  //                               borderRadius: BorderRadius.circular(20.0)),
+  //                           child: const Row(
+  //                             mainAxisAlignment: MainAxisAlignment.center,
+  //                             crossAxisAlignment: CrossAxisAlignment.center,
+  //                             children: [
+  //                               Icon(
+  //                                 Icons.exit_to_app,
+  //                                 color: Colors.white,
+  //                               ),
+  //                               SizedBox(
+  //                                 width: 5,
+  //                               ),
+  //                               Text(
+  //                                 'Close',
+  //                                 style: TextStyle(color: Colors.white),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ),
+  //                         onTap: () {
+  //                           Navigator.pop(context);
+  //                         },
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ],
+  //             );
+  //           },
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }
