@@ -280,7 +280,7 @@ class _CasesMessagesState extends State<CasesMessages> {
               showUserNames: true,
               user: _user,
 
-              isTextMessageTextSelectable: true,
+              // isTextMessageTextSelectable: true,
               theme: const DarkChatTheme(
                 inputBackgroundColor: Color(0xffbef7700),
                 backgroundColor: Colors.white,
