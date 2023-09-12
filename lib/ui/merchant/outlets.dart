@@ -52,6 +52,8 @@ class _OutletsPageState extends State<OutletsPage> {
   int indexYesNo = 0;
   int indexYesNoCategory = 0;
   int indexYesNoCategoryCount = 0;
+  List<int> indexSchedule = [];
+  List<int> indexScheduleAdded = [];
   bool isSetDefaultWall = false;
   bool isAbsorb = true;
   String saveEditButton = 'EDIT';
@@ -93,6 +95,42 @@ class _OutletsPageState extends State<OutletsPage> {
   TextEditingController txtMondayEnd = TextEditingController();
   String strMondayEnd = '';
 
+  TextEditingController txtTuesdayStart = TextEditingController();
+  String strTuesdayStart = '';
+
+  TextEditingController txtTuesdayEnd = TextEditingController();
+  String strTuesdayEnd = '';
+
+  TextEditingController txtWednesdayStart = TextEditingController();
+  String strWednesdayStart = '';
+
+  TextEditingController txtWednesdayEnd = TextEditingController();
+  String strWednesdayEnd = '';
+
+  TextEditingController txtThursdaytart = TextEditingController();
+  String stThursdayStart = '';
+
+  TextEditingController txtThursdayEnd = TextEditingController();
+  String strThursdayEnd = '';
+
+  TextEditingController txtFridayStart = TextEditingController();
+  String strFridayStart = '';
+
+  TextEditingController txtFridayEnd = TextEditingController();
+  String strFridayEnd = '';
+
+  TextEditingController txtSaturdayStart = TextEditingController();
+  String strSaturdayStart = '';
+
+  TextEditingController txtSaturdayEnd = TextEditingController();
+  String strSaturdayEnd = '';
+
+  TextEditingController txtSundayStart = TextEditingController();
+  String strSundayStart = '';
+
+  TextEditingController txtSundayEnd = TextEditingController();
+  String strSundayEnd = '';
+
   int intStar = 0;
 
   List<String> categoryList = <String>[
@@ -112,7 +150,18 @@ class _OutletsPageState extends State<OutletsPage> {
     'Bar7'
   ];
 
+  List<String> scheduleList = <String>[
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+    'Sun',
+  ];
+
   List<String> categoryListAdded = [];
+  List<String> scheduleListAdded = [];
 
   List<DropdownMenuItem<OutletClass>> _createList() {
     return outletClass
@@ -741,6 +790,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                         const SizedBox(
                                           height: 30,
                                         ),
+
                                         const Text(
                                           'Schedule',
                                           style: TextStyle(
@@ -749,38 +799,184 @@ class _OutletsPageState extends State<OutletsPage> {
                                             color: Colors.black54,
                                           ),
                                         ),
-                                        const Text(
-                                          'Mon-Fri',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black54,
+                                        SizedBox(
+                                          height: 80,
+                                          width:
+                                              MediaQuery.sizeOf(context).width,
+                                          child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: scheduleList.length,
+                                            itemBuilder: (context, index) {
+                                              return indexSchedule
+                                                      .contains(index)
+                                                  ? Card(
+                                                      color: const Color(
+                                                          0xffef7700),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(5.0),
+                                                        child: Column(
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                const Icon(
+                                                                  Icons
+                                                                      .calendar_today,
+                                                                  size: 12,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                                const SizedBox(
+                                                                    width: 5),
+                                                                Text(
+                                                                    scheduleList[
+                                                                            index]
+                                                                        .toString(),
+                                                                    style:
+                                                                        const TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                    )),
+                                                              ],
+                                                            ),
+                                                            const Text(
+                                                                '7:00 - 15:00',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                ))
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Container();
+                                            },
                                           ),
                                         ),
-                                        const Text(
-                                          '09:00-21:30',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black54,
-                                          ),
-                                        ),
-                                        const Text(
-                                          'Sat-Sun',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black54,
-                                          ),
-                                        ),
-                                        const Text(
-                                          '07:30-22:30',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black54,
-                                          ),
-                                        ),
+                                        // SizedBox(
+                                        //   height: 220,
+                                        //   width: 300,
+                                        //   child: ListView.builder(
+                                        //     scrollDirection: Axis.vertical,
+                                        //     itemCount: scheduleList.length,
+                                        //     itemBuilder: (context, index) {
+                                        //       return Padding(
+                                        //         padding:
+                                        //             const EdgeInsets.symmetric(
+                                        //                 vertical: 5.0),
+                                        //         child: Row(
+                                        //           children: [
+                                        //             Container(
+                                        //               alignment:
+                                        //                   Alignment.center,
+                                        //               width: 50,
+                                        //               // height: 50,
+                                        //               decoration: BoxDecoration(
+                                        //                   boxShadow: const [
+                                        //                     BoxShadow(
+                                        //                       color:
+                                        //                           Colors.white,
+                                        //                       offset: Offset(
+                                        //                         0.0,
+                                        //                         2.0,
+                                        //                       ),
+                                        //                       blurRadius: 5.0,
+                                        //                       spreadRadius: 2.0,
+                                        //                     ), //BoxShadow
+                                        //                   ],
+                                        //                   color: const Color(
+                                        //                       0xffef7700),
+                                        //                   borderRadius:
+                                        //                       BorderRadius
+                                        //                           .circular(
+                                        //                               20.0)),
+                                        //               child: Text(
+                                        //                   scheduleList[index]
+                                        //                       .toString(),
+                                        //                   style:
+                                        //                       const TextStyle(
+                                        //                     color: Colors.white,
+                                        //                   )),
+                                        //             ),
+                                        //             // const SizedBox(
+                                        //             //   width: 5,
+                                        //             // ),
+                                        //             const Text(' - '),
+                                        //             Container(
+                                        //               alignment:
+                                        //                   Alignment.center,
+                                        //               width: 150,
+                                        //               // height: 50,
+                                        //               decoration: BoxDecoration(
+                                        //                   boxShadow: const [
+                                        //                     BoxShadow(
+                                        //                       color:
+                                        //                           Colors.white,
+                                        //                       offset: Offset(
+                                        //                         0.0,
+                                        //                         2.0,
+                                        //                       ),
+                                        //                       blurRadius: 5.0,
+                                        //                       spreadRadius: 2.0,
+                                        //                     ), //BoxShadow
+                                        //                   ],
+                                        //                   color: const Color(
+                                        //                       0xffef7700),
+                                        //                   borderRadius:
+                                        //                       BorderRadius
+                                        //                           .circular(
+                                        //                               20.0)),
+                                        //               child: const Padding(
+                                        //                 padding:
+                                        //                     EdgeInsets.all(1.0),
+                                        //                 child: Text(
+                                        //                     '07:00 to 15:00',
+                                        //                     style: TextStyle(
+                                        //                       color:
+                                        //                           Colors.white,
+                                        //                     )),
+                                        //               ),
+                                        //             ),
+                                        //           ],
+                                        //         ),
+                                        //       );
+                                        //     },
+                                        //   ),
+                                        // ),
+                                        // const Text(
+                                        //   'Mon-Fri',
+                                        //   style: TextStyle(
+                                        //     fontSize: 16,
+                                        //     fontWeight: FontWeight.bold,
+                                        //     color: Colors.black54,
+                                        //   ),
+                                        // ),
+                                        // const Text(
+                                        //   '09:00-21:30',
+                                        //   style: TextStyle(
+                                        //     fontSize: 16,
+                                        //     fontWeight: FontWeight.bold,
+                                        //     color: Colors.black54,
+                                        //   ),
+                                        // ),
+                                        // const Text(
+                                        //   'Sat-Sun',
+                                        //   style: TextStyle(
+                                        //     fontSize: 16,
+                                        //     fontWeight: FontWeight.bold,
+                                        //     color: Colors.black54,
+                                        //   ),
+                                        // ),
+                                        // const Text(
+                                        //   '07:30-22:30',
+                                        //   style: TextStyle(
+                                        //     fontSize: 16,
+                                        //     fontWeight: FontWeight.bold,
+                                        //     color: Colors.black54,
+                                        //   ),
+                                        // ),
                                         const SizedBox(
                                           height: 10,
                                         ),
@@ -2102,12 +2298,12 @@ class _OutletsPageState extends State<OutletsPage> {
       context: context,
       builder: (context) {
         return MouseRegion(
-          // onHover: (event) {
-          //   setState(() {});
-          // },
-          // onExit: (event) {
-          //   setState(() {});
-          // },
+          onHover: (event) {
+            setState(() {});
+          },
+          onExit: (event) {
+            setState(() {});
+          },
           child: StatefulBuilder(
             builder: (context, StateSetter setState) {
               return Container(
@@ -2117,15 +2313,27 @@ class _OutletsPageState extends State<OutletsPage> {
                       borderRadius: BorderRadius.circular(20.0)),
                   child: Column(
                     children: [
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                        child: Container(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(Icons.exit_to_app)),
+                        ),
+                      ),
                       const Padding(
-                        padding: EdgeInsets.all(20.0),
+                        padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0),
                         child: Center(
                           child:
                               Text('Schedule', style: TextStyle(fontSize: 26)),
                         ),
                       ),
                       SizedBox(
-                        height: 550,
+                        height: 530,
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: SingleChildScrollView(
@@ -2179,6 +2387,10 @@ class _OutletsPageState extends State<OutletsPage> {
                                             var minute = newTime.minute;
 
                                             setState(() {
+                                              if (txtMondayStart.text != '') {
+                                                indexScheduleAdded.add(0);
+                                              }
+
                                               txtMondayStart.text =
                                                   '$hour:$minute';
                                             });
@@ -2207,6 +2419,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                             var minute = newTime.minute;
 
                                             setState(() {
+                                              indexScheduleAdded.add(0);
                                               txtMondayEnd.text =
                                                   '$hour:$minute';
                                             });
@@ -2252,7 +2465,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                               hintText: 'Start',
                                               hintTextDirection:
                                                   TextDirection.ltr),
-                                          controller: txtMondayStart,
+                                          controller: txtTuesdayStart,
                                           onTap: () async {
                                             final TimeOfDay? newTime =
                                                 await showTimePicker(
@@ -2264,7 +2477,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                             var minute = newTime.minute;
 
                                             setState(() {
-                                              txtMondayStart.text =
+                                              indexScheduleAdded.add(1);
+                                              txtTuesdayStart.text =
                                                   '$hour:$minute';
                                             });
                                           },
@@ -2280,7 +2494,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                               hintText: 'End',
                                               hintTextDirection:
                                                   TextDirection.ltr),
-                                          controller: txtMondayEnd,
+                                          controller: txtTuesdayEnd,
                                           onTap: () async {
                                             final TimeOfDay? newTime =
                                                 await showTimePicker(
@@ -2292,7 +2506,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                             var minute = newTime.minute;
 
                                             setState(() {
-                                              txtMondayEnd.text =
+                                              indexScheduleAdded.add(1);
+                                              txtTuesdayEnd.text =
                                                   '$hour:$minute';
                                             });
                                           },
@@ -2337,7 +2552,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                               hintText: 'Start',
                                               hintTextDirection:
                                                   TextDirection.ltr),
-                                          controller: txtMondayStart,
+                                          controller: txtWednesdayStart,
                                           onTap: () async {
                                             final TimeOfDay? newTime =
                                                 await showTimePicker(
@@ -2349,7 +2564,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                             var minute = newTime.minute;
 
                                             setState(() {
-                                              txtMondayStart.text =
+                                              indexScheduleAdded.add(2);
+                                              txtWednesdayStart.text =
                                                   '$hour:$minute';
                                             });
                                           },
@@ -2365,7 +2581,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                               hintText: 'End',
                                               hintTextDirection:
                                                   TextDirection.ltr),
-                                          controller: txtMondayEnd,
+                                          controller: txtWednesdayEnd,
                                           onTap: () async {
                                             final TimeOfDay? newTime =
                                                 await showTimePicker(
@@ -2377,7 +2593,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                             var minute = newTime.minute;
 
                                             setState(() {
-                                              txtMondayEnd.text =
+                                              indexScheduleAdded.add(2);
+                                              txtWednesdayEnd.text =
                                                   '$hour:$minute';
                                             });
                                           },
@@ -2422,7 +2639,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                               hintText: 'Start',
                                               hintTextDirection:
                                                   TextDirection.ltr),
-                                          controller: txtMondayStart,
+                                          controller: txtThursdaytart,
                                           onTap: () async {
                                             final TimeOfDay? newTime =
                                                 await showTimePicker(
@@ -2434,7 +2651,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                             var minute = newTime.minute;
 
                                             setState(() {
-                                              txtMondayStart.text =
+                                              indexScheduleAdded.add(3);
+                                              txtThursdaytart.text =
                                                   '$hour:$minute';
                                             });
                                           },
@@ -2450,7 +2668,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                               hintText: 'End',
                                               hintTextDirection:
                                                   TextDirection.ltr),
-                                          controller: txtMondayEnd,
+                                          controller: txtThursdayEnd,
                                           onTap: () async {
                                             final TimeOfDay? newTime =
                                                 await showTimePicker(
@@ -2462,7 +2680,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                             var minute = newTime.minute;
 
                                             setState(() {
-                                              txtMondayEnd.text =
+                                              indexScheduleAdded.add(3);
+                                              txtThursdayEnd.text =
                                                   '$hour:$minute';
                                             });
                                           },
@@ -2507,7 +2726,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                               hintText: 'Start',
                                               hintTextDirection:
                                                   TextDirection.ltr),
-                                          controller: txtMondayStart,
+                                          controller: txtFridayStart,
                                           onTap: () async {
                                             final TimeOfDay? newTime =
                                                 await showTimePicker(
@@ -2519,7 +2738,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                             var minute = newTime.minute;
 
                                             setState(() {
-                                              txtMondayStart.text =
+                                              indexScheduleAdded.add(4);
+                                              txtFridayStart.text =
                                                   '$hour:$minute';
                                             });
                                           },
@@ -2535,7 +2755,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                               hintText: 'End',
                                               hintTextDirection:
                                                   TextDirection.ltr),
-                                          controller: txtMondayEnd,
+                                          controller: txtFridayEnd,
                                           onTap: () async {
                                             final TimeOfDay? newTime =
                                                 await showTimePicker(
@@ -2547,7 +2767,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                             var minute = newTime.minute;
 
                                             setState(() {
-                                              txtMondayEnd.text =
+                                              indexScheduleAdded.add(4);
+                                              txtFridayEnd.text =
                                                   '$hour:$minute';
                                             });
                                           },
@@ -2592,7 +2813,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                               hintText: 'Start',
                                               hintTextDirection:
                                                   TextDirection.ltr),
-                                          controller: txtMondayStart,
+                                          controller: txtSaturdayStart,
                                           onTap: () async {
                                             final TimeOfDay? newTime =
                                                 await showTimePicker(
@@ -2604,7 +2825,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                             var minute = newTime.minute;
 
                                             setState(() {
-                                              txtMondayStart.text =
+                                              indexScheduleAdded.add(5);
+                                              txtSaturdayStart.text =
                                                   '$hour:$minute';
                                             });
                                           },
@@ -2620,7 +2842,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                               hintText: 'End',
                                               hintTextDirection:
                                                   TextDirection.ltr),
-                                          controller: txtMondayEnd,
+                                          controller: txtSaturdayEnd,
                                           onTap: () async {
                                             final TimeOfDay? newTime =
                                                 await showTimePicker(
@@ -2632,7 +2854,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                             var minute = newTime.minute;
 
                                             setState(() {
-                                              txtMondayEnd.text =
+                                              indexScheduleAdded.add(5);
+                                              txtSaturdayEnd.text =
                                                   '$hour:$minute';
                                             });
                                           },
@@ -2677,7 +2900,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                               hintText: 'Start',
                                               hintTextDirection:
                                                   TextDirection.ltr),
-                                          controller: txtMondayStart,
+                                          controller: txtSundayStart,
                                           onTap: () async {
                                             final TimeOfDay? newTime =
                                                 await showTimePicker(
@@ -2689,7 +2912,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                             var minute = newTime.minute;
 
                                             setState(() {
-                                              txtMondayStart.text =
+                                              indexScheduleAdded.add(6);
+                                              txtSundayStart.text =
                                                   '$hour:$minute';
                                             });
                                           },
@@ -2705,7 +2929,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                               hintText: 'End',
                                               hintTextDirection:
                                                   TextDirection.ltr),
-                                          controller: txtMondayEnd,
+                                          controller: txtSundayEnd,
                                           onTap: () async {
                                             final TimeOfDay? newTime =
                                                 await showTimePicker(
@@ -2717,7 +2941,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                             var minute = newTime.minute;
 
                                             setState(() {
-                                              txtMondayEnd.text =
+                                              indexScheduleAdded.add(6);
+                                              txtSundayEnd.text =
                                                   '$hour:$minute';
                                             });
                                           },
@@ -2734,111 +2959,63 @@ class _OutletsPageState extends State<OutletsPage> {
                           ),
                         ),
                       ),
-                      Container(
-                        alignment: Alignment.bottomCenter,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            InkWell(
-                              child: Container(
-                                alignment: Alignment.center,
-                                width: 150,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: const Offset(
-                                          0.0,
-                                          5.0,
-                                        ),
-                                        blurRadius: 10.0,
-                                        spreadRadius: 2.0,
-                                      ), //BoxShadow
-                                      // BoxShadow(
-                                      //   color: Colors.white,
-                                      //   offset: Offset(0.0, 0.0),
-                                      //   blurRadius: 0.0,
-                                      //   spreadRadius: 0.0,
-                                      // ), //BoxShadow
-                                    ],
-                                    color: const Color(0xffbef7700),
-                                    borderRadius: BorderRadius.circular(20.0)),
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.exit_to_app,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      'Close',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                            child: Container(
+                              margin: const EdgeInsets.only(right: 20.0),
+                              width: 100,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.shade300,
+                                      offset: const Offset(
+                                        0.0,
+                                        5.0,
+                                      ),
+                                      blurRadius: 10.0,
+                                      spreadRadius: 2.0,
+                                    ), //BoxShadow
+                                    // BoxShadow(
+                                    //   color: Colors.white,
+                                    //   offset: Offset(0.0, 0.0),
+                                    //   blurRadius: 0.0,
+                                    //   spreadRadius: 0.0,
+                                    // ), //BoxShadow
                                   ],
-                                ),
+                                  color: const Color(0xffbef7700),
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.save,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    'Save',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
                               ),
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
                             ),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            InkWell(
-                              child: Container(
-                                alignment: Alignment.center,
-                                width: 150,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        offset: const Offset(
-                                          0.0,
-                                          5.0,
-                                        ),
-                                        blurRadius: 10.0,
-                                        spreadRadius: 2.0,
-                                      ), //BoxShadow
-                                      // BoxShadow(
-                                      //   color: Colors.white,
-                                      //   offset: Offset(0.0, 0.0),
-                                      //   blurRadius: 0.0,
-                                      //   spreadRadius: 0.0,
-                                      // ), //BoxShadow
-                                    ],
-                                    color: const Color(0xffbef7700),
-                                    borderRadius: BorderRadius.circular(20.0)),
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.exit_to_app,
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      'Save',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                        ),
+                            onTap: () {
+                              setState(() {
+                                for (var data in indexScheduleAdded) {
+                                  indexSchedule.add(data);
+                                }
+                              });
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),
