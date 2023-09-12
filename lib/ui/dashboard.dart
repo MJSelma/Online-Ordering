@@ -143,97 +143,103 @@ class _DashBoardState extends State<DashBoard> {
           children: [
             SingleChildScrollView(
               child: Column(children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                  child: Row(
-                    children: [
-                      const Column(
-                        children: [
-                          Text(
-                            'DRINKLINK',
-                            style: TextStyle(
-                                fontFamily: 'SFPro',
-                                color: Color(0xffbef7700),
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            'MORE TIMES FOR FUN',
-                            style: TextStyle(
-                                fontFamily: 'SFPro',
-                                color: Color.fromRGBO(115, 115, 114, 0.976),
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      const Column(
-                        children: [
-                          Text(
-                            'Welcome',
-                            style: TextStyle(
-                                fontFamily: 'SFPro',
-                                color: Color(0xF8737474),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300),
-                          ),
-                          Text(
-                            'GOODFUN HOSPITALITY ',
-                            style: TextStyle(
-                                fontFamily: 'SFPro',
-                                color: Color(0xF8737474),
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(113.0),
-                            image: const DecorationImage(
-                              image: AssetImage('assets/images/Goodfun.jpg'),
-                              fit: BoxFit.fill,
+                Container(
+                  decoration: const BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('assets/images/header.jpg'),
+                          fit: BoxFit.cover)),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+                    child: Row(
+                      children: [
+                        const Column(
+                          children: [
+                            Text(
+                              'DRINKLINK',
+                              style: TextStyle(
+                                  fontFamily: 'SFPro',
+                                  color: Color(0xffbef7700),
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold),
                             ),
-                          ),
-                          child: PopupMenuButton(
-                            onSelected: (value) {
-                              _onMenuItemSelected(value as int);
-                            },
-                            tooltip: '',
-                            iconSize: 0.0,
-                            offset: Offset(0.0, appBarHeight),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(8.0),
-                                bottomRight: Radius.circular(8.0),
-                                topLeft: Radius.circular(8.0),
-                                topRight: Radius.circular(8.0),
+                            Text(
+                              'MORE TIMES FOR FUN',
+                              style: TextStyle(
+                                  fontFamily: 'SFPro',
+                                  color: Color.fromRGBO(115, 115, 114, 0.976),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        const Column(
+                          children: [
+                            Text(
+                              'Welcome',
+                              style: TextStyle(
+                                  fontFamily: 'SFPro',
+                                  color: Color(0xF8737474),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                            Text(
+                              'GOODFUN HOSPITALITY ',
+                              style: TextStyle(
+                                  fontFamily: 'SFPro',
+                                  color: Color(0xF8737474),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          width: 12,
+                        ),
+                        Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(113.0),
+                              image: const DecorationImage(
+                                image: AssetImage('assets/images/Goodfun.jpg'),
+                                fit: BoxFit.fill,
                               ),
                             ),
-                            itemBuilder: (ctx) => [
-                              _buildPopupMenuItem(
-                                  'My Cases', Icons.chat, Options.cases.index),
-                              _buildPopupMenuItem(
-                                  'New Buiseness', Icons.business, 3),
-                              _buildPopupMenuItem(
-                                  'New Manager', Icons.manage_accounts, 4),
-                              _buildPopupMenuItem(
-                                  'Settings', Icons.settings, 5),
-                              _buildPopupMenuItem('Exit', Icons.exit_to_app,
-                                  Options.exit.index),
-                            ],
-                          ))
-                    ],
+                            child: PopupMenuButton(
+                              onSelected: (value) {
+                                _onMenuItemSelected(value as int);
+                              },
+                              tooltip: '',
+                              iconSize: 0.0,
+                              offset: Offset(0.0, appBarHeight),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(8.0),
+                                  bottomRight: Radius.circular(8.0),
+                                  topLeft: Radius.circular(8.0),
+                                  topRight: Radius.circular(8.0),
+                                ),
+                              ),
+                              itemBuilder: (ctx) => [
+                                _buildPopupMenuItem('My Cases', Icons.chat,
+                                    Options.cases.index),
+                                _buildPopupMenuItem(
+                                    'New Buiseness', Icons.business, 3),
+                                _buildPopupMenuItem(
+                                    'New Manager', Icons.manage_accounts, 4),
+                                _buildPopupMenuItem(
+                                    'Settings', Icons.settings, 5),
+                                _buildPopupMenuItem('Exit', Icons.exit_to_app,
+                                    Options.exit.index),
+                              ],
+                            ))
+                      ],
+                    ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
+                  padding: const EdgeInsets.fromLTRB(4, 10, 4, 0),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -428,7 +434,7 @@ class _DashBoardState extends State<DashBoard> {
                       ] else if (indexMenu == 1) ...[
                         const MerchantPage()
                       ] else if (indexMenu == 2) ...[
-                        ConsultationMenu()
+                        const ConsultationMenu()
                       ] else if (indexMenu == 3) ...[
                         const SmartMenu()
                       ] else if (indexMenu == 6) ...[

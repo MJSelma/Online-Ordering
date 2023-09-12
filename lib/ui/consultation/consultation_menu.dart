@@ -74,6 +74,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
     }
 
     createMenu(menuCount);
+    fileName = '';
+    menuName.text = '';
   }
 
   Future<void> uploadImageUpdate() async {
@@ -104,6 +106,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
       print(e.toString());
       //there is error during converting file image to base64 encoding.
     }
+    fileName = '';
+    menuName.text = '';
   }
 
   Future<void> createMenu(int menuCount) async {
@@ -692,6 +696,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                                 .then((value) async {
                               context.read<MenuProvider>().menuRefresh();
                               Navigator.of(context).pop();
+                              context
+                                  .read<MenuProvider>()
+                                  .selectedMenu('', '', '', '', '');
                             });
                           },
                           child: IconButtonMenu(
