@@ -9,6 +9,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/businessOutletProvider.dart';
+import '../controller/outletController.dart';
 import '../data_class/businesses_class.dart';
 import '../data_class/outlet_class.dart';
 import '../data_class/region_class.dart';
@@ -21,7 +22,6 @@ class OutletsPage extends StatefulWidget {
 }
 
 class _OutletsPageState extends State<OutletsPage> {
-  final collection = FirebaseFirestore.instance;
   CollectionReference regionCollection =
       FirebaseFirestore.instance.collection('region');
   CollectionReference cusineCollection =
@@ -50,6 +50,10 @@ class _OutletsPageState extends State<OutletsPage> {
   String businessId = '';
   bool isSelectedOutlet = false;
   int indexYesNo = 0;
+  int indexYesNoCategory = 0;
+  int indexYesNoCategoryCount = 0;
+  List<int> indexSchedule = [];
+  List<int> indexScheduleAdded = [];
   bool isSetDefaultWall = false;
   bool isAbsorb = true;
   String saveEditButton = 'EDIT';
@@ -85,7 +89,79 @@ class _OutletsPageState extends State<OutletsPage> {
   String strCurrency = '';
   // String strCurrency = 'USD';
 
+  TextEditingController txtMondayStart = TextEditingController();
+  String strMondayStart = '';
+
+  TextEditingController txtMondayEnd = TextEditingController();
+  String strMondayEnd = '';
+
+  TextEditingController txtTuesdayStart = TextEditingController();
+  String strTuesdayStart = '';
+
+  TextEditingController txtTuesdayEnd = TextEditingController();
+  String strTuesdayEnd = '';
+
+  TextEditingController txtWednesdayStart = TextEditingController();
+  String strWednesdayStart = '';
+
+  TextEditingController txtWednesdayEnd = TextEditingController();
+  String strWednesdayEnd = '';
+
+  TextEditingController txtThursdaytart = TextEditingController();
+  String stThursdayStart = '';
+
+  TextEditingController txtThursdayEnd = TextEditingController();
+  String strThursdayEnd = '';
+
+  TextEditingController txtFridayStart = TextEditingController();
+  String strFridayStart = '';
+
+  TextEditingController txtFridayEnd = TextEditingController();
+  String strFridayEnd = '';
+
+  TextEditingController txtSaturdayStart = TextEditingController();
+  String strSaturdayStart = '';
+
+  TextEditingController txtSaturdayEnd = TextEditingController();
+  String strSaturdayEnd = '';
+
+  TextEditingController txtSundayStart = TextEditingController();
+  String strSundayStart = '';
+
+  TextEditingController txtSundayEnd = TextEditingController();
+  String strSundayEnd = '';
+
   int intStar = 0;
+
+  List<String> categoryList = <String>[
+    'Cafetteria',
+    'Bar',
+    'Restaurant',
+    'Bar2',
+    'Cafetteria3',
+    'Bar3',
+    'Cafetteria4',
+    'Bar4',
+    'Cafetteria5',
+    'Bar5',
+    'Cafetteria6',
+    'Bar6',
+    'Cafetteria7',
+    'Bar7'
+  ];
+
+  List<String> scheduleList = <String>[
+    'Mon',
+    'Tue',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+    'Sun',
+  ];
+
+  List<String> categoryListAdded = [];
+  List<String> scheduleListAdded = [];
 
   List<DropdownMenuItem<OutletClass>> _createList() {
     return outletClass
@@ -183,85 +259,91 @@ class _OutletsPageState extends State<OutletsPage> {
     ];
     String dropdownValueCuisine = listCuisine.first;
 
-    final dropdown = DropdownButton<OutletClass>(
-      items: _createList(),
-      underline: const SizedBox(),
-      iconSize: 0,
-      isExpanded: false,
-      borderRadius: BorderRadius.circular(20),
-      hint: Container(
-        width: 200,
-        height: 50,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          color: isSelectedOutlet == true
-              ? const Color(0xffef7700)
-              : Colors.grey.shade200,
-        ),
-        alignment: Alignment.center,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.business,
-              color: isSelectedOutlet == true
-                  ? Colors.white
-                  : const Color.fromARGB(255, 66, 64, 64),
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            Text(
-              currentItem,
-              style: TextStyle(
-                fontFamily: 'SFPro',
-                fontSize: 18,
-                color: isSelectedOutlet == true
-                    ? Colors.white
-                    : const Color.fromARGB(255, 66, 64, 64),
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-      onChanged: (OutletClass? value) {
-        setState(() {
-          currentItem = value!.name;
-          currentOutletName = value.name;
-          strLocation = value.location;
-          indexYesNo = value.isLocatedAt == true ? 0 : 1;
-          strNumber = value.contactNumber;
-          strEmail = value.email;
-          strDescription = value.description;
-          strCurrency = value.currency;
-          intStar = value.star;
-          outletId = value.id;
-          txtLocation.text = strLocation;
-          txtNumber.text = strNumber;
-          txtEmail.text = strEmail;
-          txtDescription.text = strDescription;
-          txtCurrency.text = strCurrency;
+    // final dropdown = DropdownButton<OutletClass>(
+    //   items: _createList(),
+    //   underline: const SizedBox(),
+    //   iconSize: 0,
+    //   isExpanded: false,
+    //   borderRadius: BorderRadius.circular(20),
+    //   hint: Container(
+    //     width: 200,
+    //     height: 50,
+    //     decoration: BoxDecoration(
+    //       borderRadius: BorderRadius.circular(10.0),
+    //       color: isSelectedOutlet == true
+    //           ? const Color(0xffef7700)
+    //           : Colors.grey.shade200,
+    //     ),
+    //     alignment: Alignment.center,
+    //     child: Row(
+    //       mainAxisAlignment: MainAxisAlignment.center,
+    //       children: [
+    //         Icon(
+    //           Icons.business,
+    //           color: isSelectedOutlet == true
+    //               ? Colors.white
+    //               : const Color.fromARGB(255, 66, 64, 64),
+    //         ),
+    //         const SizedBox(
+    //           width: 5,
+    //         ),
+    //         Text(
+    //           currentItem,
+    //           style: TextStyle(
+    //             fontFamily: 'SFPro',
+    //             fontSize: 18,
+    //             color: isSelectedOutlet == true
+    //                 ? Colors.white
+    //                 : const Color.fromARGB(255, 66, 64, 64),
+    //             fontWeight: FontWeight.w500,
+    //           ),
+    //           textAlign: TextAlign.center,
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    //   onChanged: (OutletClass? value) {
+    //     setState(() {
+    //       currentItem = value!.name;
+    //       currentOutletName = value.name;
+    //       strLocation = value.location;
+    //       indexYesNo = value.isLocatedAt == true ? 0 : 1;
+    //       strNumber = value.contactNumber;
+    //       strEmail = value.email;
+    //       strDescription = value.description;
+    //       strCurrency = value.currency;
+    //       intStar = value.star;
+    //       outletId = value.id;
+    //       txtLocation.text = strLocation;
+    //       txtNumber.text = strNumber;
+    //       txtEmail.text = strEmail;
+    //       txtDescription.text = strDescription;
+    //       txtCurrency.text = strCurrency;
 
-          dropDownValue = value;
-          isSelectedOutlet = true;
-          print('$defaultOutletIdProvider + $outletId');
-          // defaultOutletIdProvider.toLowerCase() == outletId.toLowerCase()
-          //     ? isSetDefaultWall = true
-          //     : isSetDefaultWall = false;
-          currentRegion = '';
-          currentCusine = '';
+    //       dropDownValue = value;
+    //       isSelectedOutlet = true;
+    //       print('$defaultOutletIdProvider + $outletId');
+    //       // defaultOutletIdProvider.toLowerCase() == outletId.toLowerCase()
+    //       //     ? isSetDefaultWall = true
+    //       //     : isSetDefaultWall = false;
+    //       currentRegionId = value.regionId;
+    //       currentRegion = value.regionName;
+    //       currentCusineId = value.cuisineId;
+    //       currentCusine = value.cuisineName;
+    //       currentCusineStylId = value.cuisineStyleId;
+    //       currentCusineStyle = value.cuisineStyleName;
 
-          businessesClass[0].defaultOutletId.toLowerCase() ==
-                  outletId.toLowerCase()
-              ? isSetDefaultWall = true
-              : isSetDefaultWall = false;
-        });
-      },
-    );
+    //       businessesClass[0].defaultOutletId.toLowerCase() ==
+    //               outletId.toLowerCase()
+    //           ? isSetDefaultWall = true
+    //           : isSetDefaultWall = false;
+    //     });
+    //   },
+    // );
 
     void save() async {
+      // List<String> category = [];
+
       print('saveOutlet');
       saveEditButton = 'EDIT';
       isAbsorb = true;
@@ -271,7 +353,24 @@ class _OutletsPageState extends State<OutletsPage> {
       strDescription = txtDescription.text;
       strCurrency = txtCurrency.text;
       addHeight = 100;
-      await saveOutlet();
+      await saveBusinessOutlet(
+          isSetDefaultWall,
+          businessId,
+          outletId,
+          txtEmail.text,
+          txtNumber.text,
+          txtLocation.text,
+          indexYesNo,
+          txtCurrency.text,
+          currentRegionId,
+          currentRegion,
+          currentCusineId,
+          currentCusine,
+          currentCusineStylId,
+          currentCusineStyle,
+          '',
+          categoryListAdded);
+      // businessProviderRead.setDocId(docId);
     }
 
     void update() async {
@@ -401,14 +500,23 @@ class _OutletsPageState extends State<OutletsPage> {
                                   //         outletId.toLowerCase()
                                   //     ? isSetDefaultWall = true
                                   //     : isSetDefaultWall = false;
-                                  currentRegion = '';
-                                  currentCusine = '';
+                                  currentRegionId = value.regionId;
+                                  currentRegion = value.regionName;
+                                  currentCusineId = value.cuisineId;
+                                  currentCusine = value.cuisineName;
+                                  currentCusineStylId = value.cuisineStyleId;
+                                  currentCusineStyle = value.cuisineStyleName;
                                   print(businessesClass.length);
                                   for (var item in businessesClass) {
                                     item.defaultOutletId.toLowerCase() ==
                                             outletId.toLowerCase()
                                         ? isSetDefaultWall = true
                                         : isSetDefaultWall = false;
+                                  }
+                                  categoryListAdded.clear();
+                                  for (var data in value.category) {
+                                    print(data);
+                                    categoryListAdded.add(data);
                                   }
 
                                   // businessesClass[0]
@@ -682,6 +790,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                         const SizedBox(
                                           height: 30,
                                         ),
+
                                         const Text(
                                           'Schedule',
                                           style: TextStyle(
@@ -690,52 +799,199 @@ class _OutletsPageState extends State<OutletsPage> {
                                             color: Colors.black54,
                                           ),
                                         ),
-                                        const Text(
-                                          'Mon-Fri',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black54,
+                                        SizedBox(
+                                          height: 80,
+                                          width:
+                                              MediaQuery.sizeOf(context).width,
+                                          child: ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: scheduleList.length,
+                                            itemBuilder: (context, index) {
+                                              return indexSchedule
+                                                      .contains(index)
+                                                  ? Card(
+                                                      color: const Color(
+                                                          0xffef7700),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(5.0),
+                                                        child: Column(
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                const Icon(
+                                                                  Icons
+                                                                      .calendar_today,
+                                                                  size: 12,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                                const SizedBox(
+                                                                    width: 5),
+                                                                Text(
+                                                                    scheduleList[
+                                                                            index]
+                                                                        .toString(),
+                                                                    style:
+                                                                        const TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                    )),
+                                                              ],
+                                                            ),
+                                                            const Text(
+                                                                '7:00 - 15:00',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                ))
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : Container();
+                                            },
                                           ),
                                         ),
-                                        const Text(
-                                          '09:00-21:30',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black54,
-                                          ),
-                                        ),
-                                        const Text(
-                                          'Sat-Sun',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black54,
-                                          ),
-                                        ),
-                                        const Text(
-                                          '07:30-22:30',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black54,
-                                          ),
-                                        ),
+                                        // SizedBox(
+                                        //   height: 220,
+                                        //   width: 300,
+                                        //   child: ListView.builder(
+                                        //     scrollDirection: Axis.vertical,
+                                        //     itemCount: scheduleList.length,
+                                        //     itemBuilder: (context, index) {
+                                        //       return Padding(
+                                        //         padding:
+                                        //             const EdgeInsets.symmetric(
+                                        //                 vertical: 5.0),
+                                        //         child: Row(
+                                        //           children: [
+                                        //             Container(
+                                        //               alignment:
+                                        //                   Alignment.center,
+                                        //               width: 50,
+                                        //               // height: 50,
+                                        //               decoration: BoxDecoration(
+                                        //                   boxShadow: const [
+                                        //                     BoxShadow(
+                                        //                       color:
+                                        //                           Colors.white,
+                                        //                       offset: Offset(
+                                        //                         0.0,
+                                        //                         2.0,
+                                        //                       ),
+                                        //                       blurRadius: 5.0,
+                                        //                       spreadRadius: 2.0,
+                                        //                     ), //BoxShadow
+                                        //                   ],
+                                        //                   color: const Color(
+                                        //                       0xffef7700),
+                                        //                   borderRadius:
+                                        //                       BorderRadius
+                                        //                           .circular(
+                                        //                               20.0)),
+                                        //               child: Text(
+                                        //                   scheduleList[index]
+                                        //                       .toString(),
+                                        //                   style:
+                                        //                       const TextStyle(
+                                        //                     color: Colors.white,
+                                        //                   )),
+                                        //             ),
+                                        //             // const SizedBox(
+                                        //             //   width: 5,
+                                        //             // ),
+                                        //             const Text(' - '),
+                                        //             Container(
+                                        //               alignment:
+                                        //                   Alignment.center,
+                                        //               width: 150,
+                                        //               // height: 50,
+                                        //               decoration: BoxDecoration(
+                                        //                   boxShadow: const [
+                                        //                     BoxShadow(
+                                        //                       color:
+                                        //                           Colors.white,
+                                        //                       offset: Offset(
+                                        //                         0.0,
+                                        //                         2.0,
+                                        //                       ),
+                                        //                       blurRadius: 5.0,
+                                        //                       spreadRadius: 2.0,
+                                        //                     ), //BoxShadow
+                                        //                   ],
+                                        //                   color: const Color(
+                                        //                       0xffef7700),
+                                        //                   borderRadius:
+                                        //                       BorderRadius
+                                        //                           .circular(
+                                        //                               20.0)),
+                                        //               child: const Padding(
+                                        //                 padding:
+                                        //                     EdgeInsets.all(1.0),
+                                        //                 child: Text(
+                                        //                     '07:00 to 15:00',
+                                        //                     style: TextStyle(
+                                        //                       color:
+                                        //                           Colors.white,
+                                        //                     )),
+                                        //               ),
+                                        //             ),
+                                        //           ],
+                                        //         ),
+                                        //       );
+                                        //     },
+                                        //   ),
+                                        // ),
+                                        // const Text(
+                                        //   'Mon-Fri',
+                                        //   style: TextStyle(
+                                        //     fontSize: 16,
+                                        //     fontWeight: FontWeight.bold,
+                                        //     color: Colors.black54,
+                                        //   ),
+                                        // ),
+                                        // const Text(
+                                        //   '09:00-21:30',
+                                        //   style: TextStyle(
+                                        //     fontSize: 16,
+                                        //     fontWeight: FontWeight.bold,
+                                        //     color: Colors.black54,
+                                        //   ),
+                                        // ),
+                                        // const Text(
+                                        //   'Sat-Sun',
+                                        //   style: TextStyle(
+                                        //     fontSize: 16,
+                                        //     fontWeight: FontWeight.bold,
+                                        //     color: Colors.black54,
+                                        //   ),
+                                        // ),
+                                        // const Text(
+                                        //   '07:30-22:30',
+                                        //   style: TextStyle(
+                                        //     fontSize: 16,
+                                        //     fontWeight: FontWeight.bold,
+                                        //     color: Colors.black54,
+                                        //   ),
+                                        // ),
                                         const SizedBox(
                                           height: 10,
                                         ),
                                         Visibility(
                                           visible: saveEditButton == 'SAVE',
-                                          child: const Text(
-                                            'Edit schedule',
-                                            style: TextStyle(
-                                              fontStyle: FontStyle.italic,
-                                              fontSize: 12,
-                                              // fontWeight: FontWeight.bold,
-                                              color: Colors.red,
-                                            ),
-                                          ),
+                                          child: TextButton(
+                                              onHover: (value) {},
+                                              onPressed: () =>
+                                                  showScheduleDialog(),
+                                              child: const Text(
+                                                'Edit schedule',
+                                                style: TextStyle(
+                                                    fontStyle: FontStyle.italic,
+                                                    color: Colors.red),
+                                              )),
                                         ),
                                       ],
                                     ),
@@ -753,28 +1009,100 @@ class _OutletsPageState extends State<OutletsPage> {
                                           color: Colors.black54,
                                         ),
                                       ),
-                                      Container(
-                                        child: saveEditButton == 'SAVE'
-                                            ? SizedBox(
-                                                width: 300,
-                                                child: TextField(
-                                                  controller: txtDescription,
-                                                  textAlign: TextAlign.start,
-                                                ),
-                                              )
-                                            : Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10.0),
-                                                child: Text(
-                                                  strDescription,
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black54,
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10.0),
+                                        child: SizedBox(
+                                          // color: Colors.amberAccent,
+                                          width: 300,
+                                          height: 100,
+
+                                          child: ListView.builder(
+                                            scrollDirection: Axis.vertical,
+                                            itemCount: saveEditButton == 'SAVE'
+                                                ? categoryList.length
+                                                : categoryListAdded.length,
+                                            itemBuilder: (context, index) {
+                                              return SingleChildScrollView(
+                                                  child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 4.0),
+                                                child: Flexible(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      saveEditButton == 'SAVE'
+                                                          ? Checkbox(
+                                                              shape: const CircleBorder(
+                                                                  eccentricity:
+                                                                      1.0),
+                                                              checkColor:
+                                                                  Colors.white,
+                                                              fillColor: MaterialStateProperty
+                                                                  .resolveWith(
+                                                                      getColor),
+                                                              value: categoryListAdded
+                                                                      .contains(
+                                                                          categoryList[
+                                                                              index])
+                                                                  ? true
+                                                                  : false,
+                                                              onChanged: (bool?
+                                                                  value) {
+                                                                setState(() {
+                                                                  if (value ==
+                                                                      true) {
+                                                                    categoryListAdded.add(
+                                                                        categoryList[
+                                                                            index]);
+                                                                  } else {
+                                                                    categoryListAdded.removeWhere((item) =>
+                                                                        item ==
+                                                                        categoryList[
+                                                                            index]);
+                                                                  }
+                                                                });
+                                                              },
+                                                            )
+                                                          : const Icon(Icons
+                                                              .arrow_right),
+                                                      Text(saveEditButton ==
+                                                              'SAVE'
+                                                          ? categoryList[index]
+                                                          : categoryListAdded[
+                                                              index]),
+                                                    ],
                                                   ),
                                                 ),
-                                              ),
+                                              ));
+                                            },
+                                          ),
+                                        ),
                                       ),
+                                      // Container(
+                                      //   child: saveEditButton == 'SAVE'
+                                      //       ? SizedBox(
+                                      //           width: 300,
+                                      //           child: TextField(
+                                      //             controller: txtDescription,
+                                      //             textAlign: TextAlign.start,
+                                      //           ),
+                                      //         )
+                                      //       : Padding(
+                                      //           padding: const EdgeInsets.only(
+                                      //               left: 10.0),
+                                      //           child: Text(
+                                      //             strDescription,
+                                      //             style: const TextStyle(
+                                      //               fontSize: 16,
+                                      //               fontWeight: FontWeight.bold,
+                                      //               color: Colors.black54,
+                                      //             ),
+                                      //           ),
+                                      //         ),
+                                      // ),
                                       // const Text(
                                       //   'Bar',
                                       //   style: TextStyle(
@@ -1232,70 +1560,8 @@ class _OutletsPageState extends State<OutletsPage> {
     );
   }
 
-  void saveRegion(
-    String name,
-  ) async {
-    await regionCollection.add({
-      'id': 'dlr005',
-      'name': name,
-      'outletId': outletId,
-      'status': true,
-      'defaultCuisineStyleId': '',
-    });
-  }
-
-  void deleteRegion(String id) async {
-    await regionCollection
-        .where('id', isEqualTo: id)
-        .get()
-        .then((QuerySnapshot value) {
-      for (var item in value.docs) {
-        print(item.id);
-        cusineCollection.doc(item.id).delete();
-      }
-    });
-  }
-
-  void saveCuisine(
-    String name,
-  ) async {
-    await cusineCollection.add({
-      'id': 'dlc006',
-      'name': name,
-      'regionId': currentRegionId,
-      'status': true,
-      // 'defaultCuisineStyleId': '',
-    });
-  }
-
-  void deleCuisine(String id) async {
-    await cusineCollection
-        .where('id', isEqualTo: id)
-        .get()
-        .then((QuerySnapshot value) {
-      for (var item in value.docs) {
-        print(item.id);
-        cusineCollection.doc(item.id).delete();
-      }
-    });
-  }
-
-  void saveCuisineStyle(
-    String name,
-  ) async {
-    await cusineStyleCollection.add({
-      'id': 'dlcs010',
-      'outletId': outletId,
-      'name': name,
-      'refId': '',
-      'status': true,
-    });
-  }
-
   void getDefaultOutlet() {
-    // outletClass.where((item) =>
-    //     item.id.toLowerCase() == defaultOutletIdProvider.toLowerCase());
-
+    categoryListAdded.clear();
     for (var data in outletClass) {
       if (data.id.toLowerCase() == outletIdProvider.toLowerCase()) {
         currentItem = data.name;
@@ -1313,63 +1579,24 @@ class _OutletsPageState extends State<OutletsPage> {
         txtDescription.text = strDescription;
         txtCurrency.text = strCurrency;
         outletId = outletIdProvider;
+
+        currentRegionId = data.regionId;
+        currentRegion = data.regionName;
+        currentCusineId = data.cuisineId;
+        currentCusine = data.cuisineName;
+        currentCusineStylId = data.cuisineStyleId;
+        currentCusineStyle = data.cuisineStyleName;
+        for (var data in data.category) {
+          print(data);
+          categoryListAdded.add(data);
+        }
+
         // dropDownValue = outletClass;
         isSelectedOutlet = true;
         isSetDefaultWall = true;
         isPostbackLoad = true;
       }
     }
-  }
-
-  saveOutlet() async {
-    // DateTime now = DateTime.now();
-    Map<String, dynamic> data = {
-      // 'id': outletId,
-      // 'name': 'Sample Outlet 1',
-      // 'description': '',
-      // 'image': '',
-      'email': txtEmail.text,
-      'contactNumber': txtNumber.text,
-      'location': txtLocation.text,
-      'isLocatedAt': indexYesNo == 0 ? true : false,
-      // 'country': 'Philippines',
-      'currency': txtCurrency.text,
-      // 'date': now,
-      // 'star': 100,
-    };
-
-    Map<String, dynamic> defaultOutletId = {
-      'defaultOutletId': outletId,
-    };
-
-    final collectionBusiness =
-        FirebaseFirestore.instance.collection('businesses').doc(businessId);
-
-    if (isSetDefaultWall == true) {
-      await collectionBusiness.update(defaultOutletId);
-    }
-
-    await collectionBusiness
-        .collection('outlets')
-        .where('id', isEqualTo: outletId)
-        .get()
-        .then((QuerySnapshot value) {
-      for (var item in value.docs) {
-        collectionBusiness.collection('outlets').doc(item.id).update(data);
-      }
-    });
-  }
-
-  void deleCuisineStyle(String id) async {
-    await cusineStyleCollection
-        .where('id', isEqualTo: id)
-        .get()
-        .then((QuerySnapshot value) {
-      for (var item in value.docs) {
-        print(item.id);
-        cusineStyleCollection.doc(item.id).delete();
-      }
-    });
   }
 
   Color getColor(Set<MaterialState> states) {
@@ -1393,7 +1620,6 @@ class _OutletsPageState extends State<OutletsPage> {
             setState(() {});
           },
           onExit: (event) {
-            print('exitttttttttttttttttt');
             setState(() {});
           },
           child: StatefulBuilder(
@@ -1439,11 +1665,7 @@ class _OutletsPageState extends State<OutletsPage> {
                     width: 300,
                     child: StreamBuilder<QuerySnapshot>(
                       stream: regionCollection
-                          .where('outletId', isEqualTo: outletId)
-                          // .where('outletId',
-                          //     arrayContains: txtSearchRegion.text != ''
-                          //         ? outletId
-                          //         : txtSearchRegion.text)
+                          // .where('outletId', isEqualTo: outletId)
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
@@ -1462,29 +1684,10 @@ class _OutletsPageState extends State<OutletsPage> {
                           return ListView.builder(
                             itemCount: documentsx.length,
                             itemBuilder: (context, index) {
-                              // var doc = snapshot.data!.docs;
                               print(strSearchRegion);
-                              // doc.contains(strSearchRegion);
                               return SingleChildScrollView(
                                 scrollDirection: Axis.vertical,
                                 child: ListTile(
-                                  // leading: Image.asset(
-                                  //   'assets/chat.png',
-                                  //   color: Colors.redAccent[700],
-                                  //   height: 24,
-                                  // ),
-                                  // trailing: Tooltip(
-                                  //   message: 'delete',
-                                  //   child: IconButton(
-                                  //     onPressed: () {
-                                  //       setState(() {
-                                  //         deleteRegion(documentsx[index]['id']);
-                                  //         print('delete region');
-                                  //       });
-                                  //     },
-                                  //     icon: const Icon(Icons.delete),
-                                  //   ),
-                                  // ),
                                   title: Padding(
                                     padding: const EdgeInsets.only(left: 5),
                                     child: SingleChildScrollView(
@@ -1539,7 +1742,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                   onPressed: () {
                                     setState(() {
                                       if (txtaddRegion.text.isEmpty) return;
-                                      saveRegion(txtaddRegion.text);
+                                      saveRegion('dlr005', outletId,
+                                          txtaddRegion.text);
                                     });
                                   },
                                   icon: const Icon(
@@ -1842,7 +2046,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                   onPressed: () {
                                     setState(() {
                                       if (txtAddCuisine.text.isEmpty) return;
-                                      saveCuisine(txtAddCuisine.text);
+                                      saveCuisine('dlc006', currentRegionId,
+                                          txtAddCuisine.text);
                                     });
                                   },
                                   icon: const Icon(
@@ -1910,7 +2115,7 @@ class _OutletsPageState extends State<OutletsPage> {
                     width: 300,
                     child: StreamBuilder<QuerySnapshot>(
                       stream: cusineStyleCollection
-                          .where('outletId', isEqualTo: outletId)
+                          // .where('outletId', isEqualTo: outletId)
                           // .where('outletId',
                           //     arrayContains: txtSearchRegion.text != ''
                           //         ? outletId
@@ -2065,7 +2270,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                       if (txtAddCuisineStyle.text.isEmpty) {
                                         return;
                                       }
-                                      saveCuisineStyle(txtAddCuisineStyle.text);
+                                      saveCuisineStyle('dlcs006', outletId,
+                                          txtAddCuisineStyle.text);
                                     });
                                   },
                                   icon: const Icon(
@@ -2086,4 +2292,1107 @@ class _OutletsPageState extends State<OutletsPage> {
       },
     );
   }
+
+  showScheduleDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return MouseRegion(
+          onHover: (event) {
+            setState(() {});
+          },
+          onExit: (event) {
+            setState(() {});
+          },
+          child: StatefulBuilder(
+            builder: (context, StateSetter setState) {
+              return Container(
+                margin: const EdgeInsets.symmetric(horizontal: 400.0),
+                child: Dialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 0.0),
+                        child: Container(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: const Icon(Icons.exit_to_app)),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0),
+                        child: Center(
+                          child:
+                              Text('Schedule', style: TextStyle(fontSize: 26)),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 530,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: SingleChildScrollView(
+                            // scrollDirection: Axis.vertical,
+                            child: Column(children: [
+                              Column(
+                                children: [
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: 150,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: const Offset(
+                                              0.0,
+                                              5.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 2.0,
+                                          ), //BoxShadow
+                                        ],
+                                        color: Colors.grey.shade400,
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    child: const Text(
+                                      'Monday',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'Start',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtMondayStart,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              if (txtMondayStart.text != '') {
+                                                indexScheduleAdded.add(0);
+                                              }
+
+                                              txtMondayStart.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text('To'),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'End',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtMondayEnd,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              indexScheduleAdded.add(0);
+                                              txtMondayEnd.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Divider(),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: 150,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: const Offset(
+                                              0.0,
+                                              5.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 2.0,
+                                          ), //BoxShadow
+                                        ],
+                                        color: Colors.grey.shade400,
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    child: const Text(
+                                      'Tuesday',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'Start',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtTuesdayStart,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              indexScheduleAdded.add(1);
+                                              txtTuesdayStart.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text('To'),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'End',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtTuesdayEnd,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              indexScheduleAdded.add(1);
+                                              txtTuesdayEnd.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Divider(),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: 150,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: const Offset(
+                                              0.0,
+                                              5.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 2.0,
+                                          ), //BoxShadow
+                                        ],
+                                        color: Colors.grey.shade400,
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    child: const Text(
+                                      'Wednesday',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'Start',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtWednesdayStart,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              indexScheduleAdded.add(2);
+                                              txtWednesdayStart.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text('To'),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'End',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtWednesdayEnd,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              indexScheduleAdded.add(2);
+                                              txtWednesdayEnd.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Divider(),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: 150,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: const Offset(
+                                              0.0,
+                                              5.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 2.0,
+                                          ), //BoxShadow
+                                        ],
+                                        color: Colors.grey.shade400,
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    child: const Text(
+                                      'Thursday',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'Start',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtThursdaytart,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              indexScheduleAdded.add(3);
+                                              txtThursdaytart.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text('To'),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'End',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtThursdayEnd,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              indexScheduleAdded.add(3);
+                                              txtThursdayEnd.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Divider(),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: 150,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: const Offset(
+                                              0.0,
+                                              5.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 2.0,
+                                          ), //BoxShadow
+                                        ],
+                                        color: Colors.grey.shade400,
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    child: const Text(
+                                      'Friday',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'Start',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtFridayStart,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              indexScheduleAdded.add(4);
+                                              txtFridayStart.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text('To'),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'End',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtFridayEnd,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              indexScheduleAdded.add(4);
+                                              txtFridayEnd.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Divider(),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: 150,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: const Offset(
+                                              0.0,
+                                              5.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 2.0,
+                                          ), //BoxShadow
+                                        ],
+                                        color: Colors.grey.shade400,
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    child: const Text(
+                                      'Saturday',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'Start',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtSaturdayStart,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              indexScheduleAdded.add(5);
+                                              txtSaturdayStart.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text('To'),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'End',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtSaturdayEnd,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              indexScheduleAdded.add(5);
+                                              txtSaturdayEnd.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Divider(),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    width: 150,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade300,
+                                            offset: const Offset(
+                                              0.0,
+                                              5.0,
+                                            ),
+                                            blurRadius: 10.0,
+                                            spreadRadius: 2.0,
+                                          ), //BoxShadow
+                                        ],
+                                        color: Colors.grey.shade400,
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                    child: const Text(
+                                      'Sunday',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'Start',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtSundayStart,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              indexScheduleAdded.add(6);
+                                              txtSundayStart.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Text('To'),
+                                      const SizedBox(width: 5),
+                                      Expanded(
+                                        child: TextField(
+                                          textAlign: TextAlign.center,
+                                          decoration: const InputDecoration(
+                                              hintText: 'End',
+                                              hintTextDirection:
+                                                  TextDirection.ltr),
+                                          controller: txtSundayEnd,
+                                          onTap: () async {
+                                            final TimeOfDay? newTime =
+                                                await showTimePicker(
+                                              context: context,
+                                              initialTime: const TimeOfDay(
+                                                  hour: 7, minute: 15),
+                                            );
+                                            var hour = newTime!.hour;
+                                            var minute = newTime.minute;
+
+                                            setState(() {
+                                              indexScheduleAdded.add(6);
+                                              txtSundayEnd.text =
+                                                  '$hour:$minute';
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Divider(),
+                                  const SizedBox(height: 10),
+                                ],
+                              ),
+                            ]),
+                          ),
+                        ),
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                            child: Container(
+                              margin: const EdgeInsets.only(right: 20.0),
+                              width: 100,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.shade300,
+                                      offset: const Offset(
+                                        0.0,
+                                        5.0,
+                                      ),
+                                      blurRadius: 10.0,
+                                      spreadRadius: 2.0,
+                                    ), //BoxShadow
+                                    // BoxShadow(
+                                    //   color: Colors.white,
+                                    //   offset: Offset(0.0, 0.0),
+                                    //   blurRadius: 0.0,
+                                    //   spreadRadius: 0.0,
+                                    // ), //BoxShadow
+                                  ],
+                                  color: const Color(0xffbef7700),
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.save,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    'Save',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                for (var data in indexScheduleAdded) {
+                                  indexSchedule.add(data);
+                                }
+                              });
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  // showScheduleDialog() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return MouseRegion(
+  //         // onHover: (event) {
+  //         //   setState(() {});
+  //         // },
+  //         // onExit: (event) {
+  //         //   setState(() {});
+  //         // },
+  //         child: StatefulBuilder(
+  //           builder: (context, StateSetter setState) {
+  //             return SimpleDialog(
+  //               shape: RoundedRectangleBorder(
+  //                   borderRadius: BorderRadius.circular(20.0)),
+  //               title: const Text(
+  //                 'Schedule',
+  //                 textAlign: TextAlign.center,
+  //               ),
+  //               contentPadding: const EdgeInsets.all(20.0),
+  //               alignment: Alignment.center,
+  //               children: [
+  //                 SingleChildScrollView(
+  //                   // scrollDirection: Axis.vertical,
+  //                   child: Column(children: [
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.center,
+  //                       children: [
+  //                         Container(
+  //                           alignment: Alignment.center,
+  //                           width: 150,
+  //                           height: 50,
+  //                           decoration: BoxDecoration(
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                   color: Colors.grey.shade300,
+  //                                   offset: const Offset(
+  //                                     0.0,
+  //                                     5.0,
+  //                                   ),
+  //                                   blurRadius: 10.0,
+  //                                   spreadRadius: 2.0,
+  //                                 ), //BoxShadow
+  //                               ],
+  //                               color: const Color(0xffbef7700),
+  //                               borderRadius: BorderRadius.circular(20.0)),
+  //                           child: const Text(
+  //                             'Monday',
+  //                             style: TextStyle(color: Colors.white),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     Row(
+  //                       children: [
+  //                         Expanded(
+  //                           child: TextField(
+  //                             textAlign: TextAlign.center,
+  //                             decoration: const InputDecoration(
+  //                                 hintText: 'Start',
+  //                                 hintTextDirection: TextDirection.ltr),
+  //                             controller: txtMondayStart,
+  //                             onTap: () async {
+  //                               final TimeOfDay? newTime = await showTimePicker(
+  //                                 context: context,
+  //                                 initialTime:
+  //                                     const TimeOfDay(hour: 7, minute: 15),
+  //                               );
+  //                               var hour = newTime!.hour;
+  //                               var minute = newTime.minute;
+
+  //                               setState(() {
+  //                                 txtMondayStart.text = '$hour:$minute';
+  //                               });
+  //                             },
+  //                           ),
+  //                         ),
+  //                         const SizedBox(width: 5),
+  //                         const Text('To'),
+  //                         const SizedBox(width: 5),
+  //                         Expanded(
+  //                           child: TextField(
+  //                             textAlign: TextAlign.center,
+  //                             decoration: const InputDecoration(
+  //                                 hintText: 'End',
+  //                                 hintTextDirection: TextDirection.ltr),
+  //                             controller: txtMondayEnd,
+  //                             onTap: () async {
+  //                               final TimeOfDay? newTime = await showTimePicker(
+  //                                 context: context,
+  //                                 initialTime:
+  //                                     const TimeOfDay(hour: 7, minute: 15),
+  //                               );
+  //                               var hour = newTime!.hour;
+  //                               var minute = newTime.minute;
+
+  //                               setState(() {
+  //                                 txtMondayEnd.text = '$hour:$minute';
+  //                               });
+  //                             },
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const Divider(),
+  //                     const SizedBox(height: 10),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.center,
+  //                       children: [
+  //                         Container(
+  //                           alignment: Alignment.center,
+  //                           width: 150,
+  //                           height: 50,
+  //                           decoration: BoxDecoration(
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                   color: Colors.grey.shade300,
+  //                                   offset: const Offset(
+  //                                     0.0,
+  //                                     5.0,
+  //                                   ),
+  //                                   blurRadius: 10.0,
+  //                                   spreadRadius: 2.0,
+  //                                 ), //BoxShadow
+  //                               ],
+  //                               color: const Color(0xffbef7700),
+  //                               borderRadius: BorderRadius.circular(20.0)),
+  //                           child: const Text(
+  //                             'Tuesday',
+  //                             style: TextStyle(color: Colors.white),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     const Divider(),
+  //                     const SizedBox(height: 10),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.center,
+  //                       children: [
+  //                         Container(
+  //                           alignment: Alignment.center,
+  //                           width: 150,
+  //                           height: 50,
+  //                           decoration: BoxDecoration(
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                   color: Colors.grey.shade300,
+  //                                   offset: const Offset(
+  //                                     0.0,
+  //                                     5.0,
+  //                                   ),
+  //                                   blurRadius: 10.0,
+  //                                   spreadRadius: 2.0,
+  //                                 ), //BoxShadow
+  //                               ],
+  //                               color: const Color(0xffbef7700),
+  //                               borderRadius: BorderRadius.circular(20.0)),
+  //                           child: const Text(
+  //                             'Wednesday',
+  //                             style: TextStyle(color: Colors.white),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     const Divider(),
+  //                     const SizedBox(height: 10),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.center,
+  //                       children: [
+  //                         Container(
+  //                           alignment: Alignment.center,
+  //                           width: 150,
+  //                           height: 50,
+  //                           decoration: BoxDecoration(
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                   color: Colors.grey.shade300,
+  //                                   offset: const Offset(
+  //                                     0.0,
+  //                                     5.0,
+  //                                   ),
+  //                                   blurRadius: 10.0,
+  //                                   spreadRadius: 2.0,
+  //                                 ), //BoxShadow
+  //                               ],
+  //                               color: const Color(0xffbef7700),
+  //                               borderRadius: BorderRadius.circular(20.0)),
+  //                           child: const Text(
+  //                             'Thursday',
+  //                             style: TextStyle(color: Colors.white),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     const Divider(),
+  //                     const SizedBox(height: 10),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.center,
+  //                       children: [
+  //                         Container(
+  //                           alignment: Alignment.center,
+  //                           width: 150,
+  //                           height: 50,
+  //                           decoration: BoxDecoration(
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                   color: Colors.grey.shade300,
+  //                                   offset: const Offset(
+  //                                     0.0,
+  //                                     5.0,
+  //                                   ),
+  //                                   blurRadius: 10.0,
+  //                                   spreadRadius: 2.0,
+  //                                 ), //BoxShadow
+  //                               ],
+  //                               color: const Color(0xffbef7700),
+  //                               borderRadius: BorderRadius.circular(20.0)),
+  //                           child: const Text(
+  //                             'Friday',
+  //                             style: TextStyle(color: Colors.white),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     const Divider(),
+  //                     const SizedBox(height: 10),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.center,
+  //                       children: [
+  //                         Container(
+  //                           alignment: Alignment.center,
+  //                           width: 150,
+  //                           height: 50,
+  //                           decoration: BoxDecoration(
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                   color: Colors.grey.shade300,
+  //                                   offset: const Offset(
+  //                                     0.0,
+  //                                     5.0,
+  //                                   ),
+  //                                   blurRadius: 10.0,
+  //                                   spreadRadius: 2.0,
+  //                                 ), //BoxShadow
+  //                               ],
+  //                               color: const Color(0xffbef7700),
+  //                               borderRadius: BorderRadius.circular(20.0)),
+  //                           child: const Text(
+  //                             'Saturday',
+  //                             style: TextStyle(color: Colors.white),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     const Divider(),
+  //                     const SizedBox(height: 10),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.center,
+  //                       crossAxisAlignment: CrossAxisAlignment.center,
+  //                       children: [
+  //                         Container(
+  //                           alignment: Alignment.center,
+  //                           width: 150,
+  //                           height: 50,
+  //                           decoration: BoxDecoration(
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                   color: Colors.grey.shade300,
+  //                                   offset: const Offset(
+  //                                     0.0,
+  //                                     5.0,
+  //                                   ),
+  //                                   blurRadius: 10.0,
+  //                                   spreadRadius: 2.0,
+  //                                 ), //BoxShadow
+  //                               ],
+  //                               color: const Color(0xffbef7700),
+  //                               borderRadius: BorderRadius.circular(20.0)),
+  //                           child: const Text(
+  //                             'Sunday',
+  //                             style: TextStyle(color: Colors.white),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     const SizedBox(height: 10),
+  //                     const Divider(),
+  //                     const SizedBox(height: 10),
+  //                   ]),
+  //                 ),
+  //                 Container(
+  //                   alignment: Alignment.bottomCenter,
+  //                   child: Row(
+  //                     mainAxisAlignment: MainAxisAlignment.center,
+  //                     crossAxisAlignment: CrossAxisAlignment.center,
+  //                     children: [
+  //                       InkWell(
+  //                         child: Container(
+  //                           alignment: Alignment.center,
+  //                           width: 150,
+  //                           height: 30,
+  //                           decoration: BoxDecoration(
+  //                               boxShadow: [
+  //                                 BoxShadow(
+  //                                   color: Colors.grey.shade300,
+  //                                   offset: const Offset(
+  //                                     0.0,
+  //                                     5.0,
+  //                                   ),
+  //                                   blurRadius: 10.0,
+  //                                   spreadRadius: 2.0,
+  //                                 ), //BoxShadow
+  //                                 // BoxShadow(
+  //                                 //   color: Colors.white,
+  //                                 //   offset: Offset(0.0, 0.0),
+  //                                 //   blurRadius: 0.0,
+  //                                 //   spreadRadius: 0.0,
+  //                                 // ), //BoxShadow
+  //                               ],
+  //                               color: const Color(0xffbef7700),
+  //                               borderRadius: BorderRadius.circular(20.0)),
+  //                           child: const Row(
+  //                             mainAxisAlignment: MainAxisAlignment.center,
+  //                             crossAxisAlignment: CrossAxisAlignment.center,
+  //                             children: [
+  //                               Icon(
+  //                                 Icons.exit_to_app,
+  //                                 color: Colors.white,
+  //                               ),
+  //                               SizedBox(
+  //                                 width: 5,
+  //                               ),
+  //                               Text(
+  //                                 'Close',
+  //                                 style: TextStyle(color: Colors.white),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ),
+  //                         onTap: () {
+  //                           Navigator.pop(context);
+  //                         },
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ],
+  //             );
+  //           },
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }

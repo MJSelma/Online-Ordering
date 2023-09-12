@@ -59,32 +59,20 @@ class BusinessOutletProvider with ChangeNotifier {
           email: item['email'],
           currency: item['currency'],
           star: item['star'],
+          regionId: item['regionId'],
+          regionName: item['regionName'],
+          cuisineId: item['cuisineId'],
+          cuisineName: item['cuisineName'],
+          cuisineStyleId: item['cuisineStyleId'],
+          cuisineStyleName: item['cuisineStyleName'],
+          scheduleId: item['scheduleId'],
+          category: item['category'],
         );
         _outletClass.add(outletClassx);
         print(_outletClass[0].name);
       }
     });
   }
-
-  // Future<void> _getRegion() async {
-  //   await FirebaseFirestore.instance
-  //       .collection('region')
-  //       .get()
-  //       .then((QuerySnapshot snapshot) {
-  //     for (var item in snapshot.docs) {
-  //       // DateTime date = (item['date'] as Timestamp).toDate();
-  //       RegionClass regionClassx = RegionClass(
-  //         docId: item.id,
-  //         id: item['id'],
-  //         name: item['name'],
-  //         outletId: item['outletId'],
-  //         status: item['status'],
-  //         defaultCuisineStyleId: item['defaultCuisineStyleId'],
-  //       );
-  //       _regionClass.add(regionClassx);
-  //     }
-  //   });
-  // }
 
   void setIsBusinessSelected(bool isSelected) {
     _isBusinessSelected = isSelected;
