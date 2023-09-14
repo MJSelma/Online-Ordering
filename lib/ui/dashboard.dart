@@ -262,6 +262,34 @@ class _DashBoardState extends State<DashBoard> {
                             visible: true,
                             child: Column(
                               children: [
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      indexMenu = 1;
+                                    });
+                                  },
+                                  child: MenuButton(
+                                      'Table Bookings', 1, Icons.book, 40, 0),
+                                ),
+                                // const SizedBox(
+                                //   height: 4,
+                                // ),
+                                // Divider(thickness: 2, color: Colors.black, ),
+                                // const SizedBox(
+                                //   height: 4,
+                                // ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                                  child: Container(
+                                    height: 2,
+                                    color: Colors.black45,
+                                    width: isMenuOpen ? 200 : 50,
+                                  ),
+                                ),
                                 const Padding(
                                   padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
                                   child: Row(

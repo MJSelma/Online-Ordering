@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/icon_button.dart';
-
 warningDialog(BuildContext context, String title, String message) {
   showDialog(
     context: context,
@@ -19,7 +17,7 @@ warningDialog(BuildContext context, String title, String message) {
           ),
           child: SizedBox(
             width: 400,
-            height: 200,
+            height: 180,
             child: Column(
               children: [
                 Row(
@@ -29,18 +27,18 @@ warningDialog(BuildContext context, String title, String message) {
                         style: const TextStyle(
                             color: Color(0xffef7700),
                             fontWeight: FontWeight.bold)),
-                    // Container(
-                    //   alignment: Alignment.topRight,
-                    //   child: InkWell(
-                    //     child: const Icon(
-                    //       Icons.close,
-                    //       size: 14,
-                    //     ),
-                    //     onTap: () {
-                    //       Navigator.pop(context);
-                    //     },
-                    //   ),
-                    // )
+                    Container(
+                      alignment: Alignment.topRight,
+                      child: InkWell(
+                        child: const Icon(
+                          Icons.close,
+                          size: 14,
+                        ),
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    )
                   ],
                 ),
                 const SizedBox(height: 30),
@@ -56,25 +54,36 @@ warningDialog(BuildContext context, String title, String message) {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 25,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: IconButtonMenu(
-                          text: 'Close',
-                          iconMenu: Icons.close,
-                          width: 150,
-                          height: 35,
-                          backColor: const Color.fromARGB(255, 210, 69, 69),
-                        )),
-                  ],
-                ),
+                // const SizedBox(
+                //   height: 25,
+                // ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.end,
+                //   children: [
+                //     Container(
+                //       width: 150,
+                //       height: 35,
+                //       decoration: BoxDecoration(
+                //         color: const Color.fromARGB(255, 210, 69, 69),
+                //         borderRadius: BorderRadius.circular(10.0),
+                //       ),
+                //       child: TextButton(
+                //         child: const Text(
+                //           'Okay',
+                //           style: TextStyle(
+                //             fontFamily: 'SFPro',
+                //             fontSize: 18,
+                //             color: Colors.white,
+                //             fontWeight: FontWeight.w500,
+                //           ),
+                //         ),
+                //         onPressed: () {
+                //           Navigator.pop(context);
+                //         },
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),
