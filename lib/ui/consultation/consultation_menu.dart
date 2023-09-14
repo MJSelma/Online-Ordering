@@ -10,6 +10,8 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
+import '../components/showDialog.dart';
+
 class ConsultationMenu extends StatefulWidget {
   const ConsultationMenu({super.key});
 
@@ -21,6 +23,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   PlatformFile? uploadimage; //variable for choosed file
   String fileName = '';
   String fileType = '';
+  bool ismenuNamefiled = false;
   FilePickerResult? results;
   TextEditingController menuName = TextEditingController();
 
@@ -139,9 +142,12 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
         const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
-            'Consultation Menu',
+            'CONSULTATION MENU',
             style: TextStyle(
-                fontWeight: FontWeight.w400, fontFamily: 'SFPro', fontSize: 20),
+                fontWeight: FontWeight.w400,
+                fontFamily: 'SFPro',
+                fontSize: 20,
+                color: Color(0xffef7700)),
           ),
         ),
         Row(
@@ -278,26 +284,43 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   outletWidget() {
     final int menuCount = context.select((MenuProvider p) => p.menuCount);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            width: 200,
-            height: 45,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
-              color: const Color(0xffffffff),
-              border: Border.all(width: 1.0, color: const Color(0xff707070)),
+              color: const Color.fromARGB(255, 228, 228, 228),
             ),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  controller: menuName,
-                  decoration:
-                      const InputDecoration.collapsed(hintText: 'Menu name'),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                width: 200,
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: const Color(0xffffffff),
+                  border:
+                      Border.all(width: 1.0, color: const Color(0xff707070)),
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: menuName,
+                      decoration: const InputDecoration.collapsed(
+                          hintText: 'Create menu'),
+                      onChanged: (value) {
+                        setState(() {
+                          value != ''
+                              ? ismenuNamefiled = true
+                              : ismenuNamefiled = false;
+                        });
+                      },
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -316,14 +339,15 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
               onTap: () {
                 // uploadImage();
                 // getUrl('waterdropmenu.png','');
+
                 chooseImage();
               },
               child: IconButtonMenu(
-                text: 'Upload Menu',
+                text: 'CHOOSE FILE',
                 iconMenu: Icons.upload,
                 width: 200,
                 height: 30,
-                backColor: fileName != ''
+                backColor: fileName != '' && menuName.text != ''
                     ? const Color(0xffef7700)
                     : const Color.fromARGB(255, 186, 186, 186),
               )),
@@ -338,11 +362,21 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
             height: 30,
           ),
           GestureDetector(
-              onTap: () {
+              onTap: () async {
+                if (menuName.text == '') {
+                  warningDialog(context, 'CREATE MENU', 'Please enter menu.');
+                  return;
+                }
+
+                if (fileName == '') {
+                  warningDialog(context, 'CHOOSE FILE', 'Please select file.');
+                  return;
+                }
+
                 uploadImage(menuCount);
               },
               child: IconButtonMenu(
-                text: 'ADD',
+                text: 'UPLOAD MENU',
                 iconMenu: Icons.add,
                 width: 200,
                 height: 30,
@@ -505,6 +539,11 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
 
   Widget updateMenuDialog(BuildContext context, String mID) {
     return AlertDialog(
+      shape: RoundedRectangleBorder(
+          side: const BorderSide(
+            color: Color(0xffef7700),
+          ),
+          borderRadius: BorderRadius.circular(20.0)),
       title: DecoratedBox(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -517,9 +556,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Update Menu',
-              ),
+              const Text('UPDATE MENU',
+                  style: TextStyle(
+                      color: Color(0xffef7700), fontWeight: FontWeight.bold)),
               const SizedBox(height: 15),
               DecoratedBox(
                 decoration: BoxDecoration(
@@ -566,10 +605,11 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
               ),
               GestureDetector(
                   onTap: () {
+                    if (menuNameUpdate.text != '') return;
                     chooseImage();
                   },
                   child: IconButtonMenu(
-                    text: 'Upload new menu',
+                    text: 'CHOOSE FILE',
                     iconMenu: Icons.upload,
                     width: 200,
                     height: 30,
@@ -620,7 +660,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                             });
                           },
                           child: IconButtonMenu(
-                            text: 'Update',
+                            text: 'UPLOAD NEW MENU',
                             iconMenu: Icons.edit,
                             width: 200,
                             height: 35,

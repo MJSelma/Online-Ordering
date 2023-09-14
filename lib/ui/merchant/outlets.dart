@@ -545,7 +545,8 @@ class _OutletsPageState extends State<OutletsPage> {
                   height: MediaQuery.sizeOf(context).height - addHeight,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20.0),
-                    color: const Color(0xffe9f9fc),
+                    // color: const Color(0xffe9f9fc),
+                    color: Colors.grey.shade100,
                     boxShadow: const [
                       BoxShadow(
                         color: Color(0x29000000),
@@ -807,51 +808,90 @@ class _OutletsPageState extends State<OutletsPage> {
                                             scrollDirection: Axis.horizontal,
                                             itemCount: scheduleList.length,
                                             itemBuilder: (context, index) {
-                                              return indexSchedule
-                                                      .contains(index)
-                                                  ? Card(
-                                                      color: const Color(
-                                                          0xffef7700),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(5.0),
-                                                        child: Column(
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                const Icon(
-                                                                  Icons
-                                                                      .calendar_today,
-                                                                  size: 12,
-                                                                  color: Colors
-                                                                      .white,
-                                                                ),
-                                                                const SizedBox(
-                                                                    width: 5),
-                                                                Text(
-                                                                    scheduleList[
-                                                                            index]
-                                                                        .toString(),
-                                                                    style:
-                                                                        const TextStyle(
-                                                                      color: Colors
-                                                                          .white,
-                                                                    )),
-                                                              ],
-                                                            ),
-                                                            const Text(
-                                                                '7:00 - 15:00',
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                ))
-                                                          ],
-                                                        ),
+                                              return Card(
+                                                // color: const Color(
+                                                //     0xffef7700),
+                                                color: Colors.redAccent,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(5.0),
+                                                  child: Column(
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          const Icon(
+                                                            Icons
+                                                                .calendar_today,
+                                                            size: 12,
+                                                            color: Colors.white,
+                                                          ),
+                                                          const SizedBox(
+                                                              width: 5),
+                                                          Text(
+                                                              scheduleList[
+                                                                      index]
+                                                                  .toString(),
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                              )),
+                                                        ],
                                                       ),
-                                                    )
-                                                  : Container();
+                                                      const Text('7:00 - 15:00',
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                          ))
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                              // return indexSchedule
+                                              //         .contains(index)
+                                              //     ? Card(
+                                              //         // color: const Color(
+                                              //         //     0xffef7700),
+                                              //         color: Colors.redAccent,
+                                              //         child: Padding(
+                                              //           padding:
+                                              //               const EdgeInsets
+                                              //                   .all(5.0),
+                                              //           child: Column(
+                                              //             children: [
+                                              //               Row(
+                                              //                 children: [
+                                              //                   const Icon(
+                                              //                     Icons
+                                              //                         .calendar_today,
+                                              //                     size: 12,
+                                              //                     color: Colors
+                                              //                         .white,
+                                              //                   ),
+                                              //                   const SizedBox(
+                                              //                       width: 5),
+                                              //                   Text(
+                                              //                       scheduleList[
+                                              //                               index]
+                                              //                           .toString(),
+                                              //                       style:
+                                              //                           const TextStyle(
+                                              //                         color: Colors
+                                              //                             .white,
+                                              //                       )),
+                                              //                 ],
+                                              //               ),
+                                              //               const Text(
+                                              //                   '7:00 - 15:00',
+                                              //                   style:
+                                              //                       TextStyle(
+                                              //                     color: Colors
+                                              //                         .white,
+                                              //                   ))
+                                              //             ],
+                                              //           ),
+                                              //         ),
+                                              //       )
+                                              //     : Container();
                                             },
                                           ),
                                         ),
