@@ -22,8 +22,10 @@ class ConsultationMenu extends StatefulWidget {
 class _ConsultationMenuState extends State<ConsultationMenu> {
   PlatformFile? uploadimage; //variable for choosed file
   String fileName = '';
+  // String fileNameUpdate = '';
   String fileType = '';
   bool ismenuNamefiled = false;
+  bool ismenuNamefiledUpdate = false;
   FilePickerResult? results;
   TextEditingController menuName = TextEditingController();
 
@@ -39,9 +41,12 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
       uploadimage = result!.files.first;
       print(result.files.first.name);
       fileName = result.files.first.name;
+      // fileNameUpdate = result.files.first.name;
       results = result;
       fileType = fileName.split('.')[1];
-      menuUpdateUrl = result.files.first.name;
+      menuUpdateUrl =
+          'http://192.168.8.108/uploads/uploads/${result.files.first.name}';
+      context.read<MenuProvider>().setImageLoaded(true);
     });
   }
 
@@ -140,11 +145,11 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.fromLTRB(25.0, 8.0, 8.0, 8.0),
           child: Text(
             'CONSULTATION MENU',
             style: TextStyle(
-                fontWeight: FontWeight.w400,
+                fontWeight: FontWeight.bold,
                 fontFamily: 'SFPro',
                 fontSize: 20,
                 color: Color(0xffef7700)),
@@ -238,10 +243,13 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                           menuNameUpdate.text = menuName;
                           menuUpdateUrl = imageUrl;
                         });
+
                         await showDialog<bool>(
                           context: context,
-                          builder: (context) =>
-                              updateMenuDialog(context, menuID),
+                          builder: (context) {
+                            context.read<MenuProvider>().setImageLoaded(false);
+                            return updateMenuDialog(context, menuID);
+                          },
                         );
                       },
                       child: IconButtonMenu(
@@ -538,6 +546,189 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   }
 
   Widget updateMenuDialog(BuildContext context, String mID) {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        final bool isImagedLoaded =
+            context.select((MenuProvider p) => p.isImageLoaded);
+        final String menuID = context.select((MenuProvider p) => p.menuID);
+        final String menuName = context.select((MenuProvider p) => p.menuName);
+        final String imageUrl = context.select((MenuProvider p) => p.imageUrl);
+        final String type = context.select((MenuProvider p) => p.type);
+        final String pdfData = context.select((MenuProvider p) => p.pdfData);
+
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              side: const BorderSide(
+                color: Color(0xffef7700),
+              ),
+              borderRadius: BorderRadius.circular(20.0)),
+          title: DecoratedBox(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: SizedBox(
+              width: 500,
+              height: 300,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text('UPDATE MENU',
+                          style: TextStyle(
+                              color: Color(0xffef7700),
+                              fontWeight: FontWeight.bold)),
+                      Container(
+                        alignment: Alignment.topRight,
+                        child: InkWell(
+                          child: const Icon(
+                            Icons.close,
+                            size: 14,
+                          ),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: [
+                          const Text(
+                            'Name',
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  maxLines: 1,
+                                  controller: menuNameUpdate,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      value != ''
+                                          ? ismenuNamefiledUpdate = true
+                                          : ismenuNamefiledUpdate = false;
+                                    });
+                                  },
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                    child: Text(
+                      menuUpdateUrl,
+                      style: const TextStyle(
+                          fontStyle: FontStyle.italic, fontSize: 14),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                            onTap: () {
+                              chooseImage();
+                            },
+                            child: IconButtonMenu(
+                              text: 'CHOOSE FILE',
+                              iconMenu: Icons.upload,
+                              width: 200,
+                              height: 35,
+                              backColor: isImagedLoaded == true &&
+                                      menuNameUpdate.text != ''
+                                  ? const Color(0xffef7700)
+                                  : const Color.fromARGB(255, 186, 186, 186),
+                            )),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        GestureDetector(
+                            onTap: () async {
+                              if (menuNameUpdate.text == '') {
+                                warningDialog(context, 'UPDATE MENU',
+                                    'Please enter menu.');
+                                return;
+                              }
+
+                              // if (fileNameUpdate.toLowerCase() ==
+                              //     ''.toLowerCase()) {
+                              //   warningDialog(context, 'CHOOSE FILE',
+                              //       'Please select file.');
+                              //   return;
+                              // }
+
+                              uploadImageUpdate();
+                              FirebaseFirestore.instance
+                                  .collection('merchant')
+                                  .doc('X6odvQ5gqesAzwtJLaFl')
+                                  .collection('consultationMenu')
+                                  .doc(mID)
+                                  .update({
+                                'name': menuNameUpdate.text,
+                                'image': menuUpdateUrl,
+                                // 'image':
+                                //     'http://192.168.8.108/uploads/uploads/$menuUpdateUrl',
+                                'type': fileType
+                              }).then((value) async {
+                                context.read<MenuProvider>().menuRefresh();
+                                context.read<MenuProvider>().selectedMenu(
+                                    menuID,
+                                    menuNameUpdate.text,
+                                    menuUpdateUrl,
+                                    type,
+                                    pdfData);
+                                Navigator.of(context).pop();
+                              });
+                            },
+                            child: IconButtonMenu(
+                              text: 'UPLOAD NEW MENU',
+                              iconMenu: Icons.edit,
+                              width: 220,
+                              height: 35,
+                              backColor: const Color(0xffef7700),
+                            )),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget deleteMenuDialog(BuildContext context, String mID, menuName) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
           side: const BorderSide(
@@ -551,14 +742,32 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
         ),
         child: SizedBox(
           width: 400,
-          height: 330,
+          height: 200,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('UPDATE MENU',
-                  style: TextStyle(
-                      color: Color(0xffef7700), fontWeight: FontWeight.bold)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('DELETE MENU',
+                      style: TextStyle(
+                          color: Color(0xffef7700),
+                          fontWeight: FontWeight.bold)),
+                  Container(
+                    alignment: Alignment.topRight,
+                    child: InkWell(
+                      child: const Icon(
+                        Icons.close,
+                        size: 14,
+                      ),
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  )
+                ],
+              ),
               const SizedBox(height: 15),
               DecoratedBox(
                 decoration: BoxDecoration(
@@ -566,191 +775,43 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: [
-                      const Text(
-                        'Name',
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              maxLines: 1,
-                              controller: menuNameUpdate,
-                            ),
-                          )
-                        ],
-                      )
-                    ],
+                  padding: const EdgeInsets.all(20.0),
+                  child: Text(
+                    'Are you sure you want to delete this menu $menuName ?',
                   ),
                 ),
               ),
               const SizedBox(
-                height: 10,
+                height: 25,
               ),
-              Text(
-                menuUpdateUrl,
-                style:
-                    const TextStyle(fontStyle: FontStyle.italic, fontSize: 14),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              GestureDetector(
-                  onTap: () {
-                    if (menuNameUpdate.text != '') return;
-                    chooseImage();
-                  },
-                  child: IconButtonMenu(
-                    text: 'CHOOSE FILE',
-                    iconMenu: Icons.upload,
-                    width: 200,
-                    height: 30,
-                    backColor: const Color.fromARGB(255, 120, 120, 120),
-                  )),
-              const SizedBox(
-                height: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: IconButtonMenu(
-                            text: 'Cancel',
-                            iconMenu: Icons.close,
-                            width: 200,
-                            height: 35,
-                            backColor: const Color.fromARGB(255, 120, 120, 120),
-                          )),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: GestureDetector(
-                          onTap: () async {
-                            uploadImageUpdate();
-                            FirebaseFirestore.instance
-                                .collection('merchant')
-                                .doc('X6odvQ5gqesAzwtJLaFl')
-                                .collection('consultationMenu')
-                                .doc(mID)
-                                .update({
-                              'name': menuNameUpdate.text,
-                              'image':
-                                  'http://192.168.8.108/uploads/uploads/$menuUpdateUrl',
-                              'type': fileType
-                            }).then((value) async {
-                              context.read<MenuProvider>().menuRefresh();
-                              Navigator.of(context).pop();
-                            });
-                          },
-                          child: IconButtonMenu(
-                            text: 'UPLOAD NEW MENU',
-                            iconMenu: Icons.edit,
-                            width: 200,
-                            height: 35,
-                            backColor: const Color(0xffef7700),
-                          )),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget deleteMenuDialog(BuildContext context, String mID, menuName) {
-    return AlertDialog(
-      title: DecoratedBox(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: SizedBox(
-          width: 300,
-          height: 170,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Delete Menu',
-              ),
-              const SizedBox(height: 15),
-              Text(
-                'Are you sure you want to delete this menu $menuName ?',
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: IconButtonMenu(
-                            text: 'Cancel',
-                            iconMenu: Icons.close,
-                            width: 200,
-                            height: 35,
-                            backColor: const Color.fromARGB(255, 120, 120, 120),
-                          )),
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: GestureDetector(
-                          onTap: () async {
-                            uploadImageUpdate();
-                            FirebaseFirestore.instance
-                                .collection('merchant')
-                                .doc('X6odvQ5gqesAzwtJLaFl')
-                                .collection('consultationMenu')
-                                .doc(mID)
-                                .delete()
-                                .then((value) async {
-                              context.read<MenuProvider>().menuRefresh();
-                              Navigator.of(context).pop();
-                              context
-                                  .read<MenuProvider>()
-                                  .selectedMenu('', '', '', '', '');
-                            });
-                          },
-                          child: IconButtonMenu(
-                            text: 'Delete',
-                            iconMenu: Icons.delete,
-                            width: 200,
-                            height: 35,
-                            backColor: const Color.fromARGB(255, 210, 69, 69),
-                          )),
-                    ),
-                  ],
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                      onTap: () async {
+                        uploadImageUpdate();
+                        FirebaseFirestore.instance
+                            .collection('merchant')
+                            .doc('X6odvQ5gqesAzwtJLaFl')
+                            .collection('consultationMenu')
+                            .doc(mID)
+                            .delete()
+                            .then((value) async {
+                          context.read<MenuProvider>().menuRefresh();
+                          Navigator.of(context).pop();
+                          context
+                              .read<MenuProvider>()
+                              .selectedMenu('', '', '', '', '');
+                        });
+                      },
+                      child: IconButtonMenu(
+                        text: 'Delete',
+                        iconMenu: Icons.delete,
+                        width: 150,
+                        height: 35,
+                        backColor: const Color.fromARGB(255, 210, 69, 69),
+                      )),
+                ],
               ),
             ],
           ),

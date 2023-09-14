@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 class MenuProvider with ChangeNotifier {
   bool refresh = false;
+  bool _isImageLoaded = false;
   String _menuName = '';
   String _imageUrl = '';
   String _menuID = '';
   String _type = '';
   String _pdfData = '';
   int _menuCount = 0;
-
+  bool get isImageLoaded => _isImageLoaded;
   String get menuName => _menuName;
   String get imageUrl => _imageUrl;
   String get menuID => _menuID;
@@ -25,7 +26,6 @@ class MenuProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
   void updateMenuCount(int count) {
     _menuCount = count;
     notifyListeners();
@@ -35,6 +35,11 @@ class MenuProvider with ChangeNotifier {
 
   void menuRefresh() {
     refresh = !refresh;
+    notifyListeners();
+  }
+
+  void setImageLoaded(bool isloaded) {
+    _isImageLoaded = isloaded;
     notifyListeners();
   }
 }
