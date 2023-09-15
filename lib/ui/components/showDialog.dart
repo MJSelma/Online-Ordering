@@ -7,6 +7,7 @@ warningDialog(BuildContext context, String title, String message) {
       return AlertDialog(
         shape: RoundedRectangleBorder(
             side: const BorderSide(
+              width: 3,
               color: Color(0xffef7700),
             ),
             borderRadius: BorderRadius.circular(20.0)),
@@ -91,4 +92,16 @@ warningDialog(BuildContext context, String title, String message) {
       );
     },
   );
+}
+
+Color getColor(Set<MaterialState> states) {
+  const Set<MaterialState> interactiveStates = <MaterialState>{
+    MaterialState.pressed,
+    MaterialState.hovered,
+    MaterialState.focused,
+  };
+  if (states.any(interactiveStates.contains)) {
+    return Colors.blue;
+  }
+  return const Color(0xffef7700);
 }

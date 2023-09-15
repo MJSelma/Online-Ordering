@@ -26,11 +26,14 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   String fileType = '';
   bool ismenuNamefiled = false;
   bool ismenuNamefiledUpdate = false;
+  bool isImportMenuHasFile = false;
+  bool isImportMenu = false;
   FilePickerResult? results;
   TextEditingController menuName = TextEditingController();
 
   TextEditingController menuNameUpdate = TextEditingController();
   String menuUpdateUrl = '';
+  String menuUpdateUrlOld = '';
 
   Future<void> chooseImage() async {
     final result = await FilePicker.platform.pickFiles(
@@ -44,6 +47,24 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
       // fileNameUpdate = result.files.first.name;
       results = result;
       fileType = fileName.split('.')[1];
+      menuUpdateUrl =
+          'http://192.168.8.108/uploads/uploads/${result.files.first.name}';
+      context.read<MenuProvider>().setImageLoaded(true);
+    });
+  }
+
+  Future<void> chooseImageUpdate() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.any,
+    );
+    //set source: ImageSource.camera to get image from camera
+    setState(() {
+      uploadimage = result!.files.first;
+      print(result.files.first.name);
+      String fileNamex = result.files.first.name;
+      // fileNameUpdate = result.files.first.name;
+      results = result;
+      fileType = fileNamex.split('.')[1];
       menuUpdateUrl =
           'http://192.168.8.108/uploads/uploads/${result.files.first.name}';
       context.read<MenuProvider>().setImageLoaded(true);
@@ -242,6 +263,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                         setState(() {
                           menuNameUpdate.text = menuName;
                           menuUpdateUrl = imageUrl;
+                          menuUpdateUrlOld = imageUrl;
                         });
 
                         await showDialog<bool>(
@@ -319,7 +341,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                     child: TextField(
                       controller: menuName,
                       decoration: const InputDecoration.collapsed(
-                          hintText: 'Create menu'),
+                          hintText: 'Menu Name'),
                       onChanged: (value) {
                         setState(() {
                           value != ''
@@ -355,7 +377,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                 iconMenu: Icons.upload,
                 width: 200,
                 height: 30,
-                backColor: fileName != '' && menuName.text != ''
+                backColor: fileName != ''
                     ? const Color(0xffef7700)
                     : const Color.fromARGB(255, 186, 186, 186),
               )),
@@ -372,7 +394,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
           GestureDetector(
               onTap: () async {
                 if (menuName.text == '') {
-                  warningDialog(context, 'CREATE MENU', 'Please enter menu.');
+                  warningDialog(
+                      context, 'CREATE MENU', 'Please enter menu name.');
                   return;
                 }
 
@@ -388,32 +411,74 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                 iconMenu: Icons.add,
                 width: 200,
                 height: 30,
-                backColor: const Color(0xffef7700),
+                backColor: fileName != '' && menuName.text != ''
+                    ? const Color(0xffef7700)
+                    : const Color.fromARGB(255, 186, 186, 186),
               )),
           const SizedBox(
             height: 120,
           ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Text(
-              'Import menu from existing outlet',
-              style: TextStyle(
-                fontSize: 14,
-                color: Color(0xffef7700),
-              ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Checkbox(
+                  shape: const CircleBorder(eccentricity: 1.0),
+                  checkColor: Colors.white,
+                  fillColor: MaterialStateProperty.resolveWith(getColor),
+                  value: isImportMenu,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isImportMenu == true
+                          ? isImportMenu = false
+                          : isImportMenu = true;
+                    });
+                  },
+                ),
+                Text(
+                  'Import menu from existing outlet'.toUpperCase(),
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xffef7700),
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(
-            height: 12,
-          ),
-          GestureDetector(
-              child: IconButtonMenu(
-            text: 'Choose Location',
-            iconMenu: Icons.storefront_outlined,
-            width: 200,
-            height: 30,
-            backColor: const Color(0xffef7700),
-          )),
+          // const SizedBox(
+          //   height: 10,
+          // ),
+          Visibility(
+              visible: isImportMenu,
+              child: Column(
+                children: [
+                  GestureDetector(
+                      child: IconButtonMenu(
+                    text: 'Choose Location'.toUpperCase(),
+                    iconMenu: Icons.storefront_outlined,
+                    width: 200,
+                    height: 30,
+                    backColor: isImportMenuHasFile == true
+                        ? const Color(0xffef7700)
+                        : const Color.fromARGB(255, 186, 186, 186),
+                  )),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  GestureDetector(
+                      onTap: () async {},
+                      child: IconButtonMenu(
+                        text: 'UPLOAD MENU',
+                        iconMenu: Icons.add,
+                        width: 200,
+                        height: 30,
+                        backColor: isImportMenuHasFile == true
+                            ? const Color(0xffef7700)
+                            : const Color.fromARGB(255, 186, 186, 186),
+                      )),
+                ],
+              )),
         ],
       ),
     );
@@ -526,10 +591,10 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                         ),
                       ),
                     ),
-                    const Spacer(),
-                    GestureDetector(
-                      child: const Icon(Icons.filter_list_alt),
-                    )
+                    // const Spacer(),
+                    // GestureDetector(
+                    //   child: const Icon(Icons.filter_list_alt),
+                    // )
                   ],
                 ),
               ),
@@ -559,6 +624,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
         return AlertDialog(
           shape: RoundedRectangleBorder(
               side: const BorderSide(
+                width: 3,
                 color: Color(0xffef7700),
               ),
               borderRadius: BorderRadius.circular(20.0)),
@@ -656,15 +722,14 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                       children: [
                         GestureDetector(
                             onTap: () {
-                              chooseImage();
+                              chooseImageUpdate();
                             },
                             child: IconButtonMenu(
                               text: 'CHOOSE FILE',
                               iconMenu: Icons.upload,
                               width: 200,
                               height: 35,
-                              backColor: isImagedLoaded == true &&
-                                      menuNameUpdate.text != ''
+                              backColor: isImagedLoaded == true
                                   ? const Color(0xffef7700)
                                   : const Color.fromARGB(255, 186, 186, 186),
                             )),
@@ -675,7 +740,13 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                             onTap: () async {
                               if (menuNameUpdate.text == '') {
                                 warningDialog(context, 'UPDATE MENU',
-                                    'Please enter menu.');
+                                    'Please enter menu name.');
+                                return;
+                              }
+
+                              if (menuUpdateUrlOld == menuUpdateUrl) {
+                                warningDialog(context, 'UPDATE MENU',
+                                    'Please select file.');
                                 return;
                               }
 
@@ -714,7 +785,10 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                               iconMenu: Icons.edit,
                               width: 220,
                               height: 35,
-                              backColor: const Color(0xffef7700),
+                              backColor: menuUpdateUrlOld != menuUpdateUrl &&
+                                      menuNameUpdate.text != ''
+                                  ? const Color(0xffef7700)
+                                  : const Color.fromARGB(255, 186, 186, 186),
                             )),
                       ],
                     ),
@@ -732,6 +806,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
     return AlertDialog(
       shape: RoundedRectangleBorder(
           side: const BorderSide(
+            width: 3,
             color: Color(0xffef7700),
           ),
           borderRadius: BorderRadius.circular(20.0)),
@@ -777,7 +852,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Text(
-                    'Are you sure you want to delete this menu $menuName ?',
+                    'Are you sure you want to cancel menu $menuName ?',
                   ),
                 ),
               ),

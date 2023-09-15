@@ -9,6 +9,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/businessOutletProvider.dart';
+import '../components/showDialog.dart';
 import '../controller/outletController.dart';
 import '../data_class/businesses_class.dart';
 import '../data_class/outlet_class.dart';
@@ -1637,18 +1638,6 @@ class _OutletsPageState extends State<OutletsPage> {
         isPostbackLoad = true;
       }
     }
-  }
-
-  Color getColor(Set<MaterialState> states) {
-    const Set<MaterialState> interactiveStates = <MaterialState>{
-      MaterialState.pressed,
-      MaterialState.hovered,
-      MaterialState.focused,
-    };
-    if (states.any(interactiveStates.contains)) {
-      return Colors.blue;
-    }
-    return const Color(0xffef7700);
   }
 
   showRegionDialog() {
