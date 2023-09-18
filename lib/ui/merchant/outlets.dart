@@ -522,6 +522,11 @@ class _OutletsPageState extends State<OutletsPage> {
                                   context
                                       .read<BusinessOutletProvider>()
                                       .setSelectedOutletId(outletId);
+                                  context
+                                      .read<BusinessOutletProvider>()
+                                      .setCountry(
+                                          value.country, value.location);
+
                                   // businessesClass[0]
                                   //             .defaultOutletId
                                   //             .toLowerCase() ==
@@ -1633,7 +1638,10 @@ class _OutletsPageState extends State<OutletsPage> {
           print(data);
           categoryListAdded.add(data);
         }
-
+        context.read<BusinessOutletProvider>().setSelectedOutletId(outletId);
+        context
+            .read<BusinessOutletProvider>()
+            .setCountry(data.country, data.location);
         // dropDownValue = outletClass;
         isSelectedOutlet = true;
         isSetDefaultWall = true;

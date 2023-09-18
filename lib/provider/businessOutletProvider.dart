@@ -13,7 +13,8 @@ class BusinessOutletProvider with ChangeNotifier {
   bool _isBusinessSelected = false;
   String _defaultOutletId = '';
   String _selectedOutletId = '';
-
+  String _country = '';
+  String _location = '';
   String get docId => _docId;
   List<OutletClass> get outletClass => _outletClass;
   List<RegionClass> get regionClass => _regionClass;
@@ -22,6 +23,8 @@ class BusinessOutletProvider with ChangeNotifier {
   String get businessName => _businessName;
   String get defaultOutletId => _defaultOutletId;
   String get selectedOutletId => _selectedOutletId;
+  String get country => _country;
+  String get location => _location;
 
   void setDocId(String id) {
     clear();
@@ -93,6 +96,12 @@ class BusinessOutletProvider with ChangeNotifier {
 
   void setSelectedOutletId(String outletID) {
     _selectedOutletId = outletID;
+    notifyListeners();
+  }
+
+  void setCountry(String country, String loc) {
+    _country = country;
+    _location = loc;
     notifyListeners();
   }
 }

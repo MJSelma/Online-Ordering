@@ -6,6 +6,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 import 'package:reorderable_grid/reorderable_grid.dart';
 
+import '../../provider/businessOutletProvider.dart';
+
 class ConsultMenuPage extends HookWidget {
   const ConsultMenuPage({Key? key}) : super(key: key);
 
@@ -13,10 +15,12 @@ class ConsultMenuPage extends HookWidget {
   Widget build(BuildContext context) {
     final bool isRefresh = context.select((MenuProvider p) => p.isRefresh);
     final menuList = useState<List<ConsultationMenuModel>>([]);
+    final outletIdprovider =
+        context.select((BusinessOutletProvider p) => p.selectedOutletId);
 
     useEffect(() {
       Future.microtask(() async {
-        await getMenu(menuList, context);
+        await getMenu(menuList, context, outletIdprovider);
       });
       return null;
     }, [isRefresh]);
@@ -32,14 +36,13 @@ class ConsultMenuPage extends HookWidget {
             )));
   }
 
-  getMenu(ValueNotifier menuList, BuildContext context) async {
+  getMenu(ValueNotifier menuList, BuildContext context, String outletId) async {
     List<ConsultationMenuModel> ulist = [];
-
     await FirebaseFirestore.instance
         .collection('merchant')
         .doc('X6odvQ5gqesAzwtJLaFl')
         .collection('consultationMenu')
-        .where('outletId', isEqualTo: 'dlo015')
+        .where('outletId', isEqualTo: outletId)
         // .orderBy('order', descending: false)
         .get()
         .then((QuerySnapshot querySnapshot) => {

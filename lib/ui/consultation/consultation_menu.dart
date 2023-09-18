@@ -167,8 +167,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
         'name': menuName.text,
         'status': true,
         'type': fileType,
-        'outletId': 'dlo014'
-        // 'outletId': selectedOutletId
+        // 'outletId': 'dlo014'
+        'outletId': selectedOutletId
       }).then((value) async {
         context.read<MenuProvider>().menuRefresh();
       });
@@ -176,7 +176,6 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   }
 
   Future<void> createMenuImport(int menuCount) async {
-    print('${selectedOutletId}999999999999999999999999999999999999999');
     if (importImagex != '') {
       await FirebaseFirestore.instance
           .collection('merchant')
@@ -190,8 +189,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
         'name': importMenuNamex,
         'status': true,
         'type': importTypex,
-        'outletId': 'dlo015'
-        // 'outletId': selectedOutletId
+        // 'outletId': 'dlo015'
+        'outletId': selectedOutletId
       }).then((value) async {
         context.read<MenuProvider>().menuRefresh();
         importImagex = '';
@@ -208,16 +207,27 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
         context.select((BusinessOutletProvider p) => p.outletClass);
     outletClasss = outletClassx;
 
+    // final outletIdprovider =
+    //     context.select((BusinessOutletProvider p) => p.defaultOutletId);
+
     final outletId =
         context.select((BusinessOutletProvider p) => p.selectedOutletId);
     selectedOutletId = outletId;
+
+    final country = context.select((BusinessOutletProvider p) => p.country);
+
+    outletClasss = outletClasss
+        .where((item) =>
+            item.country.toLowerCase() == country.toLowerCase() &&
+            item.id.toLowerCase() != selectedOutletId.toLowerCase())
+        .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         // SizedBox(
-        //   width: MediaQuery.sizeOf(context).width - 200,
+        //   width: MediaQuery.sizeOf(context).width - 300,
         //   child: outletViewer(),
         // ),
         Padding(
@@ -1092,8 +1102,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
 
         return AlertDialog(
           shape: RoundedRectangleBorder(
-              side: const BorderSide(
-                  width: 4, color: Color(0xffef7700), strokeAlign: 1),
+              side: const BorderSide(width: 4, color: Color(0xffef7700)),
               borderRadius: BorderRadius.circular(20.0)),
           title: DecoratedBox(
             decoration: BoxDecoration(
@@ -1196,6 +1205,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   getOutletList() {
     bool isSelected = false;
     int indexs = 100;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
       child: Column(children: [
@@ -1205,7 +1215,6 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
           child: ListView.builder(
             itemCount: outletClasss.length,
             itemBuilder: (context, index) {
-              // outletClasss.where((item) => false);
               return GestureDetector(
                 child: Container(
                   margin: const EdgeInsets.all(10.0),

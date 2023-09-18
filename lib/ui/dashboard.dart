@@ -258,8 +258,8 @@ class _DashBoardState extends State<DashBoard> {
                                     currentItem, 0, Icons.business, 40, 0),
                           ),
                           Visibility(
-                            // visible: businessDocId != '',
-                            visible: true,
+                            visible: businessDocId != '',
+                            // visible: true,
                             child: Column(
                               children: [
                                 const SizedBox(
