@@ -184,6 +184,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 width: 2,
+                // color: Colors.grey.shade500,
                 color: Colors.black87,
                 height: MediaQuery.of(context).size.height - 200,
               ),
@@ -193,6 +194,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 width: 2,
+                // color: Colors.grey.shade500,
                 color: Colors.black87,
                 height: MediaQuery.of(context).size.height - 200,
               ),
@@ -202,6 +204,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                   width: 2,
+                  // color: Colors.grey.shade500,
                   color: Colors.black87,
                   height: MediaQuery.of(context).size.height - 200),
             ),
@@ -624,7 +627,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
         return AlertDialog(
           shape: RoundedRectangleBorder(
               side: const BorderSide(
-                width: 3,
+                width: 4,
                 color: Color(0xffef7700),
               ),
               borderRadius: BorderRadius.circular(20.0)),
@@ -782,7 +785,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                             },
                             child: IconButtonMenu(
                               text: 'UPLOAD NEW MENU',
-                              iconMenu: Icons.edit,
+                              iconMenu: Icons.add,
                               width: 220,
                               height: 35,
                               backColor: menuUpdateUrlOld != menuUpdateUrl &&
@@ -806,7 +809,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
     return AlertDialog(
       shape: RoundedRectangleBorder(
           side: const BorderSide(
-            width: 3,
+            width: 4,
             color: Color(0xffef7700),
           ),
           borderRadius: BorderRadius.circular(20.0)),

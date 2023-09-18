@@ -7,9 +7,7 @@ warningDialog(BuildContext context, String title, String message) {
       return AlertDialog(
         shape: RoundedRectangleBorder(
             side: const BorderSide(
-              width: 3,
-              color: Color(0xffef7700),
-            ),
+                width: 4, color: Color(0xffef7700), strokeAlign: 1),
             borderRadius: BorderRadius.circular(20.0)),
         title: DecoratedBox(
           decoration: BoxDecoration(
