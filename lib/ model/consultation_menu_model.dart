@@ -7,7 +7,8 @@ class ConsultationMenuModel {
   final String status;
   final String type;
   final int order;
+  final String outletId;
 
-  ConsultationMenuModel(this.id, this.name,this.fileName, this.image, this.date,
-      this.status, this.type, this.order);
+  ConsultationMenuModel(this.id, this.name, this.fileName, this.image,
+      this.date, this.status, this.type, this.order, this.outletId);
 }

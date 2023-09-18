@@ -39,7 +39,8 @@ class ConsultMenuPage extends HookWidget {
         .collection('merchant')
         .doc('X6odvQ5gqesAzwtJLaFl')
         .collection('consultationMenu')
-        .orderBy('order', descending: false)
+        .where('outletId', isEqualTo: 'dlo015')
+        // .orderBy('order', descending: false)
         .get()
         .then((QuerySnapshot querySnapshot) => {
               querySnapshot.docs.forEach((doc) async {
@@ -52,7 +53,8 @@ class ConsultMenuPage extends HookWidget {
                     doc['date'].toString(),
                     doc['status'].toString(),
                     doc['type'],
-                    doc['order']);
+                    doc['order'],
+                    doc['outletId']);
 
                 ulist.add(obj);
               })

@@ -10,7 +10,10 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
+import '../../provider/businessOutletProvider.dart';
+import '../components/constant.dart';
 import '../components/showDialog.dart';
+import '../data_class/outlet_class.dart';
 
 class ConsultationMenu extends StatefulWidget {
   const ConsultationMenu({super.key});
@@ -24,6 +27,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   String fileName = '';
   // String fileNameUpdate = '';
   String fileType = '';
+  String fileTypeUpdate = '';
   bool ismenuNamefiled = false;
   bool ismenuNamefiledUpdate = false;
   bool isImportMenuHasFile = false;
@@ -34,6 +38,16 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   TextEditingController menuNameUpdate = TextEditingController();
   String menuUpdateUrl = '';
   String menuUpdateUrlOld = '';
+  String menuNameOld = '';
+  String currentItem = 'Select Outlet';
+  String outletImageUrl = '';
+  String importFilenamex = '';
+  String importImagex = '';
+  String selectedOutletId = '';
+  String importTypex = '';
+  String importMenuNamex = '';
+
+  List<OutletClass> outletClasss = [];
 
   Future<void> chooseImage() async {
     final result = await FilePicker.platform.pickFiles(
@@ -64,7 +78,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
       String fileNamex = result.files.first.name;
       // fileNameUpdate = result.files.first.name;
       results = result;
-      fileType = fileNamex.split('.')[1];
+      fileTypeUpdate = fileNamex.split('.')[1];
       menuUpdateUrl =
           'http://192.168.8.108/uploads/uploads/${result.files.first.name}';
       context.read<MenuProvider>().setImageLoaded(true);
@@ -153,27 +167,68 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
         'name': menuName.text,
         'status': true,
         'type': fileType,
+        'outletId': 'dlo014'
+        // 'outletId': selectedOutletId
       }).then((value) async {
         context.read<MenuProvider>().menuRefresh();
       });
     }
   }
 
+  Future<void> createMenuImport(int menuCount) async {
+    print('${selectedOutletId}999999999999999999999999999999999999999');
+    if (importImagex != '') {
+      await FirebaseFirestore.instance
+          .collection('merchant')
+          .doc('X6odvQ5gqesAzwtJLaFl')
+          .collection('consultationMenu')
+          .add({
+        'order': menuCount,
+        'date': DateTime.now(),
+        'fileName': importFilenamex,
+        'image': 'http://192.168.8.108/uploads/uploads/$importFilenamex',
+        'name': importMenuNamex,
+        'status': true,
+        'type': importTypex,
+        'outletId': 'dlo015'
+        // 'outletId': selectedOutletId
+      }).then((value) async {
+        context.read<MenuProvider>().menuRefresh();
+        importImagex = '';
+        isImportMenu = false;
+      });
+    } else {
+      warningDialog(context, 'CHOOSE OUTLET', 'Please choose outlet.');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final outletClassx =
+        context.select((BusinessOutletProvider p) => p.outletClass);
+    outletClasss = outletClassx;
+
+    final outletId =
+        context.select((BusinessOutletProvider p) => p.selectedOutletId);
+    selectedOutletId = outletId;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        const Padding(
-          padding: EdgeInsets.fromLTRB(25.0, 8.0, 8.0, 8.0),
+        // SizedBox(
+        //   width: MediaQuery.sizeOf(context).width - 200,
+        //   child: outletViewer(),
+        // ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(25.0, 8.0, 8.0, 8.0),
           child: Text(
             'CONSULTATION MENU',
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontFamily: 'SFPro',
                 fontSize: 20,
-                color: Color(0xffef7700)),
+                color: defaultFileColorOrange),
           ),
         ),
         Row(
@@ -212,6 +267,64 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
           ],
         )
       ],
+    );
+  }
+
+  List<DropdownMenuEntry<OutletClass>> _createListOutlet() {
+    return outletClasss.map<DropdownMenuEntry<OutletClass>>((e) {
+      return DropdownMenuEntry(value: e, label: e.name);
+    }).toList();
+  }
+
+  outletViewer() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text(
+            'Main Wall',
+            style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Color(0xffef7700)),
+          ),
+          SizedBox(
+            width: 230,
+            child: outletClasss.isEmpty
+                ? Container()
+                : Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(20.0)),
+                    child: DropdownMenu<OutletClass>(
+                      enableSearch: true,
+                      enableFilter: true,
+                      inputDecorationTheme: const InputDecorationTheme(
+                          border: InputBorder.none,
+                          fillColor: Color(0xffef7700),
+                          hintStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Color(0xffef7700))),
+                      trailingIcon: const Icon(
+                        Icons.search,
+                        color: Color(0xffef7700),
+                      ),
+                      width: 200,
+                      hintText: currentItem,
+                      textStyle: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Color(0xffef7700)),
+                      onSelected: (OutletClass? value) {},
+                      dropdownMenuEntries: _createListOutlet(),
+                    ),
+                  ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -261,29 +374,55 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                 alignment: Alignment.topLeft,
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: GestureDetector(
-                      onTap: () async {
-                        setState(() {
-                          menuNameUpdate.text = menuName;
-                          menuUpdateUrl = imageUrl;
-                          menuUpdateUrlOld = imageUrl;
-                        });
-
-                        await showDialog<bool>(
-                          context: context,
-                          builder: (context) {
-                            context.read<MenuProvider>().setImageLoaded(false);
-                            return updateMenuDialog(context, menuID);
-                          },
-                        );
-                      },
-                      child: IconButtonMenu(
-                        text: 'Edit',
-                        iconMenu: Icons.edit,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
                         width: 100,
                         height: 30,
-                        backColor: const Color.fromARGB(255, 186, 186, 186),
-                      )),
+                        decoration: BoxDecoration(
+                          color: defaultbuttonColorGrey,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: TextButton(
+                          child: const Text(
+                            'Edit',
+                            style: TextStyle(
+                              fontFamily: 'SFPro',
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          onPressed: () async {
+                            setState(() {
+                              menuNameUpdate.text = menuName;
+                              menuUpdateUrl = imageUrl;
+                              menuUpdateUrlOld = imageUrl;
+                              menuNameOld = menuName;
+                            });
+
+                            await showDialog<bool>(
+                              context: context,
+                              builder: (context) {
+                                context
+                                    .read<MenuProvider>()
+                                    .setImageLoaded(false);
+                                return updateMenuDialog(context, menuID);
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  // child: IconButtonMenu(
+                  //   text: 'Edit',
+                  //   iconMenu: Icons.edit,
+                  //   width: 100,
+                  //   height: 30,
+                  //   backColor: const defaultbuttonColorGrey,
+                  // )),
                 ),
               ),
             if (imageUrl != '')
@@ -376,14 +515,15 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                 chooseImage();
               },
               child: IconButtonMenu(
-                text: 'CHOOSE FILE',
-                iconMenu: Icons.upload,
-                width: 200,
-                height: 30,
-                backColor: fileName != ''
-                    ? const Color(0xffef7700)
-                    : const Color.fromARGB(255, 186, 186, 186),
-              )),
+                  text: 'CHOOSE FILE',
+                  iconMenu: Icons.upload,
+                  width: 200,
+                  height: 30,
+                  backColor: defaultFileColorOrange
+                  // backColor: fileName != ''
+                  //     ? const defaultFileColorOrange
+                  //     : const defaultbuttonColorGrey,
+                  )),
           const Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(
@@ -415,8 +555,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                 width: 200,
                 height: 30,
                 backColor: fileName != '' && menuName.text != ''
-                    ? const Color(0xffef7700)
-                    : const Color.fromARGB(255, 186, 186, 186),
+                    ? defaultUploadButtonColorGreen
+                    : defaultbuttonColorGrey,
               )),
           const SizedBox(
             height: 120,
@@ -439,11 +579,11 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                   },
                 ),
                 Text(
-                  'Import menu from existing outlet'.toUpperCase(),
-                  style: const TextStyle(
+                  'Import menu from existing outlets'.toUpperCase(),
+                  style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xffef7700),
+                    color: defaultFileColorOrange,
                   ),
                 ),
               ],
@@ -457,28 +597,39 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
               child: Column(
                 children: [
                   GestureDetector(
-                      child: IconButtonMenu(
-                    text: 'Choose Location'.toUpperCase(),
-                    iconMenu: Icons.storefront_outlined,
-                    width: 200,
-                    height: 30,
-                    backColor: isImportMenuHasFile == true
-                        ? const Color(0xffef7700)
-                        : const Color.fromARGB(255, 186, 186, 186),
-                  )),
+                    child: IconButtonMenu(
+                      text: 'Choose OUTLET'.toUpperCase(),
+                      iconMenu: Icons.storefront_outlined,
+                      width: 200,
+                      height: 30,
+                      backColor: importImagex != ''
+                          ? defaultFileColorOrange
+                          : defaultbuttonColorGrey,
+                    ),
+                    onTap: () {
+                      context.read<MenuProvider>().setChoosenOutletMenId('');
+                      context
+                          .read<MenuProvider>()
+                          .setImportImage('', '', '', '');
+
+                      chooseOutlet();
+                    },
+                  ),
                   const SizedBox(
                     height: 30,
                   ),
                   GestureDetector(
-                      onTap: () async {},
+                      onTap: () async {
+                        createMenuImport(menuCount);
+                      },
                       child: IconButtonMenu(
                         text: 'UPLOAD MENU',
                         iconMenu: Icons.add,
                         width: 200,
                         height: 30,
-                        backColor: isImportMenuHasFile == true
-                            ? const Color(0xffef7700)
-                            : const Color.fromARGB(255, 186, 186, 186),
+                        backColor: importImagex != ''
+                            ? defaultUploadButtonColorGreen
+                            : defaultbuttonColorGrey,
                       )),
                 ],
               )),
@@ -626,9 +777,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
 
         return AlertDialog(
           shape: RoundedRectangleBorder(
-              side: const BorderSide(
+              side: BorderSide(
                 width: 4,
-                color: Color(0xffef7700),
+                color: defaultFileColorOrange,
               ),
               borderRadius: BorderRadius.circular(20.0)),
           title: DecoratedBox(
@@ -646,9 +797,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('UPDATE MENU',
+                      Text('UPDATE MENU',
                           style: TextStyle(
-                              color: Color(0xffef7700),
+                              color: defaultFileColorOrange,
                               fontWeight: FontWeight.bold)),
                       Container(
                         alignment: Alignment.topRight,
@@ -728,30 +879,51 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                               chooseImageUpdate();
                             },
                             child: IconButtonMenu(
-                              text: 'CHOOSE FILE',
-                              iconMenu: Icons.upload,
-                              width: 200,
-                              height: 35,
-                              backColor: isImagedLoaded == true
-                                  ? const Color(0xffef7700)
-                                  : const Color.fromARGB(255, 186, 186, 186),
-                            )),
+                                text: 'CHOOSE FILE',
+                                iconMenu: Icons.upload,
+                                width: 200,
+                                height: 35,
+                                backColor: defaultFileColorOrange
+                                // backColor: isImagedLoaded == true
+                                //     ? const defaultFileColorOrange
+                                //     : const defaultbuttonColorGrey,
+                                )),
                         const SizedBox(
                           width: 10,
                         ),
-                        GestureDetector(
-                            onTap: () async {
+                        Container(
+                          width: 220,
+                          height: 35,
+                          decoration: BoxDecoration(
+                            color: menuUpdateUrlOld != menuUpdateUrl &&
+                                        menuNameUpdate.text != '' ||
+                                    menuNameOld != menuNameUpdate.text
+                                ? defaultUploadButtonColorGreen
+                                : defaultbuttonColorGrey,
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: TextButton(
+                            child: const Text(
+                              'APPLY CHANGES',
+                              style: TextStyle(
+                                fontFamily: 'SFPro',
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            onPressed: () async {
                               if (menuNameUpdate.text == '') {
                                 warningDialog(context, 'UPDATE MENU',
                                     'Please enter menu name.');
                                 return;
                               }
 
-                              if (menuUpdateUrlOld == menuUpdateUrl) {
-                                warningDialog(context, 'UPDATE MENU',
-                                    'Please select file.');
-                                return;
-                              }
+                              // if (menuUpdateUrlOld == menuUpdateUrl) {
+                              //   warningDialog(context, 'UPDATE MENU',
+                              //       'Please select file.');
+                              //   return;
+                              // }
 
                               // if (fileNameUpdate.toLowerCase() ==
                               //     ''.toLowerCase()) {
@@ -783,16 +955,18 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                                 Navigator.of(context).pop();
                               });
                             },
-                            child: IconButtonMenu(
-                              text: 'UPLOAD NEW MENU',
-                              iconMenu: Icons.add,
-                              width: 220,
-                              height: 35,
-                              backColor: menuUpdateUrlOld != menuUpdateUrl &&
-                                      menuNameUpdate.text != ''
-                                  ? const Color(0xffef7700)
-                                  : const Color.fromARGB(255, 186, 186, 186),
-                            )),
+                          ),
+                        ),
+                        // child: IconButtonMenu(
+                        //   text: 'APPLY CHANGES',
+                        //   iconMenu: Icons.add,
+                        //   width: 220,
+                        //   height: 35,
+                        //   backColor: menuUpdateUrlOld != menuUpdateUrl &&
+                        //           menuNameUpdate.text != ''
+                        //       ? defaultUploadButtonColorGreen
+                        //       : defaultbuttonColorGrey,
+                        // )),
                       ],
                     ),
                   ),
@@ -808,9 +982,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   Widget deleteMenuDialog(BuildContext context, String mID, menuName) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
-          side: const BorderSide(
+          side: BorderSide(
             width: 4,
-            color: Color(0xffef7700),
+            color: defaultFileColorOrange,
           ),
           borderRadius: BorderRadius.circular(20.0)),
       title: DecoratedBox(
@@ -828,9 +1002,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('DELETE MENU',
+                  Text('DELETE MENU',
                       style: TextStyle(
-                          color: Color(0xffef7700),
+                          color: defaultFileColorOrange,
                           fontWeight: FontWeight.bold)),
                   Container(
                     alignment: Alignment.topRight,
@@ -895,6 +1069,272 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
           ),
         ),
       ),
+    );
+  }
+
+  chooseOutlet() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final String importFileName =
+            context.select((MenuProvider p) => p.importFileName);
+        final String importImage =
+            context.select((MenuProvider p) => p.importImage);
+        final String importType =
+            context.select((MenuProvider p) => p.importType);
+        final String importMenuName =
+            context.select((MenuProvider p) => p.importMenuName);
+
+        importFilenamex = importFileName;
+        importImagex = importImage;
+        importTypex = importType;
+        importMenuNamex = importMenuName;
+
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              side: const BorderSide(
+                  width: 4, color: Color(0xffef7700), strokeAlign: 1),
+              borderRadius: BorderRadius.circular(20.0)),
+          title: DecoratedBox(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('CHOOSE OUTLET',
+                      style: TextStyle(
+                          color: Color(0xffef7700),
+                          fontWeight: FontWeight.bold)),
+                  Container(
+                    alignment: Alignment.topRight,
+                    child: InkWell(
+                      child: const Icon(
+                        Icons.close,
+                        size: 14,
+                      ),
+                      onTap: () {
+                        context.read<MenuProvider>().setChoosenOutletMenId('');
+                        context
+                            .read<MenuProvider>()
+                            .setImportImage('', '', '', '');
+                        Navigator.pop(context);
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ]),
+          ),
+          content: SizedBox(
+            width: MediaQuery.sizeOf(context).width - 300,
+            height: MediaQuery.sizeOf(context).height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    getOutletList(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: 2,
+                        color: Colors.grey.shade500,
+                        height: MediaQuery.of(context).size.height - 200,
+                      ),
+                    ),
+                    getOutletMenu(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          width: 2,
+                          color: Colors.grey.shade500,
+                          height: MediaQuery.of(context).size.height - 200),
+                    ),
+                    getMenuView()
+                  ],
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                        onTap: () async {
+                          setState(() {
+                            context.read<MenuProvider>().setImportImage(
+                                importFileName,
+                                importImage,
+                                importType,
+                                importMenuName);
+                            Navigator.pop(context);
+                          });
+                        },
+                        child: IconButtonMenu(
+                          text: 'IMPORT',
+                          iconMenu: Icons.import_export,
+                          width: 150,
+                          height: 35,
+                          backColor: const Color.fromARGB(255, 210, 69, 69),
+                        )),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  getOutletList() {
+    bool isSelected = false;
+    int indexs = 100;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+      child: Column(children: [
+        SizedBox(
+          width: 300,
+          height: MediaQuery.sizeOf(context).height - 200,
+          child: ListView.builder(
+            itemCount: outletClasss.length,
+            itemBuilder: (context, index) {
+              // outletClasss.where((item) => false);
+              return GestureDetector(
+                child: Container(
+                  margin: const EdgeInsets.all(10.0),
+                  alignment: Alignment.center,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: const Color(0xffef7700),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Text(
+                    outletClasss[index].name,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+                onTap: () {
+                  setState(() {
+                    print(outletClasss[index].id);
+                    context
+                        .read<MenuProvider>()
+                        .setChoosenOutletMenId(outletClasss[index].id);
+
+                    context.read<MenuProvider>().setImportImage('', '', '', '');
+                  });
+                },
+              );
+            },
+          ),
+        )
+      ]),
+    );
+  }
+
+  getOutletMenu() {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        final choosenOutletId =
+            context.select((MenuProvider p) => p.ChoosenOutletMenId);
+
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+          child: Column(children: [
+            SizedBox(
+              width: 300,
+              height: MediaQuery.sizeOf(context).height - 200,
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('merchant')
+                    .doc('X6odvQ5gqesAzwtJLaFl')
+                    .collection('consultationMenu')
+                    .where('outletId', isEqualTo: choosenOutletId)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 300,
+                              // childAspectRatio: 3 / 2,
+                              crossAxisSpacing: 20,
+                              mainAxisSpacing: 20),
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        DocumentSnapshot doc = snapshot.data!.docs[index];
+                        return Column(
+                          children: [
+                            GestureDetector(
+                              child: Container(
+                                height: 200,
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15)),
+                                child: Image.network(
+                                  doc['image'],
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  outletImageUrl = doc['image'];
+                                  print(outletImageUrl);
+                                  context.read<MenuProvider>().setImportImage(
+                                      doc['fileName'],
+                                      doc['image'],
+                                      doc['type'],
+                                      doc['name']);
+                                });
+                              },
+                            ),
+                            Text(doc['name'])
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    return Container();
+                  }
+                },
+              ),
+            )
+          ]),
+        );
+      },
+    );
+  }
+
+  getMenuView() {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        final url = context.select((MenuProvider p) => p.importImage);
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+          child: Visibility(
+            visible: url != '',
+            child: Center(
+              child: Container(
+                height: 500,
+                width: 600,
+                alignment: Alignment.center,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                child: Image.network(
+                  url,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

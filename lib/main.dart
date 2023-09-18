@@ -42,6 +42,7 @@ void main() async {
       storageBucket: "gs://drinklinkv2-d84fe.appspot.com",
     ),
   );
+
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   runApp(MultiProvider(
     providers: [

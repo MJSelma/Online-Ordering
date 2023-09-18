@@ -519,7 +519,9 @@ class _OutletsPageState extends State<OutletsPage> {
                                     print(data);
                                     categoryListAdded.add(data);
                                   }
-
+                                  context
+                                      .read<BusinessOutletProvider>()
+                                      .setSelectedOutletId(outletId);
                                   // businessesClass[0]
                                   //             .defaultOutletId
                                   //             .toLowerCase() ==
