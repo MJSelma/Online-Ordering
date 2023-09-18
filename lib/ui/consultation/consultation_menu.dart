@@ -1129,6 +1129,10 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                         context
                             .read<MenuProvider>()
                             .setImportImage('', '', '', '');
+                        context.read<MenuProvider>().setChooseOutletIndex(-1);
+                        context
+                            .read<MenuProvider>()
+                            .setChooseOutletIndexSelected(-1);
                         Navigator.pop(context);
                       },
                     ),
@@ -1203,47 +1207,95 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   }
 
   getOutletList() {
-    bool isSelected = false;
-    int indexs = 100;
+    return StatefulBuilder(
+      builder: (context, setState) {
+        final int indexOutletMenu =
+            context.select((MenuProvider p) => p.chooseOutletIndex);
+        final int indexOutletMenuSelected =
+            context.select((MenuProvider p) => p.chooseOutletIndexSelected);
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-      child: Column(children: [
-        SizedBox(
-          width: 300,
-          height: MediaQuery.sizeOf(context).height - 200,
-          child: ListView.builder(
-            itemCount: outletClasss.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                child: Container(
-                  margin: const EdgeInsets.all(10.0),
-                  alignment: Alignment.center,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: const Color(0xffef7700),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text(
-                    outletClasss[index].name,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-                onTap: () {
-                  setState(() {
-                    print(outletClasss[index].id);
-                    context
-                        .read<MenuProvider>()
-                        .setChoosenOutletMenId(outletClasss[index].id);
+        int ind = 100;
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+          child: Column(children: [
+            SizedBox(
+              width: 300,
+              height: MediaQuery.sizeOf(context).height - 200,
+              child: ListView.builder(
+                itemCount: outletClasss.length,
+                itemBuilder: (context, index) {
+                  print(index);
+                  return MouseRegion(
+                    onHover: (event) {
+                      setState(() {
+                        context
+                            .read<MenuProvider>()
+                            .setChooseOutletIndex(index);
+                      });
+                    },
+                    onExit: (event) {
+                      setState(() {
+                        context.read<MenuProvider>().setChooseOutletIndex(-1);
+                      });
+                    },
+                    child: GestureDetector(
+                      child: Container(
+                        // margin: const EdgeInsets.all(10.0),
+                        alignment: Alignment.center,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          color: indexOutletMenuSelected == index
+                              ? const Color(0xffef7700)
+                              : indexOutletMenu == index
+                                  ? const Color(0xffef7700)
+                                  : defaultbuttonColorGrey,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                outletClasss[index].name,
+                                textAlign: TextAlign.left,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Text(
+                                  textAlign: TextAlign.left,
+                                  outletClasss[index].location,
+                                  style: const TextStyle(
+                                      fontSize: 10, color: Colors.white),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        setState(() {
+                          print(outletClasss[index].id);
+                          context
+                              .read<MenuProvider>()
+                              .setChooseOutletIndexSelected(index);
+                          context
+                              .read<MenuProvider>()
+                              .setChoosenOutletMenId(outletClasss[index].id);
 
-                    context.read<MenuProvider>().setImportImage('', '', '', '');
-                  });
+                          context
+                              .read<MenuProvider>()
+                              .setImportImage('', '', '', '');
+                        });
+                      },
+                    ),
+                  );
                 },
-              );
-            },
-          ),
-        )
-      ]),
+              ),
+            )
+          ]),
+        );
+      },
     );
   }
 

@@ -123,7 +123,7 @@ class _DashBoardState extends State<DashBoard> {
       isExpanded: false,
       borderRadius: BorderRadius.circular(20),
       hint: Center(
-        child: MenuButton(currentItem, 0, Icons.business, 40, 0),
+        child: MenuButton(currentItem, 0, Icons.business, 50, 0),
       ),
       onChanged: (BusinessesClass? value) {
         setState(() {
@@ -255,7 +255,7 @@ class _DashBoardState extends State<DashBoard> {
                             child: isMenuOpen
                                 ? dropdown
                                 : MenuButton(
-                                    currentItem, 0, Icons.business, 40, 0),
+                                    currentItem, 0, Icons.business, 50, 0),
                           ),
                           Visibility(
                             visible: businessDocId != '',
