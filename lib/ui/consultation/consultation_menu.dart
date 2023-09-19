@@ -617,10 +617,16 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                           : defaultbuttonColorGrey,
                     ),
                     onTap: () {
-                      context.read<MenuProvider>().setChoosenOutletMenId('');
-                      context
-                          .read<MenuProvider>()
-                          .setImportImage('', '', '', '');
+                      setState(() {
+                        context.read<MenuProvider>().setChoosenOutletMenId('');
+                        context.read<MenuProvider>().setChooseOutletIndex(-1);
+                        context
+                            .read<MenuProvider>()
+                            .setChooseOutletIndexSelected(-1);
+                        context
+                            .read<MenuProvider>()
+                            .setImportImage('', '', '', '');
+                      });
 
                       chooseOutlet();
                     },
@@ -908,8 +914,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                             color: menuUpdateUrlOld != menuUpdateUrl &&
                                         menuNameUpdate.text != '' ||
                                     menuNameOld != menuNameUpdate.text
-                                ? defaultUploadButtonColorGreen
-                                : defaultbuttonColorGrey,
+                                ? defaultbuttonColorGrey
+                                : defaultUploadButtonColorGreen,
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: TextButton(
@@ -1125,14 +1131,19 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                         size: 14,
                       ),
                       onTap: () {
-                        context.read<MenuProvider>().setChoosenOutletMenId('');
-                        context
-                            .read<MenuProvider>()
-                            .setImportImage('', '', '', '');
-                        context.read<MenuProvider>().setChooseOutletIndex(-1);
-                        context
-                            .read<MenuProvider>()
-                            .setChooseOutletIndexSelected(-1);
+                        setState(() {
+                          context
+                              .read<MenuProvider>()
+                              .setChoosenOutletMenId('');
+                          context
+                              .read<MenuProvider>()
+                              .setImportImage('', '', '', '');
+                          context.read<MenuProvider>().setChooseOutletIndex(-1);
+                          context
+                              .read<MenuProvider>()
+                              .setChooseOutletIndexSelected(-1);
+                        });
+
                         Navigator.pop(context);
                       },
                     ),

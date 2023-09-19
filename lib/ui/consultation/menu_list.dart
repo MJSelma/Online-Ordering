@@ -42,26 +42,36 @@ class ConsultMenuPage extends HookWidget {
         .collection('merchant')
         .doc('X6odvQ5gqesAzwtJLaFl')
         .collection('consultationMenu')
-        .where('outletId', isEqualTo: outletId)
-        // .orderBy('order', descending: false)
+        .orderBy('order', descending: false)
+        // .where('outletId', isEqualTo: outletId)
         .get()
-        .then((QuerySnapshot querySnapshot) => {
-              querySnapshot.docs.forEach((doc) async {
-                debugPrint(doc.id);
-                ConsultationMenuModel obj = ConsultationMenuModel(
-                    doc.id,
-                    doc['name'],
-                    doc['fileName'],
-                    doc['image'],
-                    doc['date'].toString(),
-                    doc['status'].toString(),
-                    doc['type'],
-                    doc['order'],
-                    doc['outletId']);
+        .then((QuerySnapshot querySnapshot) {
+      // querySnapshot.docs
+      //     .where((item) =>
+      //         item['outletId'].toString().toLowerCase() ==
+      //         outletId.toLowerCase())
+      //     .toList();
 
-                ulist.add(obj);
-              })
-            });
+      querySnapshot.docs.forEach((doc) async {
+        debugPrint(doc.id);
+        ConsultationMenuModel obj = ConsultationMenuModel(
+            doc.id,
+            doc['name'],
+            doc['fileName'],
+            doc['image'],
+            doc['date'].toString(),
+            doc['status'].toString(),
+            doc['type'],
+            doc['order'],
+            doc['outletId']);
+
+        ulist.add(obj);
+      });
+      ulist = ulist
+          .where(
+              (item) => item.outletId.toLowerCase() == outletId.toLowerCase())
+          .toList();
+    });
 
     menuList.value = ulist;
     context.read<MenuProvider>().updateMenuCount(ulist.length);
