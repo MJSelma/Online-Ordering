@@ -9,6 +9,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/businessOutletProvider.dart';
+import '../../provider/menu_provider.dart';
 import '../components/showDialog.dart';
 import '../controller/outletController.dart';
 import '../data_class/businesses_class.dart';
@@ -519,6 +520,10 @@ class _OutletsPageState extends State<OutletsPage> {
                                     print(data);
                                     categoryListAdded.add(data);
                                   }
+
+                                  context
+                                      .read<MenuProvider>()
+                                      .selectedMenu('', '', '', '', '');
                                   context
                                       .read<BusinessOutletProvider>()
                                       .setSelectedOutletId(outletId);

@@ -16,6 +16,7 @@ class MenuProvider with ChangeNotifier {
   String _importMenuName = '';
   int _chooseOutletIndex = -1;
   int _chooseOutletIndexSelected = -1;
+  String _searchMenuName = '';
 
   bool get isImageLoaded => _isImageLoaded;
   String get menuName => _menuName;
@@ -31,6 +32,7 @@ class MenuProvider with ChangeNotifier {
   String get importMenuName => _importMenuName;
   int get chooseOutletIndex => _chooseOutletIndex;
   int get chooseOutletIndexSelected => _chooseOutletIndexSelected;
+  String get searchMenuName => _searchMenuName;
 
   void selectedMenu(String id, name, image, type, pdfData) {
     _menuID = id;
@@ -78,6 +80,11 @@ class MenuProvider with ChangeNotifier {
 
   void setChooseOutletIndexSelected(int ind) {
     _chooseOutletIndexSelected = ind;
+    notifyListeners();
+  }
+
+  void setSearchMenuName(String name) {
+    _searchMenuName = name;
     notifyListeners();
   }
 }

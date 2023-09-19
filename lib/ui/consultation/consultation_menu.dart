@@ -34,7 +34,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   bool isImportMenu = false;
   FilePickerResult? results;
   TextEditingController menuName = TextEditingController();
-
+  TextEditingController txtSearchMenu = TextEditingController();
   TextEditingController menuNameUpdate = TextEditingController();
   String menuUpdateUrl = '';
   String menuUpdateUrlOld = '';
@@ -249,8 +249,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 width: 2,
-                // color: Colors.grey.shade500,
-                color: Colors.black87,
+                color: Colors.grey.shade500,
+                // color: Colors.black87,
                 height: MediaQuery.of(context).size.height - 200,
               ),
             ),
@@ -259,8 +259,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                 width: 2,
-                // color: Colors.grey.shade500,
-                color: Colors.black87,
+                color: Colors.grey.shade500,
+                // color: Colors.black87,
                 height: MediaQuery.of(context).size.height - 200,
               ),
             ),
@@ -269,8 +269,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
               padding: const EdgeInsets.all(8.0),
               child: Container(
                   width: 2,
-                  // color: Colors.grey.shade500,
-                  color: Colors.black87,
+                  color: Colors.grey.shade500,
+                  // color: Colors.black87,
                   height: MediaQuery.of(context).size.height - 200),
             ),
             menuViewer(),
@@ -750,13 +750,21 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                         border: Border.all(
                             width: 1.0, color: const Color(0xff707070)),
                       ),
-                      child: const Center(
+                      child: Center(
                         child: Padding(
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: TextField(
-                            // controller: userController,
-                            decoration:
-                                InputDecoration.collapsed(hintText: 'Search'),
+                            controller: txtSearchMenu,
+                            decoration: const InputDecoration.collapsed(
+                                hintText: 'Search'),
+                            onChanged: (value) {
+                              setState(() {
+                                context.read<MenuProvider>().menuRefresh();
+                                context
+                                    .read<MenuProvider>()
+                                    .setSearchMenuName(txtSearchMenu.text);
+                              });
+                            },
                           ),
                         ),
                       ),
@@ -911,11 +919,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                           width: 220,
                           height: 35,
                           decoration: BoxDecoration(
-                            color: menuUpdateUrlOld != menuUpdateUrl &&
-                                        menuNameUpdate.text != '' ||
-                                    menuNameOld != menuNameUpdate.text
-                                ? defaultbuttonColorGrey
-                                : defaultUploadButtonColorGreen,
+                            color: menuNameUpdate.text != ''
+                                ? defaultUploadButtonColorGreen
+                                : defaultbuttonColorGrey,
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: TextButton(

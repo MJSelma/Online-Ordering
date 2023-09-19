@@ -15,6 +15,7 @@ class BusinessOutletProvider with ChangeNotifier {
   String _selectedOutletId = '';
   String _country = '';
   String _location = '';
+
   String get docId => _docId;
   List<OutletClass> get outletClass => _outletClass;
   List<RegionClass> get regionClass => _regionClass;

@@ -17,10 +17,11 @@ class ConsultMenuPage extends HookWidget {
     final menuList = useState<List<ConsultationMenuModel>>([]);
     final outletIdprovider =
         context.select((BusinessOutletProvider p) => p.selectedOutletId);
+    final searchMenuName = context.select((MenuProvider p) => p.searchMenuName);
 
     useEffect(() {
       Future.microtask(() async {
-        await getMenu(menuList, context, outletIdprovider);
+        await getMenu(menuList, context, outletIdprovider, searchMenuName);
       });
       return null;
     }, [isRefresh]);
@@ -36,22 +37,16 @@ class ConsultMenuPage extends HookWidget {
             )));
   }
 
-  getMenu(ValueNotifier menuList, BuildContext context, String outletId) async {
+  getMenu(ValueNotifier menuList, BuildContext context, String outletId,
+      String menuName) async {
     List<ConsultationMenuModel> ulist = [];
     await FirebaseFirestore.instance
         .collection('merchant')
         .doc('X6odvQ5gqesAzwtJLaFl')
         .collection('consultationMenu')
         .orderBy('order', descending: false)
-        // .where('outletId', isEqualTo: outletId)
         .get()
         .then((QuerySnapshot querySnapshot) {
-      // querySnapshot.docs
-      //     .where((item) =>
-      //         item['outletId'].toString().toLowerCase() ==
-      //         outletId.toLowerCase())
-      //     .toList();
-
       querySnapshot.docs.forEach((doc) async {
         debugPrint(doc.id);
         ConsultationMenuModel obj = ConsultationMenuModel(
@@ -67,10 +62,19 @@ class ConsultMenuPage extends HookWidget {
 
         ulist.add(obj);
       });
-      ulist = ulist
-          .where(
-              (item) => item.outletId.toLowerCase() == outletId.toLowerCase())
-          .toList();
+
+      if (menuName != '') {
+        ulist = ulist
+            .where((item) =>
+                item.outletId.toLowerCase() == outletId.toLowerCase() &&
+                item.name.toLowerCase().contains(menuName.toLowerCase()))
+            .toList();
+      } else {
+        ulist = ulist
+            .where(
+                (item) => item.outletId.toLowerCase() == outletId.toLowerCase())
+            .toList();
+      }
     });
 
     menuList.value = ulist;
