@@ -47,7 +47,7 @@ class _OutletMenuState extends State<OutletMenu> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(25.0, 8.0, 8.0, 8.0),
+            padding: const EdgeInsets.fromLTRB(20.0, 8.0, 8.0, 8.0),
             child: Text(
               indexPageName.toUpperCase(),
               style: TextStyle(
@@ -57,14 +57,6 @@ class _OutletMenuState extends State<OutletMenu> {
                   color: defaultFileColorOrange),
             ),
           ),
-          // const Text(
-          //   'Main Wall',
-          //   style: TextStyle(
-          //       fontSize: 24,
-          //       fontWeight: FontWeight.bold,
-          //       color: Color(0xffef7700)),
-          // ),
-          // const Spacer(),
           SizedBox(
             width: 230,
             child: outletClasss.isEmpty

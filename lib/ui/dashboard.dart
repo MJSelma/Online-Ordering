@@ -327,6 +327,7 @@ class _DashBoardState extends State<DashBoard> {
                                   onTap: () {
                                     setState(() {
                                       indexMenu = 3;
+                                      setIndexMenuNameProvider('');
                                     });
                                   },
                                   child: MenuButton('Smart Menu', 3,
@@ -345,6 +346,7 @@ class _DashBoardState extends State<DashBoard> {
                                   onTap: () {
                                     setState(() {
                                       indexMenu = 4;
+                                      setIndexMenuNameProvider('');
                                     });
                                   },
                                   child: MenuButton(
@@ -357,6 +359,7 @@ class _DashBoardState extends State<DashBoard> {
                                   onTap: () {
                                     setState(() {
                                       indexMenu = 5;
+                                      setIndexMenuNameProvider('');
                                     });
                                   },
                                   child: MenuButton('Events/Weekly \nPrograms',
@@ -369,6 +372,7 @@ class _DashBoardState extends State<DashBoard> {
                                   onTap: () {
                                     setState(() {
                                       indexMenu = 6;
+                                      setIndexMenuNameProvider('');
                                     });
                                   },
                                   child: MenuButton(
@@ -381,6 +385,7 @@ class _DashBoardState extends State<DashBoard> {
                                   onTap: () {
                                     setState(() {
                                       indexMenu = 7;
+                                      setIndexMenuNameProvider('');
                                     });
                                   },
                                   child: MenuButton(
@@ -393,6 +398,7 @@ class _DashBoardState extends State<DashBoard> {
                                   onTap: () {
                                     setState(() {
                                       indexMenu = 8;
+                                      setIndexMenuNameProvider('');
                                     });
                                   },
                                   child: MenuButton('Your Ads', 8,
@@ -405,6 +411,7 @@ class _DashBoardState extends State<DashBoard> {
                                   onTap: () {
                                     setState(() {
                                       indexMenu = 9;
+                                      setIndexMenuNameProvider('');
                                     });
                                   },
                                   child: MenuButton(
@@ -417,6 +424,7 @@ class _DashBoardState extends State<DashBoard> {
                                   onTap: () {
                                     setState(() {
                                       indexMenu = 10;
+                                      setIndexMenuNameProvider('');
                                     });
                                   },
                                   child: MenuButton('Report', 10,
@@ -429,6 +437,7 @@ class _DashBoardState extends State<DashBoard> {
                                   onTap: () {
                                     setState(() {
                                       indexMenu = 11;
+                                      setIndexMenuNameProvider('');
                                     });
                                   },
                                   child: MenuButton(
@@ -441,6 +450,7 @@ class _DashBoardState extends State<DashBoard> {
                                   onTap: () {
                                     setState(() {
                                       indexMenu = 12;
+                                      setIndexMenuNameProvider('');
                                     });
                                   },
                                   child: MenuButton('Business Contact', 12,
@@ -473,16 +483,34 @@ class _DashBoardState extends State<DashBoard> {
                       ),
                       if (indexMenu == 0) ...[
                         const OutletsPage()
-                      ] else if (indexMenu == 1) ...[
-                        const MerchantPage()
-                      ] else if (indexMenu == 2) ...[
-                        const ConsultationMenu()
-                      ] else if (indexMenu == 3) ...[
-                        const SmartMenu()
-                      ] else if (indexMenu == 6) ...[
-                        const CasesMenu()
                       ] else ...[
-                        // const widgetWall()
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: MediaQuery.sizeOf(context).width - 300,
+                                  child: const OutletMenu(),
+                                ),
+                              ],
+                            ),
+                            if (indexMenu == 0) ...[
+                              const OutletsPage()
+                            ] else if (indexMenu == 1) ...[
+                              const MerchantPage()
+                            ] else if (indexMenu == 2) ...[
+                              const ConsultationMenu(),
+                            ] else if (indexMenu == 3) ...[
+                              const SmartMenu()
+                            ] else if (indexMenu == 6) ...[
+                              const CasesMenu()
+                            ] else ...[
+                              // const widgetWall()
+                            ],
+                          ],
+                        )
                       ]
                     ],
                   ),

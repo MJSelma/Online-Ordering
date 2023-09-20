@@ -14,7 +14,6 @@ import '../../provider/businessOutletProvider.dart';
 import '../components/constant.dart';
 import '../components/showDialog.dart';
 import '../data_class/outlet_class.dart';
-import '../merchant/ouletMenu.dart';
 
 class ConsultationMenu extends StatefulWidget {
   const ConsultationMenu({super.key});
@@ -227,14 +226,14 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            SizedBox(
-              width: MediaQuery.sizeOf(context).width - 300,
-              child: const OutletMenu(),
-            ),
-          ],
-        ),
+        // Row(
+        //   children: [
+        //     SizedBox(
+        //       width: MediaQuery.sizeOf(context).width - 300,
+        //       child: const OutletMenu(),
+        //     ),
+        //   ],
+        // ),
         // Padding(
         //   padding: const EdgeInsets.fromLTRB(25.0, 8.0, 8.0, 8.0),
         //   child: Text(
@@ -590,6 +589,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                       isImportMenu == true
                           ? isImportMenu = false
                           : isImportMenu = true;
+                      importImagex = '';
                     });
                   },
                 ),

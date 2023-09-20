@@ -355,6 +355,10 @@ class _OutletsPageState extends State<OutletsPage> {
       strDescription = txtDescription.text;
       strCurrency = txtCurrency.text;
       addHeight = 100;
+      if (isSetDefaultWall == true) {
+        context.read<BusinessOutletProvider>().setDefaultOutletId(outletId);
+      }
+
       await saveBusinessOutlet(
           isSetDefaultWall,
           businessId,
