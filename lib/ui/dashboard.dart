@@ -17,6 +17,7 @@ import 'cases/cases.dart';
 import 'cases/casesMessages.dart';
 import 'cases/cases_menu.dart';
 import 'data_class/businesses_class.dart';
+import 'merchant/ouletMenu.dart';
 import 'merchant/outlets.dart';
 
 enum Options { cases, exit }
@@ -312,6 +313,8 @@ class _DashBoardState extends State<DashBoard> {
                                   onTap: () {
                                     setState(() {
                                       indexMenu = 2;
+                                      setIndexMenuNameProvider(
+                                          'Consultation Menu');
                                     });
                                   },
                                   child: MenuButton('Consultation Menu', 2,
@@ -534,6 +537,10 @@ class _DashBoardState extends State<DashBoard> {
             ),
           ),
         ));
+  }
+
+  setIndexMenuNameProvider(String name) {
+    context.read<BusinessOutletProvider>().setIndexPageName(name);
   }
 
   Widget MenuButton(String text, int val, IconData iconMenu, double height,

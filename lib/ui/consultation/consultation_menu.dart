@@ -14,6 +14,7 @@ import '../../provider/businessOutletProvider.dart';
 import '../components/constant.dart';
 import '../components/showDialog.dart';
 import '../data_class/outlet_class.dart';
+import '../merchant/ouletMenu.dart';
 
 class ConsultationMenu extends StatefulWidget {
   const ConsultationMenu({super.key});
@@ -226,21 +227,25 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        // SizedBox(
-        //   width: MediaQuery.sizeOf(context).width - 300,
-        //   child: outletViewer(),
-        // ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(25.0, 8.0, 8.0, 8.0),
-          child: Text(
-            'CONSULTATION MENU',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontFamily: 'SFPro',
-                fontSize: 20,
-                color: defaultFileColorOrange),
-          ),
+        Row(
+          children: [
+            SizedBox(
+              width: MediaQuery.sizeOf(context).width - 300,
+              child: const OutletMenu(),
+            ),
+          ],
         ),
+        // Padding(
+        //   padding: const EdgeInsets.fromLTRB(25.0, 8.0, 8.0, 8.0),
+        //   child: Text(
+        //     'CONSULTATION MENU',
+        //     style: TextStyle(
+        //         fontWeight: FontWeight.bold,
+        //         fontFamily: 'SFPro',
+        //         fontSize: 20,
+        //         color: defaultFileColorOrange),
+        //   ),
+        // ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,

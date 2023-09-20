@@ -15,6 +15,7 @@ class BusinessOutletProvider with ChangeNotifier {
   String _selectedOutletId = '';
   String _country = '';
   String _location = '';
+  String _indexPageName = '';
 
   String get docId => _docId;
   List<OutletClass> get outletClass => _outletClass;
@@ -26,6 +27,7 @@ class BusinessOutletProvider with ChangeNotifier {
   String get selectedOutletId => _selectedOutletId;
   String get country => _country;
   String get location => _location;
+  String get indexPageName => _indexPageName;
 
   void setDocId(String id) {
     clear();
@@ -103,6 +105,11 @@ class BusinessOutletProvider with ChangeNotifier {
   void setCountry(String country, String loc) {
     _country = country;
     _location = loc;
+    notifyListeners();
+  }
+
+  void setIndexPageName(String name) {
+    _indexPageName = name;
     notifyListeners();
   }
 }
