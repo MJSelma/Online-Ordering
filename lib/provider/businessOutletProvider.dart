@@ -3,10 +3,13 @@ import 'package:drinklinkmerchant/ui/data_class/region_class.dart';
 import 'package:flutter/material.dart';
 
 import '../ui/data_class/outlet_class.dart';
+import '../ui/data_class/schedule_class.dart';
 
 class BusinessOutletProvider with ChangeNotifier {
   final List<OutletClass> _outletClass = [];
   final List<RegionClass> _regionClass = [];
+  final List<ScheduleClass> _scheduleClass = [];
+  final List<DateTimeClass> _dateTimeClass = [];
 
   String _docId = '';
   String _businessName = '';
@@ -20,6 +23,8 @@ class BusinessOutletProvider with ChangeNotifier {
   String get docId => _docId;
   List<OutletClass> get outletClass => _outletClass;
   List<RegionClass> get regionClass => _regionClass;
+  List<ScheduleClass> get scheduleClass => _scheduleClass;
+  List<DateTimeClass> get dateTimeClass => _dateTimeClass;
 
   bool get isBusinessSelected => _isBusinessSelected;
   String get businessName => _businessName;
@@ -33,6 +38,7 @@ class BusinessOutletProvider with ChangeNotifier {
     clear();
     _docId = id;
     _getOutlet();
+
     // _getRegion();
     setIsBusinessSelected(true);
     notifyListeners();
@@ -77,13 +83,58 @@ class BusinessOutletProvider with ChangeNotifier {
           category: item['category'],
         );
         _outletClass.add(outletClassx);
-        print(_outletClass[0].name);
+      }
+    });
+  }
+
+  Future<void> _getSchedule() async {
+    await FirebaseFirestore.instance
+        .collection('schedule')
+        .where('outletId', isEqualTo: _selectedOutletId)
+        // .where('outletId', isEqualTo: 'dlo010')
+        .get()
+        .then((QuerySnapshot snapshot) {
+      _scheduleClass.clear();
+      for (var item in snapshot.docs) {
+        print(item['outletId']);
+        ScheduleClass scheduleClass = ScheduleClass(
+          scheduleDocId: item.id,
+          outletId: item['outletId'],
+          schedule: item['schedule'],
+        );
+        _scheduleClass.add(scheduleClass);
+      }
+      if (_scheduleClass.isNotEmpty) {
+        _dateTimeClass.clear();
+        List<dynamic> map = _scheduleClass[0].schedule;
+        print(_scheduleClass[0].schedule);
+
+        DateTimeClass dateTimeClassx =
+            DateTimeClass(date: '', start: 0, end: 0);
+
+        for (var item in map) {
+          Map<String, dynamic> map2 = item;
+
+          map2.forEach((key, value) {
+            Map<String, dynamic> map3 = value;
+            DateTimeClass dateTimeClassx = DateTimeClass(
+                date: key, start: map3['start'], end: map3['end']);
+            _dateTimeClass.add(dateTimeClassx);
+          });
+        }
+
+        for (var element in _dateTimeClass) {
+          print(element.date);
+        }
+      } else {
+        _dateTimeClass.clear();
       }
     });
   }
 
   void setIsBusinessSelected(bool isSelected) {
     _isBusinessSelected = isSelected;
+
     notifyListeners();
   }
 
@@ -99,6 +150,8 @@ class BusinessOutletProvider with ChangeNotifier {
 
   void setSelectedOutletId(String outletID) {
     _selectedOutletId = outletID;
+    // _getSchedule(outletID);
+    _getSchedule();
     notifyListeners();
   }
 

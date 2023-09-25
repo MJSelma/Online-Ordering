@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 import '../../provider/businessOutletProvider.dart';
+import '../../widgets/button.dart';
 import '../components/constant.dart';
 import '../components/showDialog.dart';
 import '../data_class/outlet_class.dart';
@@ -242,7 +243,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
         //         fontWeight: FontWeight.bold,
         //         fontFamily: 'SFPro',
         //         fontSize: 20,
-        //         color: defaultFileColorOrange),
+        //         color: sys_color_defaultorange),
         //   ),
         // ),
         Row(
@@ -391,43 +392,70 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Container(
-                        width: 100,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          color: defaultbuttonColorGrey,
-                          borderRadius: BorderRadius.circular(10.0),
+                      GestureDetector(
+                        child: ButtonMenu(
+                          text: 'Edit',
+                          width: 100,
+                          height: 30,
+                          backColor: button_color_grey,
+                          textColor: iconButtonTextColor,
                         ),
-                        child: TextButton(
-                          child: const Text(
-                            'Edit',
-                            style: TextStyle(
-                              fontFamily: 'SFPro',
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          onPressed: () async {
-                            setState(() {
-                              menuNameUpdate.text = menuName;
-                              menuUpdateUrl = imageUrl;
-                              menuUpdateUrlOld = imageUrl;
-                              menuNameOld = menuName;
-                            });
+                        onTap: () async {
+                          setState(() {
+                            menuNameUpdate.text = menuName;
+                            menuUpdateUrl = imageUrl;
+                            menuUpdateUrlOld = imageUrl;
+                            menuNameOld = menuName;
+                          });
 
-                            await showDialog<bool>(
-                              context: context,
-                              builder: (context) {
-                                context
-                                    .read<MenuProvider>()
-                                    .setImageLoaded(false);
-                                return updateMenuDialog(context, menuID);
-                              },
-                            );
-                          },
-                        ),
+                          await showDialog<bool>(
+                            context: context,
+                            builder: (context) {
+                              context
+                                  .read<MenuProvider>()
+                                  .setImageLoaded(false);
+                              return updateMenuDialog(context, menuID);
+                            },
+                          );
+                        },
                       ),
+                      // Container(
+                      //   width: 100,
+                      //   height: 30,
+                      //   decoration: BoxDecoration(
+                      //     color: button_color_grey,
+                      //     borderRadius: BorderRadius.circular(10.0),
+                      //   ),
+                      //   child: TextButton(
+                      //     child: const Text(
+                      //       'Edit',
+                      //       style: TextStyle(
+                      //         fontFamily: 'SFPro',
+                      //         fontSize: 18,
+                      //         color: Colors.white,
+                      //         fontWeight: FontWeight.w500,
+                      //       ),
+                      //     ),
+                      //     onPressed: () async {
+                      //       setState(() {
+                      //         menuNameUpdate.text = menuName;
+                      //         menuUpdateUrl = imageUrl;
+                      //         menuUpdateUrlOld = imageUrl;
+                      //         menuNameOld = menuName;
+                      //       });
+
+                      //       await showDialog<bool>(
+                      //         context: context,
+                      //         builder: (context) {
+                      //           context
+                      //               .read<MenuProvider>()
+                      //               .setImageLoaded(false);
+                      //           return updateMenuDialog(context, menuID);
+                      //         },
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
                     ],
                   ),
                   // child: IconButtonMenu(
@@ -435,7 +463,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                   //   iconMenu: Icons.edit,
                   //   width: 100,
                   //   height: 30,
-                  //   backColor: const defaultbuttonColorGrey,
+                  //   backColor: const button_color_grey,
                   // )),
                 ),
               ),
@@ -458,6 +486,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                         width: 100,
                         height: 30,
                         backColor: const Color.fromARGB(255, 210, 69, 69),
+                        textColor: iconButtonTextColor,
                       )),
                 ),
               )
@@ -529,15 +558,17 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                 chooseImage();
               },
               child: IconButtonMenu(
-                  text: 'CHOOSE FILE',
-                  iconMenu: Icons.upload,
-                  width: 200,
-                  height: 30,
-                  backColor: defaultFileColorOrange
-                  // backColor: fileName != ''
-                  //     ? const defaultFileColorOrange
-                  //     : const defaultbuttonColorGrey,
-                  )),
+                text: 'CHOOSE FILE',
+                iconMenu: Icons.upload,
+                width: 200,
+                height: 30,
+                backColor: sys_color_defaultorange,
+                textColor: iconButtonTextColor,
+
+                // backColor: fileName != ''
+                //     ? const sys_color_defaultorange
+                //     : const button_color_grey,
+              )),
           const Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(
@@ -569,8 +600,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                 width: 200,
                 height: 30,
                 backColor: fileName != '' && menuName.text != ''
-                    ? defaultUploadButtonColorGreen
-                    : defaultbuttonColorGrey,
+                    ? button_color_green
+                    : button_color_grey,
+                textColor: iconButtonTextColor,
               )),
           const SizedBox(
             height: 120,
@@ -598,7 +630,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
-                    color: defaultFileColorOrange,
+                    color: sys_color_defaultorange,
                   ),
                 ),
               ],
@@ -618,8 +650,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                       width: 200,
                       height: 30,
                       backColor: importImagex != ''
-                          ? defaultFileColorOrange
-                          : defaultbuttonColorGrey,
+                          ? sys_color_defaultorange
+                          : button_color_grey,
+                      textColor: iconButtonTextColor,
                     ),
                     onTap: () {
                       setState(() {
@@ -649,8 +682,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                         width: 200,
                         height: 30,
                         backColor: importImagex != ''
-                            ? defaultUploadButtonColorGreen
-                            : defaultbuttonColorGrey,
+                            ? button_color_green
+                            : button_color_grey,
+                        textColor: iconButtonTextColor,
                       )),
                 ],
               )),
@@ -808,7 +842,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
           shape: RoundedRectangleBorder(
               side: BorderSide(
                 width: 4,
-                color: defaultFileColorOrange,
+                color: sys_color_defaultorange,
               ),
               borderRadius: BorderRadius.circular(20.0)),
           title: DecoratedBox(
@@ -828,7 +862,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                     children: [
                       Text('UPDATE MENU',
                           style: TextStyle(
-                              color: defaultFileColorOrange,
+                              color: sys_color_defaultorange,
                               fontWeight: FontWeight.bold)),
                       Container(
                         alignment: Alignment.topRight,
@@ -908,82 +942,110 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                               chooseImageUpdate();
                             },
                             child: IconButtonMenu(
-                                text: 'CHOOSE FILE',
-                                iconMenu: Icons.upload,
-                                width: 200,
-                                height: 35,
-                                backColor: defaultFileColorOrange
-                                // backColor: isImagedLoaded == true
-                                //     ? const defaultFileColorOrange
-                                //     : const defaultbuttonColorGrey,
-                                )),
+                              text: 'CHOOSE FILE',
+                              iconMenu: Icons.upload,
+                              width: 200,
+                              height: 35,
+                              backColor: sys_color_defaultorange,
+                              textColor: iconButtonTextColor,
+                              // backColor: isImagedLoaded == true
+                              //     ? const sys_color_defaultorange
+                              //     : const button_color_grey,
+                            )),
                         const SizedBox(
                           width: 10,
                         ),
-                        Container(
-                          width: 220,
-                          height: 35,
-                          decoration: BoxDecoration(
-                            color: menuNameUpdate.text != ''
-                                ? defaultUploadButtonColorGreen
-                                : defaultbuttonColorGrey,
-                            borderRadius: BorderRadius.circular(10.0),
+                        GestureDetector(
+                          child: ButtonMenu(
+                            text: 'APPLY CHANGES',
+                            width: 200,
+                            height: 35,
+                            backColor: menuNameUpdate.text != ''
+                                ? button_color_green
+                                : button_color_grey,
+                            textColor: iconButtonTextColor,
                           ),
-                          child: TextButton(
-                            child: const Text(
-                              'APPLY CHANGES',
-                              style: TextStyle(
-                                fontFamily: 'SFPro',
-                                fontSize: 18,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            onPressed: () async {
-                              if (menuNameUpdate.text == '') {
-                                warningDialog(context, 'UPDATE MENU',
-                                    'Please enter menu name.');
-                                return;
-                              }
-
-                              // if (menuUpdateUrlOld == menuUpdateUrl) {
-                              //   warningDialog(context, 'UPDATE MENU',
-                              //       'Please select file.');
-                              //   return;
-                              // }
-
-                              // if (fileNameUpdate.toLowerCase() ==
-                              //     ''.toLowerCase()) {
-                              //   warningDialog(context, 'CHOOSE FILE',
-                              //       'Please select file.');
-                              //   return;
-                              // }
-
-                              uploadImageUpdate();
-                              FirebaseFirestore.instance
-                                  .collection('merchant')
-                                  .doc('X6odvQ5gqesAzwtJLaFl')
-                                  .collection('consultationMenu')
-                                  .doc(mID)
-                                  .update({
-                                'name': menuNameUpdate.text,
-                                'image': menuUpdateUrl,
-                                // 'image':
-                                //     'http://192.168.8.108/uploads/uploads/$menuUpdateUrl',
-                                'type': fileType
-                              }).then((value) async {
-                                context.read<MenuProvider>().menuRefresh();
-                                context.read<MenuProvider>().selectedMenu(
-                                    menuID,
-                                    menuNameUpdate.text,
-                                    menuUpdateUrl,
-                                    type,
-                                    pdfData);
-                                Navigator.of(context).pop();
-                              });
-                            },
-                          ),
+                          onTap: () async {
+                            if (menuNameUpdate.text == '') {
+                              warningDialog(context, 'UPDATE MENU',
+                                  'Please enter menu name.');
+                              return;
+                            }
+                            uploadImageUpdate();
+                            FirebaseFirestore.instance
+                                .collection('merchant')
+                                .doc('X6odvQ5gqesAzwtJLaFl')
+                                .collection('consultationMenu')
+                                .doc(mID)
+                                .update({
+                              'name': menuNameUpdate.text,
+                              'image': menuUpdateUrl,
+                              // 'image':
+                              //     'http://192.168.8.108/uploads/uploads/$menuUpdateUrl',
+                              'type': fileType
+                            }).then((value) async {
+                              context.read<MenuProvider>().menuRefresh();
+                              context.read<MenuProvider>().selectedMenu(
+                                  menuID,
+                                  menuNameUpdate.text,
+                                  menuUpdateUrl,
+                                  type,
+                                  pdfData);
+                              Navigator.of(context).pop();
+                            });
+                          },
                         ),
+                        // Container(
+                        //   width: 220,
+                        //   height: 35,
+                        //   decoration: BoxDecoration(
+                        //     color: menuNameUpdate.text != ''
+                        //         ? button_color_green
+                        //         : button_color_grey,
+                        //     borderRadius: BorderRadius.circular(10.0),
+                        //   ),
+
+                        //   child: TextButton(
+                        //     child: const Text(
+                        //       'APPLY CHANGES',
+                        //       style: TextStyle(
+                        //         fontFamily: 'SFPro',
+                        //         fontSize: 18,
+                        //         color: Colors.white,
+                        //         fontWeight: FontWeight.w500,
+                        //       ),
+                        //     ),
+                        //     onPressed: () async {
+                        //       if (menuNameUpdate.text == '') {
+                        //         warningDialog(context, 'UPDATE MENU',
+                        //             'Please enter menu name.');
+                        //         return;
+                        //       }
+                        //       uploadImageUpdate();
+                        //       FirebaseFirestore.instance
+                        //           .collection('merchant')
+                        //           .doc('X6odvQ5gqesAzwtJLaFl')
+                        //           .collection('consultationMenu')
+                        //           .doc(mID)
+                        //           .update({
+                        //         'name': menuNameUpdate.text,
+                        //         'image': menuUpdateUrl,
+                        //         // 'image':
+                        //         //     'http://192.168.8.108/uploads/uploads/$menuUpdateUrl',
+                        //         'type': fileType
+                        //       }).then((value) async {
+                        //         context.read<MenuProvider>().menuRefresh();
+                        //         context.read<MenuProvider>().selectedMenu(
+                        //             menuID,
+                        //             menuNameUpdate.text,
+                        //             menuUpdateUrl,
+                        //             type,
+                        //             pdfData);
+                        //         Navigator.of(context).pop();
+                        //       });
+                        //     },
+                        //   ),
+                        // ),
                         // child: IconButtonMenu(
                         //   text: 'APPLY CHANGES',
                         //   iconMenu: Icons.add,
@@ -991,8 +1053,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                         //   height: 35,
                         //   backColor: menuUpdateUrlOld != menuUpdateUrl &&
                         //           menuNameUpdate.text != ''
-                        //       ? defaultUploadButtonColorGreen
-                        //       : defaultbuttonColorGrey,
+                        //       ? button_color_green
+                        //       : button_color_grey,
                         // )),
                       ],
                     ),
@@ -1011,7 +1073,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
       shape: RoundedRectangleBorder(
           side: BorderSide(
             width: 4,
-            color: defaultFileColorOrange,
+            color: sys_color_defaultorange,
           ),
           borderRadius: BorderRadius.circular(20.0)),
       title: DecoratedBox(
@@ -1031,7 +1093,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                 children: [
                   Text('DELETE MENU',
                       style: TextStyle(
-                          color: defaultFileColorOrange,
+                          color: sys_color_defaultorange,
                           fontWeight: FontWeight.bold)),
                   Container(
                     alignment: Alignment.topRight,
@@ -1089,6 +1151,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                         width: 150,
                         height: 35,
                         backColor: const Color.fromARGB(255, 210, 69, 69),
+                        textColor: iconButtonTextColor,
                       )),
                 ],
               ),
@@ -1217,6 +1280,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                           width: 150,
                           height: 35,
                           backColor: const Color.fromARGB(255, 210, 69, 69),
+                          textColor: iconButtonTextColor,
                         )),
                   ],
                 ),
@@ -1270,7 +1334,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                               ? const Color(0xffef7700)
                               : indexOutletMenu == index
                                   ? const Color(0xffef7700)
-                                  : defaultbuttonColorGrey,
+                                  : button_color_grey,
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: Padding(

@@ -1,23 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../provider/menu_provider.dart';
+
 Future<void> saveBusinessOutlet(
-  bool isSetDefaultWall,
-  String businessId,
-  String outletId,
-  String email,
-  String number,
-  String lcoation,
-  int isLocatedAt,
-  String currency,
-  String regionId,
-  String regionName,
-  String cuisineId,
-  String cuisineName,
-  String cuisineStyleId,
-  String cuisineStyleName,
-  String scheduleId,
-  List<String> category,
-) async {
+    bool isSetDefaultWall,
+    String businessId,
+    String outletId,
+    String email,
+    String number,
+    String lcoation,
+    int isLocatedAt,
+    String currency,
+    String regionId,
+    String regionName,
+    String cuisineId,
+    String cuisineName,
+    String cuisineStyleId,
+    String cuisineStyleName,
+    String scheduleId,
+    List<String> category,
+    context) async {
   Map<String, dynamic> data = {
     'email': email,
     'contactNumber': number,
@@ -54,6 +56,7 @@ Future<void> saveBusinessOutlet(
       collectionBusiness.collection('outlets').doc(item.id).update(data);
     }
   });
+  context.read<MenuProvider>().menuRefresh();
 }
 
 Future<void> saveRegion(

@@ -15,6 +15,7 @@ import '../controller/outletController.dart';
 import '../data_class/businesses_class.dart';
 import '../data_class/outlet_class.dart';
 import '../data_class/region_class.dart';
+import '../data_class/schedule_class.dart';
 
 class OutletsPage extends StatefulWidget {
   const OutletsPage({super.key});
@@ -35,6 +36,8 @@ class _OutletsPageState extends State<OutletsPage> {
   List<BusinessesClass> businessesClass = [];
   List<OutletClass> outletClass = [];
   List<RegionClass> regionClass = [];
+  List<ScheduleClass> scheduleClass = [];
+  List<DateTimeClass> scheduleDateTime = [];
 
   String outletId = '';
   String outletIdProvider = '';
@@ -162,6 +165,16 @@ class _OutletsPageState extends State<OutletsPage> {
     'Sun',
   ];
 
+  // List<String> scheduleList = <String>[
+  //   'Monday',
+  //   'Tuesday',
+  //   'Wednesday',
+  //   'Thursday',
+  //   'Friday',
+  //   'Saturday',
+  //   'Sunday',
+  // ];
+
   List<String> categoryListAdded = [];
   List<String> scheduleListAdded = [];
 
@@ -210,18 +223,39 @@ class _OutletsPageState extends State<OutletsPage> {
 
     final outletClassx =
         context.select((BusinessOutletProvider p) => p.outletClass);
+
+    final scheduleClassx =
+        context.select((BusinessOutletProvider p) => p.scheduleClass);
+    final scheduleDateTimex =
+        context.select((BusinessOutletProvider p) => p.dateTimeClass);
+
     final regionClassx =
         context.select((BusinessOutletProvider p) => p.regionClass);
     final isSelected =
         context.select((BusinessOutletProvider p) => p.isBusinessSelected);
 
     final businessesData = Provider.of<List<BusinessesClass>>(context);
+
     businessesClass = businessesData
         .where((item) =>
             item.defaultOutletId.toLowerCase() == outletId.toLowerCase())
         .toList();
 
+    // scheduleList.clear();
+    // scheduleClass = scheduleClassx;
+    // for (var item in scheduleDate) {
+    //   scheduleList.add(item.date);
+    // }
+
+    // dynamic schedulex = Map<String, dynamic>;
+
+    // for (var item in scheduleClass) {
+    //   schedulex = item.schedule;
+    // }
+    // print(schedulex['Monday']);
+
     outletClass = outletClassx;
+    scheduleDateTime = scheduleDateTimex;
     businessName = businessNamex;
     businessId = docId;
     outletIdProvider = defaultOutletIdProvider;
@@ -261,88 +295,6 @@ class _OutletsPageState extends State<OutletsPage> {
     ];
     String dropdownValueCuisine = listCuisine.first;
 
-    // final dropdown = DropdownButton<OutletClass>(
-    //   items: _createList(),
-    //   underline: const SizedBox(),
-    //   iconSize: 0,
-    //   isExpanded: false,
-    //   borderRadius: BorderRadius.circular(20),
-    //   hint: Container(
-    //     width: 200,
-    //     height: 50,
-    //     decoration: BoxDecoration(
-    //       borderRadius: BorderRadius.circular(10.0),
-    //       color: isSelectedOutlet == true
-    //           ? const Color(0xffef7700)
-    //           : Colors.grey.shade200,
-    //     ),
-    //     alignment: Alignment.center,
-    //     child: Row(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       children: [
-    //         Icon(
-    //           Icons.business,
-    //           color: isSelectedOutlet == true
-    //               ? Colors.white
-    //               : const Color.fromARGB(255, 66, 64, 64),
-    //         ),
-    //         const SizedBox(
-    //           width: 5,
-    //         ),
-    //         Text(
-    //           currentItem,
-    //           style: TextStyle(
-    //             fontFamily: 'SFPro',
-    //             fontSize: 18,
-    //             color: isSelectedOutlet == true
-    //                 ? Colors.white
-    //                 : const Color.fromARGB(255, 66, 64, 64),
-    //             fontWeight: FontWeight.w500,
-    //           ),
-    //           textAlign: TextAlign.center,
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    //   onChanged: (OutletClass? value) {
-    //     setState(() {
-    //       currentItem = value!.name;
-    //       currentOutletName = value.name;
-    //       strLocation = value.location;
-    //       indexYesNo = value.isLocatedAt == true ? 0 : 1;
-    //       strNumber = value.contactNumber;
-    //       strEmail = value.email;
-    //       strDescription = value.description;
-    //       strCurrency = value.currency;
-    //       intStar = value.star;
-    //       outletId = value.id;
-    //       txtLocation.text = strLocation;
-    //       txtNumber.text = strNumber;
-    //       txtEmail.text = strEmail;
-    //       txtDescription.text = strDescription;
-    //       txtCurrency.text = strCurrency;
-
-    //       dropDownValue = value;
-    //       isSelectedOutlet = true;
-    //       print('$defaultOutletIdProvider + $outletId');
-    //       // defaultOutletIdProvider.toLowerCase() == outletId.toLowerCase()
-    //       //     ? isSetDefaultWall = true
-    //       //     : isSetDefaultWall = false;
-    //       currentRegionId = value.regionId;
-    //       currentRegion = value.regionName;
-    //       currentCusineId = value.cuisineId;
-    //       currentCusine = value.cuisineName;
-    //       currentCusineStylId = value.cuisineStyleId;
-    //       currentCusineStyle = value.cuisineStyleName;
-
-    //       businessesClass[0].defaultOutletId.toLowerCase() ==
-    //               outletId.toLowerCase()
-    //           ? isSetDefaultWall = true
-    //           : isSetDefaultWall = false;
-    //     });
-    //   },
-    // );
-
     void save() async {
       // List<String> category = [];
 
@@ -375,7 +327,8 @@ class _OutletsPageState extends State<OutletsPage> {
           currentCusineStylId,
           currentCusineStyle,
           '',
-          categoryListAdded);
+          categoryListAdded,
+          context);
       // businessProviderRead.setDocId(docId);
     }
 
@@ -400,27 +353,6 @@ class _OutletsPageState extends State<OutletsPage> {
         padding: const EdgeInsets.fromLTRB(30, 0.0, 40.0, 0.0),
         child: Column(
           children: [
-            // DropdownMenu<String>(
-            //   initialSelection: list.first,
-            //   onSelected: (String? value) {
-            //     // This is called when the user selects an item.
-            //     setState(() {
-            //       dropdownValuex = value!;
-            //     });
-            //   },
-            //   dropdownMenuEntries:
-            //       list.map<DropdownMenuEntry<String>>((String value) {
-            //     return DropdownMenuEntry<String>(value: value, label: value);
-            //   }).toList(),
-            // )
-            // FloatingActionButton(
-            //   child: const Text('Refresh'),
-            //   onPressed: () {
-            //     setState(() {
-            //       // _getOutlet('tZajIXre4OqWnhWg5RsV');
-            //     });
-            //   },
-            // ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
@@ -554,12 +486,11 @@ class _OutletsPageState extends State<OutletsPage> {
                 ],
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: Expanded(
                 child: Container(
-                  height: MediaQuery.sizeOf(context).height - addHeight,
+                  height: MediaQuery.sizeOf(context).height - 180,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20.0),
                     // color: const Color(0xffe9f9fc),
@@ -817,6 +748,57 @@ class _OutletsPageState extends State<OutletsPage> {
                                             color: Colors.black54,
                                           ),
                                         ),
+                                        // SizedBox(
+                                        //   height: 80,
+                                        //   width:
+                                        //       MediaQuery.sizeOf(context).width,
+                                        //   child: ListView.builder(
+                                        //     scrollDirection: Axis.horizontal,
+                                        //     itemCount: scheduleDateTime.length,
+                                        //     itemBuilder: (context, index) {
+                                        //       return Card(
+                                        //         // color: const Color(
+                                        //         //     0xffef7700),
+                                        //         color: Colors.redAccent,
+                                        //         child: Padding(
+                                        //           padding:
+                                        //               const EdgeInsets.all(5.0),
+                                        //           child: Column(
+                                        //             children: [
+                                        //               Row(
+                                        //                 children: [
+                                        //                   const Icon(
+                                        //                     Icons
+                                        //                         .calendar_today,
+                                        //                     size: 12,
+                                        //                     color: Colors.white,
+                                        //                   ),
+                                        //                   const SizedBox(
+                                        //                       width: 5),
+                                        //                   Text(
+                                        //                       scheduleDateTime[
+                                        //                               index]
+                                        //                           .date,
+                                        //                       style:
+                                        //                           const TextStyle(
+                                        //                         color: Colors
+                                        //                             .white,
+                                        //                       )),
+                                        //                 ],
+                                        //               ),
+                                        //               Text(
+                                        //                   '${scheduleDateTime[index].start} - ${scheduleDateTime[index].end}',
+                                        //                   style:
+                                        //                       const TextStyle(
+                                        //                     color: Colors.white,
+                                        //                   ))
+                                        //             ],
+                                        //           ),
+                                        //         ),
+                                        //       );
+                                        //     },
+                                        //   ),
+                                        // ),
                                         SizedBox(
                                           height: 80,
                                           width:
@@ -825,6 +807,13 @@ class _OutletsPageState extends State<OutletsPage> {
                                             scrollDirection: Axis.horizontal,
                                             itemCount: scheduleList.length,
                                             itemBuilder: (context, index) {
+                                              // for (var item
+                                              //     in scheduleClass[index]
+                                              //         .schedule) {
+                                              //   scheduleListAdded.add(item);
+                                              // }
+                                              // print(scheduleClass[index]
+                                              //     .schedule);
                                               return Card(
                                                 // color: const Color(
                                                 //     0xffef7700),
@@ -846,8 +835,7 @@ class _OutletsPageState extends State<OutletsPage> {
                                                               width: 5),
                                                           Text(
                                                               scheduleList[
-                                                                      index]
-                                                                  .toString(),
+                                                                  index],
                                                               style:
                                                                   const TextStyle(
                                                                 color: Colors
@@ -855,7 +843,8 @@ class _OutletsPageState extends State<OutletsPage> {
                                                               )),
                                                         ],
                                                       ),
-                                                      const Text('7:00 - 15:00',
+                                                      const Text(
+                                                          '7:00 - 15:00 ',
                                                           style: TextStyle(
                                                             color: Colors.white,
                                                           ))
@@ -863,177 +852,9 @@ class _OutletsPageState extends State<OutletsPage> {
                                                   ),
                                                 ),
                                               );
-                                              // return indexSchedule
-                                              //         .contains(index)
-                                              //     ? Card(
-                                              //         // color: const Color(
-                                              //         //     0xffef7700),
-                                              //         color: Colors.redAccent,
-                                              //         child: Padding(
-                                              //           padding:
-                                              //               const EdgeInsets
-                                              //                   .all(5.0),
-                                              //           child: Column(
-                                              //             children: [
-                                              //               Row(
-                                              //                 children: [
-                                              //                   const Icon(
-                                              //                     Icons
-                                              //                         .calendar_today,
-                                              //                     size: 12,
-                                              //                     color: Colors
-                                              //                         .white,
-                                              //                   ),
-                                              //                   const SizedBox(
-                                              //                       width: 5),
-                                              //                   Text(
-                                              //                       scheduleList[
-                                              //                               index]
-                                              //                           .toString(),
-                                              //                       style:
-                                              //                           const TextStyle(
-                                              //                         color: Colors
-                                              //                             .white,
-                                              //                       )),
-                                              //                 ],
-                                              //               ),
-                                              //               const Text(
-                                              //                   '7:00 - 15:00',
-                                              //                   style:
-                                              //                       TextStyle(
-                                              //                     color: Colors
-                                              //                         .white,
-                                              //                   ))
-                                              //             ],
-                                              //           ),
-                                              //         ),
-                                              //       )
-                                              //     : Container();
                                             },
                                           ),
                                         ),
-                                        // SizedBox(
-                                        //   height: 220,
-                                        //   width: 300,
-                                        //   child: ListView.builder(
-                                        //     scrollDirection: Axis.vertical,
-                                        //     itemCount: scheduleList.length,
-                                        //     itemBuilder: (context, index) {
-                                        //       return Padding(
-                                        //         padding:
-                                        //             const EdgeInsets.symmetric(
-                                        //                 vertical: 5.0),
-                                        //         child: Row(
-                                        //           children: [
-                                        //             Container(
-                                        //               alignment:
-                                        //                   Alignment.center,
-                                        //               width: 50,
-                                        //               // height: 50,
-                                        //               decoration: BoxDecoration(
-                                        //                   boxShadow: const [
-                                        //                     BoxShadow(
-                                        //                       color:
-                                        //                           Colors.white,
-                                        //                       offset: Offset(
-                                        //                         0.0,
-                                        //                         2.0,
-                                        //                       ),
-                                        //                       blurRadius: 5.0,
-                                        //                       spreadRadius: 2.0,
-                                        //                     ), //BoxShadow
-                                        //                   ],
-                                        //                   color: const Color(
-                                        //                       0xffef7700),
-                                        //                   borderRadius:
-                                        //                       BorderRadius
-                                        //                           .circular(
-                                        //                               20.0)),
-                                        //               child: Text(
-                                        //                   scheduleList[index]
-                                        //                       .toString(),
-                                        //                   style:
-                                        //                       const TextStyle(
-                                        //                     color: Colors.white,
-                                        //                   )),
-                                        //             ),
-                                        //             // const SizedBox(
-                                        //             //   width: 5,
-                                        //             // ),
-                                        //             const Text(' - '),
-                                        //             Container(
-                                        //               alignment:
-                                        //                   Alignment.center,
-                                        //               width: 150,
-                                        //               // height: 50,
-                                        //               decoration: BoxDecoration(
-                                        //                   boxShadow: const [
-                                        //                     BoxShadow(
-                                        //                       color:
-                                        //                           Colors.white,
-                                        //                       offset: Offset(
-                                        //                         0.0,
-                                        //                         2.0,
-                                        //                       ),
-                                        //                       blurRadius: 5.0,
-                                        //                       spreadRadius: 2.0,
-                                        //                     ), //BoxShadow
-                                        //                   ],
-                                        //                   color: const Color(
-                                        //                       0xffef7700),
-                                        //                   borderRadius:
-                                        //                       BorderRadius
-                                        //                           .circular(
-                                        //                               20.0)),
-                                        //               child: const Padding(
-                                        //                 padding:
-                                        //                     EdgeInsets.all(1.0),
-                                        //                 child: Text(
-                                        //                     '07:00 to 15:00',
-                                        //                     style: TextStyle(
-                                        //                       color:
-                                        //                           Colors.white,
-                                        //                     )),
-                                        //               ),
-                                        //             ),
-                                        //           ],
-                                        //         ),
-                                        //       );
-                                        //     },
-                                        //   ),
-                                        // ),
-                                        // const Text(
-                                        //   'Mon-Fri',
-                                        //   style: TextStyle(
-                                        //     fontSize: 16,
-                                        //     fontWeight: FontWeight.bold,
-                                        //     color: Colors.black54,
-                                        //   ),
-                                        // ),
-                                        // const Text(
-                                        //   '09:00-21:30',
-                                        //   style: TextStyle(
-                                        //     fontSize: 16,
-                                        //     fontWeight: FontWeight.bold,
-                                        //     color: Colors.black54,
-                                        //   ),
-                                        // ),
-                                        // const Text(
-                                        //   'Sat-Sun',
-                                        //   style: TextStyle(
-                                        //     fontSize: 16,
-                                        //     fontWeight: FontWeight.bold,
-                                        //     color: Colors.black54,
-                                        //   ),
-                                        // ),
-                                        // const Text(
-                                        //   '07:30-22:30',
-                                        //   style: TextStyle(
-                                        //     fontSize: 16,
-                                        //     fontWeight: FontWeight.bold,
-                                        //     color: Colors.black54,
-                                        //   ),
-                                        // ),
                                         const SizedBox(
                                           height: 10,
                                         ),
@@ -1123,8 +944,11 @@ class _OutletsPageState extends State<OutletsPage> {
                                                                 });
                                                               },
                                                             )
-                                                          : const Icon(Icons
-                                                              .arrow_right),
+                                                          : categoryListAdded
+                                                                  .isNotEmpty
+                                                              ? const Icon(Icons
+                                                                  .arrow_right)
+                                                              : Container(),
                                                       Text(saveEditButton ==
                                                               'SAVE'
                                                           ? categoryList[index]
@@ -1651,6 +1475,7 @@ class _OutletsPageState extends State<OutletsPage> {
         context
             .read<BusinessOutletProvider>()
             .setCountry(data.country, data.location);
+
         // dropDownValue = outletClass;
         isSelectedOutlet = true;
         isSetDefaultWall = true;

@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../ui/components/constant.dart';
 
-class IconButtonMenu extends StatelessWidget {
+class ButtonMenu extends StatelessWidget {
   String text;
-  IconData iconMenu;
   double height;
   double width;
   Color backColor;
   Color textColor;
-  IconButtonMenu(
+
+  ButtonMenu(
       {super.key,
       required this.text,
-      required this.iconMenu,
       required this.height,
       required this.width,
       required this.backColor,
@@ -40,21 +39,17 @@ class IconButtonMenu extends StatelessWidget {
               blurRadius: 4.0,
               spreadRadius: 2.0,
             ), //BoxShadow
-            // const BoxShadow(
-            //   color: Colors.red,
-            //   offset: Offset(0.0, 3.0),
+            // BoxShadow(
+            //   color: Colors.white,
+            //   offset: Offset(0.0, 0.0),
             //   blurRadius: 0.0,
-            //   spreadRadius: 2.0,
+            //   spreadRadius: 0.0,
             // ), //BoxShad
           ]),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
-            child: Icon(iconMenu, color: Colors.white),
-          ),
           Text(
             text,
             style: TextStyle(

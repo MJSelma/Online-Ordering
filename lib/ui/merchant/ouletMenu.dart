@@ -30,11 +30,14 @@ class _OutletMenuState extends State<OutletMenu> {
         context.select((BusinessOutletProvider p) => p.indexPageName);
     final outletClassx =
         context.select((BusinessOutletProvider p) => p.outletClass);
-    final defaultOutletIdProvider =
-        context.select((BusinessOutletProvider p) => p.defaultOutletId);
+    // final defaultOutletIdProvider =
+    //     context.select((BusinessOutletProvider p) => p.defaultOutletId);
+
+    final outletId =
+        context.select((BusinessOutletProvider p) => p.selectedOutletId);
 
     outletClasss = outletClassx;
-    outletIdProvider = defaultOutletIdProvider;
+    outletIdProvider = outletId;
     for (var data in outletClasss) {
       if (data.id.toLowerCase() == outletIdProvider.toLowerCase()) {
         currentItem = data.name;
@@ -54,7 +57,7 @@ class _OutletMenuState extends State<OutletMenu> {
                   fontWeight: FontWeight.bold,
                   fontFamily: 'SFPro',
                   fontSize: 20,
-                  color: defaultFileColorOrange),
+                  color: sys_color_defaultorange),
             ),
           ),
           SizedBox(

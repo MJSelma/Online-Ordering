@@ -13,12 +13,14 @@ import 'package:provider/provider.dart';
 
 import '../provider/businessOutletProvider.dart';
 import '../provider/casesMessagesProvider.dart';
+import '../provider/menu_provider.dart';
 import 'cases/cases.dart';
 import 'cases/casesMessages.dart';
 import 'cases/cases_menu.dart';
 import 'data_class/businesses_class.dart';
 import 'merchant/ouletMenu.dart';
 import 'merchant/outlets.dart';
+import 'merchant/sample.dart';
 
 enum Options { cases, exit }
 
@@ -269,6 +271,10 @@ class _DashBoardState extends State<DashBoard> {
                                 GestureDetector(
                                   onTap: () {
                                     setState(() {
+                                      setIndexMenuNameProvider('');
+                                      context
+                                          .read<MenuProvider>()
+                                          .menuRefresh();
                                       indexMenu = 1;
                                     });
                                   },
@@ -499,7 +505,8 @@ class _DashBoardState extends State<DashBoard> {
                             if (indexMenu == 0) ...[
                               const OutletsPage()
                             ] else if (indexMenu == 1) ...[
-                              const MerchantPage()
+                              const SamplePage()
+                              // const MerchantPage()
                             ] else if (indexMenu == 2) ...[
                               const ConsultationMenu(),
                             ] else if (indexMenu == 3) ...[
