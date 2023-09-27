@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 
 import '../../provider/businessOutletProvider.dart';
 import '../../provider/menu_provider.dart';
-import '../components/showDialog.dart';
+import '../../widgets/showDialog.dart';
+import '../constant/theme_color.dart';
 import '../controller/outletController.dart';
 import '../data_class/businesses_class.dart';
 import '../data_class/outlet_class.dart';
@@ -366,121 +367,136 @@ class _OutletsPageState extends State<OutletsPage> {
                         color: Color(0xffef7700)),
                   ),
                   SizedBox(
-                    width: 230,
+                    width: 350,
                     child: outletClass.isEmpty
                         ? Container()
-                        : Container(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
-                                borderRadius: BorderRadius.circular(20.0)),
-                            child: DropdownMenu<OutletClass>(
-                              enableSearch: true,
-                              enableFilter: true,
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Choose Outlet',
+                                style: TextStyle(
+                                    color: sys_color_defaultorange,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.shade100,
+                                    borderRadius: BorderRadius.circular(20.0)),
+                                child: DropdownMenu<OutletClass>(
+                                  enableSearch: true,
+                                  enableFilter: true,
 
-                              inputDecorationTheme: const InputDecorationTheme(
-                                  border: InputBorder.none,
-                                  fillColor: Color(0xffef7700),
-                                  hintStyle: TextStyle(
+                                  inputDecorationTheme:
+                                      const InputDecorationTheme(
+                                          border: InputBorder.none,
+                                          fillColor: Color(0xffef7700),
+                                          hintStyle: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                              color: Color(0xffef7700))
+                                          // border: UnderlineInputBorder(
+
+                                          // border: OutlineInputBorder(
+                                          //   borderRadius: BorderRadius.all(
+                                          //     Radius.circular(20.0),
+                                          //   ),
+                                          // ),
+                                          ),
+
+                                  // menuStyle: const MenuStyle(
+                                  //   surfaceTintColor: MaterialStatePropertyAll<Color>( Color(0xffef7700))
+                                  // ),
+                                  // initialSelection: list.first,
+                                  trailingIcon: const Icon(
+                                    Icons.search,
+                                    color: Color(0xffef7700),
+                                  ),
+                                  // selectedTrailingIcon: null,
+                                  width: 200,
+                                  hintText: currentItem,
+                                  textStyle: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 16,
-                                      color: Color(0xffef7700))
-                                  // border: UnderlineInputBorder(
+                                      color: Color(0xffef7700)),
 
-                                  // border: OutlineInputBorder(
-                                  //   borderRadius: BorderRadius.all(
-                                  //     Radius.circular(20.0),
-                                  //   ),
+                                  onSelected: (OutletClass? value) {
+                                    // This is called when the user selects an item.
+                                    setState(() {
+                                      currentItem = value!.name;
+                                      currentOutletName = value.name;
+                                      strLocation = value.location;
+                                      indexYesNo =
+                                          value.isLocatedAt == true ? 0 : 1;
+                                      strNumber = value.contactNumber;
+                                      strEmail = value.email;
+                                      strDescription = value.description;
+                                      strCurrency = value.currency;
+                                      intStar = value.star;
+                                      outletId = value.id;
+                                      txtLocation.text = strLocation;
+                                      txtNumber.text = strNumber;
+                                      txtEmail.text = strEmail;
+                                      txtDescription.text = strDescription;
+                                      txtCurrency.text = strCurrency;
+
+                                      dropDownValue = value;
+                                      isSelectedOutlet = true;
+                                      print(
+                                          '$defaultOutletIdProvider + $outletId');
+                                      // defaultOutletIdProvider.toLowerCase() ==
+                                      //         outletId.toLowerCase()
+                                      //     ? isSetDefaultWall = true
+                                      //     : isSetDefaultWall = false;
+                                      currentRegionId = value.regionId;
+                                      currentRegion = value.regionName;
+                                      currentCusineId = value.cuisineId;
+                                      currentCusine = value.cuisineName;
+                                      currentCusineStylId =
+                                          value.cuisineStyleId;
+                                      currentCusineStyle =
+                                          value.cuisineStyleName;
+                                      print(businessesClass.length);
+                                      for (var item in businessesClass) {
+                                        item.defaultOutletId.toLowerCase() ==
+                                                outletId.toLowerCase()
+                                            ? isSetDefaultWall = true
+                                            : isSetDefaultWall = false;
+                                      }
+                                      categoryListAdded.clear();
+                                      for (var data in value.category) {
+                                        print(data);
+                                        categoryListAdded.add(data);
+                                      }
+
+                                      context
+                                          .read<MenuProvider>()
+                                          .selectedMenu('', '', '', '', '');
+                                      context
+                                          .read<BusinessOutletProvider>()
+                                          .setSelectedOutletId(outletId);
+                                      context
+                                          .read<BusinessOutletProvider>()
+                                          .setCountry(
+                                              value.country, value.location);
+
+                                      // businessesClass[0]
+                                      //             .defaultOutletId
+                                      //             .toLowerCase() ==
+                                      //         outletId.toLowerCase()
+                                      //     ? isSetDefaultWall = true
+                                      //     : isSetDefaultWall = false;
+                                    });
+                                  },
+                                  dropdownMenuEntries: _createListOutlet(),
+                                  // menuStyle: MenuStyle(
+
                                   // ),
-                                  ),
-
-                              // menuStyle: const MenuStyle(
-                              //   surfaceTintColor: MaterialStatePropertyAll<Color>( Color(0xffef7700))
-                              // ),
-                              // initialSelection: list.first,
-                              trailingIcon: const Icon(
-                                Icons.search,
-                                color: Color(0xffef7700),
+                                ),
                               ),
-                              // selectedTrailingIcon: null,
-                              width: 200,
-                              hintText: currentItem,
-                              textStyle: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Color(0xffef7700)),
-
-                              onSelected: (OutletClass? value) {
-                                // This is called when the user selects an item.
-                                setState(() {
-                                  currentItem = value!.name;
-                                  currentOutletName = value.name;
-                                  strLocation = value.location;
-                                  indexYesNo =
-                                      value.isLocatedAt == true ? 0 : 1;
-                                  strNumber = value.contactNumber;
-                                  strEmail = value.email;
-                                  strDescription = value.description;
-                                  strCurrency = value.currency;
-                                  intStar = value.star;
-                                  outletId = value.id;
-                                  txtLocation.text = strLocation;
-                                  txtNumber.text = strNumber;
-                                  txtEmail.text = strEmail;
-                                  txtDescription.text = strDescription;
-                                  txtCurrency.text = strCurrency;
-
-                                  dropDownValue = value;
-                                  isSelectedOutlet = true;
-                                  print('$defaultOutletIdProvider + $outletId');
-                                  // defaultOutletIdProvider.toLowerCase() ==
-                                  //         outletId.toLowerCase()
-                                  //     ? isSetDefaultWall = true
-                                  //     : isSetDefaultWall = false;
-                                  currentRegionId = value.regionId;
-                                  currentRegion = value.regionName;
-                                  currentCusineId = value.cuisineId;
-                                  currentCusine = value.cuisineName;
-                                  currentCusineStylId = value.cuisineStyleId;
-                                  currentCusineStyle = value.cuisineStyleName;
-                                  print(businessesClass.length);
-                                  for (var item in businessesClass) {
-                                    item.defaultOutletId.toLowerCase() ==
-                                            outletId.toLowerCase()
-                                        ? isSetDefaultWall = true
-                                        : isSetDefaultWall = false;
-                                  }
-                                  categoryListAdded.clear();
-                                  for (var data in value.category) {
-                                    print(data);
-                                    categoryListAdded.add(data);
-                                  }
-
-                                  context
-                                      .read<MenuProvider>()
-                                      .selectedMenu('', '', '', '', '');
-                                  context
-                                      .read<BusinessOutletProvider>()
-                                      .setSelectedOutletId(outletId);
-                                  context
-                                      .read<BusinessOutletProvider>()
-                                      .setCountry(
-                                          value.country, value.location);
-
-                                  // businessesClass[0]
-                                  //             .defaultOutletId
-                                  //             .toLowerCase() ==
-                                  //         outletId.toLowerCase()
-                                  //     ? isSetDefaultWall = true
-                                  //     : isSetDefaultWall = false;
-                                });
-                              },
-                              dropdownMenuEntries: _createListOutlet(),
-                              // menuStyle: MenuStyle(
-
-                              // ),
-                            ),
+                            ],
                           ),
                   ),
                 ],

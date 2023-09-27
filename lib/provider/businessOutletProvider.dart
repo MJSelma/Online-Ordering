@@ -151,7 +151,7 @@ class BusinessOutletProvider with ChangeNotifier {
   void setSelectedOutletId(String outletID) {
     _selectedOutletId = outletID;
     // _getSchedule(outletID);
-    _getSchedule();
+    // _getSchedule();
     notifyListeners();
   }
 

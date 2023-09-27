@@ -14,9 +14,11 @@ import 'package:provider/provider.dart';
 import '../provider/businessOutletProvider.dart';
 import '../provider/casesMessagesProvider.dart';
 import '../provider/menu_provider.dart';
+import '../widgets/menu_button.dart';
 import 'cases/cases.dart';
 import 'cases/casesMessages.dart';
 import 'cases/cases_menu.dart';
+import 'constant/theme_color.dart';
 import 'data_class/businesses_class.dart';
 import 'merchant/ouletMenu.dart';
 import 'merchant/outlets.dart';
@@ -32,12 +34,9 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
-  int indexMenu = 100;
-  int indexMenuHover = 100;
   bool showChat = false;
-  bool isMenuOpen = true;
-
-  String currentItem = 'Select Business';
+  int indexMenu = 100;
+  String currentItem = 'SELECT BUSINESS';
   String businessDocId = '';
 
   BusinessesClass? dropDownValue;
@@ -116,7 +115,11 @@ class _DashBoardState extends State<DashBoard> {
     _getProvider(context);
 
     final businessProvider = context.read<BusinessOutletProvider>();
-
+    bool isMenuOpen = context.select((MenuProvider p) => p.isMenuOpen);
+    context.read<MenuProvider>().setIndexMenu(indexMenu);
+    // int indexMenux = context.select((MenuProvider p) => p.indexMenu);
+    // indexMenu = indexMenux;
+    // int indexMenuHover = context.select((MenuProvider p) => p.indexMenuHover);
     // final businessProvider = Provider.of<BusinessOutletProvider>(context);
 
     final dropdown = DropdownButton<BusinessesClass>(
@@ -126,11 +129,17 @@ class _DashBoardState extends State<DashBoard> {
       isExpanded: false,
       borderRadius: BorderRadius.circular(20),
       hint: Center(
-        child: MenuButton(currentItem, 0, Icons.business, 50, 0),
+        child: MenuButton(
+            text: currentItem,
+            val: 0,
+            iconMenu: Icons.business,
+            height: 50,
+            paddingLeft: 0),
       ),
       onChanged: (BusinessesClass? value) {
         setState(() {
           indexMenu = 0;
+
           businessDocId = value!.docId;
           currentItem = value.name;
           dropDownValue = value;
@@ -258,7 +267,11 @@ class _DashBoardState extends State<DashBoard> {
                             child: isMenuOpen
                                 ? dropdown
                                 : MenuButton(
-                                    currentItem, 0, Icons.business, 50, 0),
+                                    text: currentItem,
+                                    val: 0,
+                                    iconMenu: Icons.business,
+                                    height: 50,
+                                    paddingLeft: 0),
                           ),
                           Visibility(
                             visible: businessDocId != '',
@@ -279,7 +292,11 @@ class _DashBoardState extends State<DashBoard> {
                                     });
                                   },
                                   child: MenuButton(
-                                      'Table Bookings', 1, Icons.book, 40, 0),
+                                      text: 'TABLE BOOKINGS',
+                                      val: 1,
+                                      iconMenu: Icons.book,
+                                      height: 30,
+                                      paddingLeft: 0),
                                 ),
                                 // const SizedBox(
                                 //   height: 4,
@@ -320,25 +337,72 @@ class _DashBoardState extends State<DashBoard> {
                                     setState(() {
                                       indexMenu = 2;
                                       setIndexMenuNameProvider(
-                                          'Consultation Menu');
+                                          'CONSULTATION MENU');
                                     });
                                   },
-                                  child: MenuButton('Consultation Menu', 2,
-                                      Icons.picture_as_pdf, 40, 14),
+                                  child: MenuButton(
+                                      text: 'CONSULTATION MENU',
+                                      val: 2,
+                                      iconMenu: Icons.picture_as_pdf,
+                                      height: 30,
+                                      paddingLeft: 0),
                                 ),
                                 const SizedBox(
-                                  height: 6,
+                                  height: 10,
                                 ),
                                 GestureDetector(
                                   onTap: () {
                                     setState(() {
                                       indexMenu = 3;
-                                      setIndexMenuNameProvider('');
+                                      setIndexMenuNameProvider('SMART MENU');
                                     });
                                   },
-                                  child: MenuButton('Smart Menu', 3,
-                                      Icons.menu_book_rounded, 40, 14),
+                                  child: MenuButton(
+                                      text: 'SMART MENU',
+                                      val: 3,
+                                      iconMenu: Icons.menu_book_rounded,
+                                      height: 30,
+                                      paddingLeft: 0),
                                 ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                if (isMenuOpen)
+                                  Visibility(
+                                    visible: indexMenu == 3,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(20.0),
+                                      decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(20.0)),
+                                          border: Border.fromBorderSide(
+                                              BorderSide(
+                                                  width: 1.0,
+                                                  color:
+                                                      sys_color_defaultorange))),
+                                      child: const Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text('WORKING STATIONS'),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text('WORKTOPS'),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text('INVENTORIES'),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text('SMART MENU'),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(0, 8, 0, 8),
@@ -356,7 +420,11 @@ class _DashBoardState extends State<DashBoard> {
                                     });
                                   },
                                   child: MenuButton(
-                                      'Explore Venue', 4, Icons.explore, 40, 0),
+                                      text: 'EXPLORE VENUE',
+                                      val: 4,
+                                      iconMenu: Icons.explore,
+                                      height: 30,
+                                      paddingLeft: 0),
                                 ),
                                 const SizedBox(
                                   height: 12,
@@ -368,8 +436,12 @@ class _DashBoardState extends State<DashBoard> {
                                       setIndexMenuNameProvider('');
                                     });
                                   },
-                                  child: MenuButton('Events/Weekly \nPrograms',
-                                      5, Icons.calendar_month, 50, 0),
+                                  child: MenuButton(
+                                      text: 'EVENTS/WEEKLY \nPROGRAMS',
+                                      val: 5,
+                                      iconMenu: Icons.calendar_month,
+                                      height: 50,
+                                      paddingLeft: 0),
                                 ),
                                 const SizedBox(
                                   height: 12,
@@ -382,7 +454,11 @@ class _DashBoardState extends State<DashBoard> {
                                     });
                                   },
                                   child: MenuButton(
-                                      'Media Content', 6, Icons.image, 40, 0),
+                                      text: 'MEDIA CONTENT',
+                                      val: 6,
+                                      iconMenu: Icons.image,
+                                      height: 30,
+                                      paddingLeft: 0),
                                 ),
                                 const SizedBox(
                                   height: 12,
@@ -395,7 +471,11 @@ class _DashBoardState extends State<DashBoard> {
                                     });
                                   },
                                   child: MenuButton(
-                                      'Experience', 7, Icons.history, 40, 0),
+                                      text: 'EXPERIENCE',
+                                      val: 7,
+                                      iconMenu: Icons.history,
+                                      height: 30,
+                                      paddingLeft: 0),
                                 ),
                                 const SizedBox(
                                   height: 12,
@@ -407,8 +487,12 @@ class _DashBoardState extends State<DashBoard> {
                                       setIndexMenuNameProvider('');
                                     });
                                   },
-                                  child: MenuButton('Your Ads', 8,
-                                      Icons.branding_watermark, 40, 0),
+                                  child: MenuButton(
+                                      text: 'YOUR ADS',
+                                      val: 8,
+                                      iconMenu: Icons.branding_watermark,
+                                      height: 30,
+                                      paddingLeft: 0),
                                 ),
                                 const SizedBox(
                                   height: 12,
@@ -421,7 +505,11 @@ class _DashBoardState extends State<DashBoard> {
                                     });
                                   },
                                   child: MenuButton(
-                                      'Your Staff', 9, Icons.person_add, 40, 0),
+                                      text: 'YOUR STAFF',
+                                      val: 9,
+                                      iconMenu: Icons.person_add,
+                                      height: 30,
+                                      paddingLeft: 0),
                                 ),
                                 const SizedBox(
                                   height: 12,
@@ -433,8 +521,12 @@ class _DashBoardState extends State<DashBoard> {
                                       setIndexMenuNameProvider('');
                                     });
                                   },
-                                  child: MenuButton('Report', 10,
-                                      Icons.bar_chart_outlined, 40, 0),
+                                  child: MenuButton(
+                                      text: 'REPORT',
+                                      val: 30,
+                                      iconMenu: Icons.bar_chart_outlined,
+                                      height: 40,
+                                      paddingLeft: 0),
                                 ),
                                 const SizedBox(
                                   height: 12,
@@ -447,7 +539,11 @@ class _DashBoardState extends State<DashBoard> {
                                     });
                                   },
                                   child: MenuButton(
-                                      'Payment', 11, Icons.payment, 40, 0),
+                                      text: 'PAYMENT',
+                                      val: 30,
+                                      iconMenu: Icons.payment,
+                                      height: 40,
+                                      paddingLeft: 0),
                                 ),
                                 const SizedBox(
                                   height: 12,
@@ -459,8 +555,12 @@ class _DashBoardState extends State<DashBoard> {
                                       setIndexMenuNameProvider('');
                                     });
                                   },
-                                  child: MenuButton('Business Contact', 12,
-                                      Icons.contact_mail_rounded, 40, 0),
+                                  child: MenuButton(
+                                      text: 'BUSINESS CONTACT',
+                                      val: 30,
+                                      iconMenu: Icons.contact_mail_rounded,
+                                      height: 40,
+                                      paddingLeft: 0),
                                 ),
                               ],
                             ),
@@ -475,6 +575,9 @@ class _DashBoardState extends State<DashBoard> {
                               onTap: () {
                                 setState(() {
                                   isMenuOpen = !isMenuOpen;
+                                  context
+                                      .read<MenuProvider>()
+                                      .setIsMenuOpen(isMenuOpen);
                                 });
                               },
                               child: Icon(
@@ -490,33 +593,37 @@ class _DashBoardState extends State<DashBoard> {
                       if (indexMenu == 0) ...[
                         const OutletsPage()
                       ] else ...[
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: MediaQuery.sizeOf(context).width - 300,
-                                  child: const OutletMenu(),
-                                ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.sizeOf(context).width - 300,
+                                    child: const OutletMenu(),
+                                  ),
+                                ],
+                              ),
+                              if (indexMenu == 0) ...[
+                                const OutletsPage()
+                              ] else if (indexMenu == 1) ...[
+                                const SamplePage()
+                                // const MerchantPage()
+                              ] else if (indexMenu == 2) ...[
+                                const ConsultationMenu(),
+                              ] else if (indexMenu == 3) ...[
+                                const SmartMenu()
+                              ] else if (indexMenu == 6) ...[
+                                const CasesMenu()
+                              ] else ...[
+                                // const widgetWall()
                               ],
-                            ),
-                            if (indexMenu == 0) ...[
-                              const OutletsPage()
-                            ] else if (indexMenu == 1) ...[
-                              const SamplePage()
-                              // const MerchantPage()
-                            ] else if (indexMenu == 2) ...[
-                              const ConsultationMenu(),
-                            ] else if (indexMenu == 3) ...[
-                              const SmartMenu()
-                            ] else if (indexMenu == 6) ...[
-                              const CasesMenu()
-                            ] else ...[
-                              // const widgetWall()
                             ],
-                          ],
+                          ),
                         )
                       ]
                     ],
@@ -577,187 +684,188 @@ class _DashBoardState extends State<DashBoard> {
   setIndexMenuNameProvider(String name) {
     context.read<BusinessOutletProvider>().setIndexPageName(name);
   }
-
-  Widget MenuButton(String text, int val, IconData iconMenu, double height,
-      double paddingLeft) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(paddingLeft, 0, 0, 0),
-      child: MouseRegion(
-        onHover: (event) {
-          setState(() {
-            indexMenuHover = val;
-          });
-        },
-        onExit: (event) {
-          indexMenuHover = 100;
-        },
-        child: Container(
-          width: isMenuOpen ? 200 : 50,
-          height: height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            color: indexMenu == val
-                ? const Color(0xffef7700)
-                : indexMenuHover == val
-                    ? const Color(0xffef7700)
-                    : Colors.grey.shade200,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(12, 0, 5, 0),
-                child: Icon(
-                  iconMenu,
-                  color: indexMenu == val
-                      ? Colors.white
-                      : indexMenuHover == val
-                          ? Colors.white
-                          : const Color.fromARGB(255, 66, 64, 64),
-                ),
-              ),
-              Visibility(
-                visible: isMenuOpen,
-                child: Text(
-                  text,
-                  style: TextStyle(
-                    fontFamily: 'SFPro',
-                    fontSize: 18,
-                    color: indexMenu == val
-                        ? Colors.white
-                        : indexMenuHover == val
-                            ? Colors.white
-                            : const Color.fromARGB(255, 66, 64, 64),
-                    fontWeight: FontWeight.w500,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
 
-class widgetWall extends StatelessWidget {
-  const widgetWall({
-    Key? key,
-  }) : super(key: key);
+//   Widget MenuButton(String text, int val, IconData iconMenu, double height,
+//       double paddingLeft) {
+//     return Padding(
+//       padding: EdgeInsets.fromLTRB(paddingLeft, 0, 0, 0),
+//       child: MouseRegion(
+//         onHover: (event) {
+//           setState(() {
+//             indexMenuHover = val;
+//           });
+//         },
+//         onExit: (event) {
+//           indexMenuHover = 100;
+//         },
+//         child: Container(
+//           width: isMenuOpen ? 200 : 50,
+//           height: height,
+//           decoration: BoxDecoration(
+//             borderRadius: BorderRadius.circular(10.0),
+//             color: indexMenu == val
+//                 ? const Color(0xffef7700)
+//                 : indexMenuHover == val
+//                     ? const Color(0xffef7700)
+//                     : Colors.grey.shade200,
+//           ),
+//           child: Row(
+//             mainAxisAlignment: MainAxisAlignment.start,
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             children: [
+//               Padding(
+//                 padding: const EdgeInsets.fromLTRB(12, 0, 5, 0),
+//                 child: Icon(
+//                   iconMenu,
+//                   color: indexMenu == val
+//                       ? Colors.white
+//                       : indexMenuHover == val
+//                           ? Colors.white
+//                           : const Color.fromARGB(255, 66, 64, 64),
+//                 ),
+//               ),
+//               Visibility(
+//                 visible: isMenuOpen,
+//                 child: Text(
+//                   text,
+//                   style: TextStyle(
+//                     fontFamily: 'SFPro',
+//                     fontSize: 18,
+//                     color: indexMenu == val
+//                         ? Colors.white
+//                         : indexMenuHover == val
+//                             ? Colors.white
+//                             : const Color.fromARGB(255, 66, 64, 64),
+//                     fontWeight: FontWeight.w500,
+//                   ),
+//                   textAlign: TextAlign.center,
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width - 280,
-          height: 150,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30.0),
-            color: const Color(0xffe9f9fc),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x29000000),
-                offset: Offset(0, 3),
-                blurRadius: 6,
-              ),
-            ],
-          ),
-          child: const Padding(
-            padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
-            child: Text(
-              'Order Your Best \nFood Anytime / Ads will show here also',
-              style: TextStyle(
-                fontFamily: 'SF Pro',
-                fontSize: 30,
-                color: Color(0xff5b5957),
-                fontWeight: FontWeight.w700,
-                shadows: [
-                  Shadow(
-                    color: Color(0x29000000),
-                    offset: Offset(0, 3),
-                    blurRadius: 6,
-                  )
-                ],
-              ),
-              textAlign: TextAlign.left,
-            ),
-          ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 700,
-                  height: 500,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(55.0),
-                    color: const Color(0xfffafafa),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x29000000),
-                        offset: Offset(0, 3),
-                        blurRadius: 6,
-                      ),
-                    ],
-                  ),
-                  child: Image.asset(
-                    'assets/images/wall_sample.png',
-                    width: 600,
-                    height: 450,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                const Row(
-                  children: [],
-                )
-              ],
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 400,
-                  height: 400,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(55.0),
-                    color: const Color(0xfffafafa),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x29000000),
-                        offset: Offset(0, 3),
-                        blurRadius: 6,
-                      ),
-                    ],
-                  ),
-                  child: Image.asset(
-                    'assets/images/ads_sample.png',
-                    width: 600,
-                    height: 450,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-                const Row(
-                  children: [],
-                )
-              ],
-            )
-          ],
-        )
-      ],
-    );
-  }
-}
+// class widgetWall extends StatelessWidget {
+//   const widgetWall({
+//     Key? key,
+//   }) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Container(
+//           width: MediaQuery.of(context).size.width - 280,
+//           height: 150,
+//           decoration: BoxDecoration(
+//             borderRadius: BorderRadius.circular(30.0),
+//             color: const Color(0xffe9f9fc),
+//             boxShadow: const [
+//               BoxShadow(
+//                 color: Color(0x29000000),
+//                 offset: Offset(0, 3),
+//                 blurRadius: 6,
+//               ),
+//             ],
+//           ),
+//           child: const Padding(
+//             padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
+//             child: Text(
+//               'Order Your Best \nFood Anytime / Ads will show here also',
+//               style: TextStyle(
+//                 fontFamily: 'SF Pro',
+//                 fontSize: 30,
+//                 color: Color(0xff5b5957),
+//                 fontWeight: FontWeight.w700,
+//                 shadows: [
+//                   Shadow(
+//                     color: Color(0x29000000),
+//                     offset: Offset(0, 3),
+//                     blurRadius: 6,
+//                   )
+//                 ],
+//               ),
+//               textAlign: TextAlign.left,
+//             ),
+//           ),
+//         ),
+//         const SizedBox(
+//           height: 20,
+//         ),
+//         Row(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           mainAxisAlignment: MainAxisAlignment.start,
+//           children: [
+//             Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Container(
+//                   width: 700,
+//                   height: 500,
+//                   decoration: BoxDecoration(
+//                     borderRadius: BorderRadius.circular(55.0),
+//                     color: const Color(0xfffafafa),
+//                     boxShadow: const [
+//                       BoxShadow(
+//                         color: Color(0x29000000),
+//                         offset: Offset(0, 3),
+//                         blurRadius: 6,
+//                       ),
+//                     ],
+//                   ),
+//                   child: Image.asset(
+//                     'assets/images/wall_sample.png',
+//                     width: 600,
+//                     height: 450,
+//                     fit: BoxFit.fill,
+//                   ),
+//                 ),
+//                 const Row(
+//                   children: [],
+//                 )
+//               ],
+//             ),
+//             const SizedBox(
+//               width: 20,
+//             ),
+//             Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Container(
+//                   width: 400,
+//                   height: 400,
+//                   decoration: BoxDecoration(
+//                     borderRadius: BorderRadius.circular(55.0),
+//                     color: const Color(0xfffafafa),
+//                     boxShadow: const [
+//                       BoxShadow(
+//                         color: Color(0x29000000),
+//                         offset: Offset(0, 3),
+//                         blurRadius: 6,
+//                       ),
+//                     ],
+//                   ),
+//                   child: Image.asset(
+//                     'assets/images/ads_sample.png',
+//                     width: 600,
+//                     height: 450,
+//                     fit: BoxFit.fill,
+//                   ),
+//                 ),
+//                 const Row(
+//                   children: [],
+//                 )
+//               ],
+//             )
+//           ],
+//         )
+//       ],
+//     );
+//   }
+// }

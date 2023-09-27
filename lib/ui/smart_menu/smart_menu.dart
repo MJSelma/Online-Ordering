@@ -10,15 +10,21 @@ class SmartMenu extends StatefulWidget {
 class _SmartMenuState extends State<SmartMenu> {
   @override
   Widget build(BuildContext context) {
-    return  Column(
+    return const Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text('Smart Menu', style: TextStyle(fontWeight: FontWeight.w200, fontFamily: 'SFPro',),),
+          padding: EdgeInsets.all(8.0),
+          child: Text(
+            'Smart Menu',
+            style: TextStyle(
+              fontWeight: FontWeight.w200,
+              fontFamily: 'SFPro',
+            ),
+          ),
         ),
-        Row(children: [
-
-        ],)
+        Row(
+          children: [],
+        )
       ],
     );
   }

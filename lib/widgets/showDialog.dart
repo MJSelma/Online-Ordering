@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
+import '../ui/constant/theme_color.dart';
+
 warningDialog(BuildContext context, String title, String message) {
   showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
         shape: RoundedRectangleBorder(
-            side: const BorderSide(
-                width: 4, color: Color(0xffef7700), strokeAlign: 1),
+            side: BorderSide(
+                width: 3, color: sys_color_defaultorange, strokeAlign: 1),
             borderRadius: BorderRadius.circular(20.0)),
         title: DecoratedBox(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: sys_color_white,
             borderRadius: BorderRadius.circular(20),
           ),
           child: SizedBox(
@@ -23,8 +25,8 @@ warningDialog(BuildContext context, String title, String message) {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(title,
-                        style: const TextStyle(
-                            color: Color(0xffef7700),
+                        style: TextStyle(
+                            color: sys_color_defaultorange,
                             fontWeight: FontWeight.bold)),
                     Container(
                       alignment: Alignment.topRight,
@@ -72,7 +74,7 @@ warningDialog(BuildContext context, String title, String message) {
                 //           style: TextStyle(
                 //             fontFamily: 'SFPro',
                 //             fontSize: 18,
-                //             color: Colors.white,
+                //             color: sys_color_white,
                 //             fontWeight: FontWeight.w500,
                 //           ),
                 //         ),
@@ -101,5 +103,5 @@ Color getColor(Set<MaterialState> states) {
   if (states.any(interactiveStates.contains)) {
     return Colors.blue;
   }
-  return const Color(0xffef7700);
+  return sys_color_defaultorange;
 }

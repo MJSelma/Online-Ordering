@@ -4,6 +4,7 @@ Color iconButtonTextColor = Colors.white;
 
 Color sys_color_defaultorange = const Color(0xffef7700);
 Color sys_color_purple = const Color(0xff382F6C);
+Color sys_color_purpleLight = const Color(0xffA32CC4);
 Color sys_color_orange = const Color(0xffFF521A);
 Color sys_color_darkgrey = const Color(0xff4F5E75);
 Color sys_color_lightorange = const Color(0xffEF8354);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../ui/components/constant.dart';
+import '../ui/constant/theme_color.dart';
 
 class ButtonMenu extends StatelessWidget {
   String text;

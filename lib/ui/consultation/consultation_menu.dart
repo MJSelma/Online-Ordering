@@ -12,8 +12,8 @@ import 'package:provider/provider.dart';
 
 import '../../provider/businessOutletProvider.dart';
 import '../../widgets/button.dart';
-import '../components/constant.dart';
-import '../components/showDialog.dart';
+import '../constant/theme_color.dart';
+import '../../widgets/showDialog.dart';
 import '../data_class/outlet_class.dart';
 
 class ConsultationMenu extends StatefulWidget {
@@ -841,7 +841,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
         return AlertDialog(
           shape: RoundedRectangleBorder(
               side: BorderSide(
-                width: 4,
+                width: 3,
                 color: sys_color_defaultorange,
               ),
               borderRadius: BorderRadius.circular(20.0)),
@@ -1072,7 +1072,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
     return AlertDialog(
       shape: RoundedRectangleBorder(
           side: BorderSide(
-            width: 4,
+            width: 3,
             color: sys_color_defaultorange,
           ),
           borderRadius: BorderRadius.circular(20.0)),
@@ -1182,7 +1182,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
 
         return AlertDialog(
           shape: RoundedRectangleBorder(
-              side: const BorderSide(width: 4, color: Color(0xffef7700)),
+              side: const BorderSide(width: 3, color: Color(0xffef7700)),
               borderRadius: BorderRadius.circular(20.0)),
           title: DecoratedBox(
             decoration: BoxDecoration(
@@ -1279,7 +1279,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                           iconMenu: Icons.import_export,
                           width: 150,
                           height: 35,
-                          backColor: const Color.fromARGB(255, 210, 69, 69),
+                          // backColor: const Color.fromARGB(255, 210, 69, 69),
+                          backColor: button_color_red,
                           textColor: iconButtonTextColor,
                         )),
                   ],

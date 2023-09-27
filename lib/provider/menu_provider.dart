@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class MenuProvider with ChangeNotifier {
+  //Sub menu
+  bool _isMenuOpen = true;
+  int _indexMenu = 100;
+
   bool refresh = false;
   bool _isImageLoaded = false;
   String _menuName = '';
@@ -33,6 +37,8 @@ class MenuProvider with ChangeNotifier {
   int get chooseOutletIndex => _chooseOutletIndex;
   int get chooseOutletIndexSelected => _chooseOutletIndexSelected;
   String get searchMenuName => _searchMenuName;
+  bool get isMenuOpen => _isMenuOpen;
+  int get indexMenu => _indexMenu;
 
   void selectedMenu(String id, name, image, type, pdfData) {
     _menuID = id;
@@ -85,6 +91,17 @@ class MenuProvider with ChangeNotifier {
 
   void setSearchMenuName(String name) {
     _searchMenuName = name;
+    notifyListeners();
+  }
+
+  void setIsMenuOpen(bool open) {
+    _isMenuOpen = open;
+    notifyListeners();
+  }
+
+  void setIndexMenu(int menu) {
+    _indexMenu = menu;
+
     notifyListeners();
   }
 }

@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../provider/businessOutletProvider.dart';
 import '../../provider/menu_provider.dart';
-import '../components/constant.dart';
+import '../constant/theme_color.dart';
 import '../data_class/outlet_class.dart';
 
 class OutletMenu extends StatefulWidget {
@@ -61,50 +61,61 @@ class _OutletMenuState extends State<OutletMenu> {
             ),
           ),
           SizedBox(
-            width: 230,
+            width: 350,
             child: outletClasss.isEmpty
                 ? Container()
-                : Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(20.0)),
-                    child: DropdownMenu<OutletClass>(
-                      enableSearch: true,
-                      enableFilter: true,
-                      inputDecorationTheme: const InputDecorationTheme(
-                          border: InputBorder.none,
-                          fillColor: Color(0xffef7700),
-                          hintStyle: TextStyle(
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Choose Outlet',
+                        style: TextStyle(
+                            color: sys_color_defaultorange,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(20.0)),
+                        child: DropdownMenu<OutletClass>(
+                          enableSearch: true,
+                          enableFilter: true,
+                          inputDecorationTheme: const InputDecorationTheme(
+                              border: InputBorder.none,
+                              fillColor: Color(0xffef7700),
+                              hintStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Color(0xffef7700))),
+                          trailingIcon: const Icon(
+                            Icons.search,
+                            color: Color(0xffef7700),
+                          ),
+                          width: 200,
+                          hintText: currentItem,
+                          textStyle: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
-                              color: Color(0xffef7700))),
-                      trailingIcon: const Icon(
-                        Icons.search,
-                        color: Color(0xffef7700),
+                              color: Color(0xffef7700)),
+                          onSelected: (OutletClass? value) {
+                            setState(() {
+                              context
+                                  .read<MenuProvider>()
+                                  .selectedMenu('', '', '', '', '');
+                              context
+                                  .read<BusinessOutletProvider>()
+                                  .setSelectedOutletId(value!.id);
+                              context
+                                  .read<BusinessOutletProvider>()
+                                  .setCountry(value.country, value.location);
+                            });
+                            context.read<MenuProvider>().menuRefresh();
+                          },
+                          dropdownMenuEntries: _createListOutlet(),
+                        ),
                       ),
-                      width: 200,
-                      hintText: currentItem,
-                      textStyle: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Color(0xffef7700)),
-                      onSelected: (OutletClass? value) {
-                        setState(() {
-                          context
-                              .read<MenuProvider>()
-                              .selectedMenu('', '', '', '', '');
-                          context
-                              .read<BusinessOutletProvider>()
-                              .setSelectedOutletId(value!.id);
-                          context
-                              .read<BusinessOutletProvider>()
-                              .setCountry(value.country, value.location);
-                        });
-                        context.read<MenuProvider>().menuRefresh();
-                      },
-                      dropdownMenuEntries: _createListOutlet(),
-                    ),
+                    ],
                   ),
           ),
         ],
