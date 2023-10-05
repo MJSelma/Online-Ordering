@@ -8,6 +8,7 @@ class MenuProvider with ChangeNotifier {
   String _type = '';
   String _pdfData = '';
   int _menuCount = 0;
+  int _smartMenuSelected = 0;
 
   String get menuName => _menuName;
   String get imageUrl => _imageUrl;
@@ -15,6 +16,7 @@ class MenuProvider with ChangeNotifier {
   String get type => _type;
   String get pdfData => _pdfData;
   int get menuCount => _menuCount;
+  int get smartMenuSelected => _smartMenuSelected;
 
   void selectedMenu(String id, name, image, type, pdfData) {
     _menuID = id;
@@ -25,6 +27,10 @@ class MenuProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void updateSmartMenuIndex(int menuNum) {
+    _smartMenuSelected = menuNum;
+    notifyListeners();
+  }
 
   void updateMenuCount(int count) {
     _menuCount = count;

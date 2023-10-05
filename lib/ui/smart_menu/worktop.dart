@@ -1,14 +1,14 @@
 import 'package:drinklinkmerchant/widgets/icon_button.dart';
 import 'package:flutter/material.dart';
 
-class SmartMenu extends StatefulWidget {
-  const SmartMenu({super.key});
+class WorkTop extends StatefulWidget {
+  const WorkTop({super.key});
 
   @override
-  State<SmartMenu> createState() => _SmartMenuState();
+  State<WorkTop> createState() => _WorkTopState();
 }
 
-class _SmartMenuState extends State<SmartMenu> {
+class _WorkTopState extends State<WorkTop> {
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class _SmartMenuState extends State<SmartMenu> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Text(
-            'Smart Menu',
+            'Smart Menu > Worktop',
             style: TextStyle(
                 fontWeight: FontWeight.w400, fontFamily: 'SFPro', fontSize: 20),
           ),
