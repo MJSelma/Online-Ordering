@@ -6,7 +6,7 @@ class ButtonMenu extends StatelessWidget {
   String text;
   double height;
   double width;
-  Color backColor;
+  List<Color> backColor;
   Color textColor;
 
   ButtonMenu(
@@ -23,21 +23,31 @@ class ButtonMenu extends StatelessWidget {
       width: width,
       height: height,
       decoration: BoxDecoration(
+          // image: DecorationImage(
+          //     image: AssetImage(sys_color_defaultorange == backColor
+          //         ? 'assets/images/sys_orange.png'
+          //         : ''),
+          //     fit: BoxFit.cover),
           borderRadius: BorderRadius.circular(10.0),
           border: const Border.fromBorderSide(BorderSide(
             strokeAlign: 1,
             color: Colors.white,
           )),
-          color: backColor,
+          // color: backColor,
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: backColor),
           boxShadow: [
             BoxShadow(
-              color: button_color_grey,
+              color: btn_color_gray2dark,
+              // blurStyle: BlurStyle.normal,
               offset: const Offset(
-                0.0,
-                2.0,
+                1.0,
+                3.0,
               ),
-              blurRadius: 4.0,
-              spreadRadius: 2.0,
+              blurRadius: 3.0,
+              spreadRadius: 1.0,
             ), //BoxShadow
             // BoxShadow(
             //   color: Colors.white,
@@ -54,7 +64,7 @@ class ButtonMenu extends StatelessWidget {
             text,
             style: TextStyle(
               fontFamily: 'SFPro',
-              fontSize: 18,
+              fontSize: 12,
               color: textColor,
               fontWeight: FontWeight.w500,
             ),

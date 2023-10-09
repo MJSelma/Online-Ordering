@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/businessOutletProvider.dart';
 import '../provider/menu_provider.dart';
 import '../ui/constant/theme_color.dart';
 
@@ -29,7 +30,8 @@ class _MenuButtonState extends State<MenuButton> {
   Widget build(BuildContext context) {
     int indexMenu = context.select((MenuProvider p) => p.indexMenu);
     bool isMenuOpen = context.select((MenuProvider p) => p.isMenuOpen);
-
+    String outletId =
+        context.select((BusinessOutletProvider p) => p.selectedOutletId);
     return Padding(
       padding: EdgeInsets.fromLTRB(widget.paddingLeft, 0, 0, 0),
       child: MouseRegion(
@@ -47,45 +49,50 @@ class _MenuButtonState extends State<MenuButton> {
           width: isMenuOpen ? 200 : 50,
           height: widget.height,
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              border: const Border.fromBorderSide(BorderSide(
-                strokeAlign: 1,
-                color: Colors.white,
-              )),
-              gradient: indexMenu == widget.val
-                  ? null
-                  : indexMenuHover == widget.val
-                      ? null
-                      : LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          // stops: const [
-                          //   0.1,
-                          //   0.4,
-                          //   0.6,
-                          //   0.9,
-                          // ],
-                          colors: [button_color_grey, Colors.grey.shade200]),
-              // boxShadow: [
-              //   BoxShadow(
-              //     color: button_color_grey,
-              //     offset: const Offset(
-              //       0.0,
-              //       2.0,
-              //     ),
-              //     blurRadius: 4.0,
-              //     spreadRadius: 2.0,
-              //   ),
-              // ],
-              color: indexMenu == 0 && indexMenuHover == 100
-                  ? sys_color_purpleLight
-                  : indexMenu > 0 && indexMenu == widget.val
-                      ? sys_color_defaultorange
-                      : indexMenuHover == widget.val
-                          ? sys_color_defaultorange
-                          : button_color_grey
-              // : Colors.grey.shade200,
-              ),
+            borderRadius: BorderRadius.circular(10.0),
+            border: const Border.fromBorderSide(BorderSide(
+              strokeAlign: 1,
+              color: Colors.white,
+            )),
+            boxShadow: [
+              BoxShadow(
+                color: button_color_grey,
+                // blurStyle: BlurStyle.normal,
+                offset: const Offset(
+                  1.0,
+                  3.0,
+                ),
+                blurRadius: 3.0,
+                spreadRadius: 1.0,
+              ), //BoxShadow
+              // BoxShadow(
+              //   color: Colors.white,
+              //   offset: Offset(0.0, 0.0),
+              //   blurRadius: 0.0,
+              //   spreadRadius: 0.0,
+              // ), //BoxShad
+            ],
+
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: indexMenu == widget.val &&
+                        indexMenuHover == 100 &&
+                        outletId != ''
+                    ? [btn_color_purplelight, btn_color_purpledark]
+                    : indexMenuHover == widget.val
+                        ? [btn_color_purplelight, btn_color_purpledark]
+                        : [btn_color_graylight, btn_color_graydark]),
+
+            // color: indexMenu == 0 && indexMenuHover == 100
+            //     ? sys_color_purpleLight
+            //     : indexMenu > 0 && indexMenu == widget.val
+            //         ? sys_color_defaultorange
+            //         : indexMenuHover == widget.val
+            //             ? sys_color_defaultorange
+            //             : button_color_grey
+            // : Colors.grey.shade200,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -93,12 +100,13 @@ class _MenuButtonState extends State<MenuButton> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(12, 0, 5, 0),
                 child: Icon(
+                  size: 20,
                   widget.iconMenu,
                   color: indexMenu == widget.val
-                      ? Colors.white
+                      ? btn_color_graylight
                       : indexMenuHover == widget.val
-                          ? Colors.white
-                          : sys_color_purple,
+                          ? sys_color_purpleDark
+                          : sys_color_purpleDark,
                 ),
               ),
               Visibility(
@@ -107,12 +115,12 @@ class _MenuButtonState extends State<MenuButton> {
                   widget.text,
                   style: TextStyle(
                     fontFamily: 'SFPro',
-                    fontSize: 14,
+                    fontSize: 13,
                     color: indexMenu == widget.val
-                        ? Colors.white
+                        ? btn_color_graylight
                         : indexMenuHover == widget.val
-                            ? Colors.white
-                            : sys_color_purple,
+                            ? btn_color_graylight
+                            : sys_color_purpleDark,
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,

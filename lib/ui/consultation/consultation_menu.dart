@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drinklinkmerchant/provider/menu_provider.dart';
 import 'package:drinklinkmerchant/ui/consultation/menu_list.dart';
-import 'package:drinklinkmerchant/widgets/icon_button.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -15,6 +14,7 @@ import '../../widgets/button.dart';
 import '../constant/theme_color.dart';
 import '../../widgets/showDialog.dart';
 import '../data_class/outlet_class.dart';
+import 'ipaddress.dart';
 
 class ConsultationMenu extends StatefulWidget {
   const ConsultationMenu({super.key});
@@ -62,8 +62,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
       // fileNameUpdate = result.files.first.name;
       results = result;
       fileType = fileName.split('.')[1];
-      menuUpdateUrl =
-          'http://192.168.8.108/uploads/uploads/${result.files.first.name}';
+      menuUpdateUrl = '$ipAddress/uploads/uploads/${result.files.first.name}';
+      // menuUpdateUrl =
+      //     'http://192.168.8.108/uploads/uploads/${result.files.first.name}';
       context.read<MenuProvider>().setImageLoaded(true);
     });
   }
@@ -80,8 +81,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
       // fileNameUpdate = result.files.first.name;
       results = result;
       fileTypeUpdate = fileNamex.split('.')[1];
-      menuUpdateUrl =
-          'http://192.168.8.108/uploads/uploads/${result.files.first.name}';
+      menuUpdateUrl = '$ipAddress/uploads/uploads/${result.files.first.name}';
+      // menuUpdateUrl =
+      //     'http://192.168.8.108/uploads/uploads/${result.files.first.name}';
       context.read<MenuProvider>().setImageLoaded(true);
     });
   }
@@ -89,7 +91,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   Future<void> uploadImage(int menuCount) async {
     //show your own loading or progressing code here
 
-    String uploadurl = "http://192.168.8.108/uploads/image.php";
+    String uploadurl = "$ipAddress/uploads/image.php";
     // String uploadurl = "http://192.168.1.7/uploads/image.php";
     //dont use http://localhost , because emulator don't get that address
     //insted use your local IP address or use live URL
@@ -125,7 +127,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   Future<void> uploadImageUpdate() async {
     //show your own loading or progressing code here
 
-    String uploadurl = "http://192.168.8.108/uploads/image.php";
+    String uploadurl = "$ipAddress/uploads/image.php";
+    // String uploadurl = "http://192.168.8.108/uploads/image.php";
     //dont use http://localhost , because emulator don't get that address
     //insted use your local IP address or use live URL
     //hit "ipconfig" in windows or "ip a" in linux to get you local IP
@@ -164,7 +167,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
         'order': menuCount,
         'date': DateTime.now(),
         'fileName': fileName,
-        'image': 'http://192.168.8.108/uploads/uploads/$fileName',
+        'image': '$ipAddress/uploads/uploads/$fileName',
         'name': menuName.text,
         'status': true,
         'type': fileType,
@@ -186,7 +189,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
         'order': menuCount,
         'date': DateTime.now(),
         'fileName': importFilenamex,
-        'image': 'http://192.168.8.108/uploads/uploads/$importFilenamex',
+        'image': '$ipAddress/uploads/uploads/$importFilenamex',
         'name': importMenuNamex,
         'status': true,
         'type': importTypex,
@@ -397,7 +400,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                           text: 'Edit',
                           width: 100,
                           height: 30,
-                          backColor: button_color_grey,
+                          backColor: [btn_color_graylight, btn_color_graydark],
                           textColor: iconButtonTextColor,
                         ),
                         onTap: () async {
@@ -480,12 +483,11 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                               deleteMenuDialog(context, menuID, menuName),
                         );
                       },
-                      child: IconButtonMenu(
+                      child: ButtonMenu(
                         text: 'Delete',
-                        iconMenu: Icons.delete,
                         width: 100,
                         height: 30,
-                        backColor: const Color.fromARGB(255, 210, 69, 69),
+                        backColor: [btn_color_redlight, btn_color_reddark],
                         textColor: iconButtonTextColor,
                       )),
                 ),
@@ -557,12 +559,12 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
 
                 chooseImage();
               },
-              child: IconButtonMenu(
+              child: ButtonMenu(
                 text: 'CHOOSE FILE',
-                iconMenu: Icons.upload,
+
                 width: 200,
                 height: 30,
-                backColor: sys_color_defaultorange,
+                backColor: [btn_color_orangelight, btn_color_orangedark],
                 textColor: iconButtonTextColor,
 
                 // backColor: fileName != ''
@@ -594,14 +596,13 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
 
                 uploadImage(menuCount);
               },
-              child: IconButtonMenu(
+              child: ButtonMenu(
                 text: 'UPLOAD MENU',
-                iconMenu: Icons.add,
                 width: 200,
                 height: 30,
                 backColor: fileName != '' && menuName.text != ''
-                    ? button_color_green
-                    : button_color_grey,
+                    ? [btn_color_greenlight, btn_color_greendark]
+                    : [btn_color_graylight, btn_color_graydark],
                 textColor: iconButtonTextColor,
               )),
           const SizedBox(
@@ -644,14 +645,11 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
               child: Column(
                 children: [
                   GestureDetector(
-                    child: IconButtonMenu(
+                    child: ButtonMenu(
                       text: 'Choose OUTLET'.toUpperCase(),
-                      iconMenu: Icons.storefront_outlined,
                       width: 200,
                       height: 30,
-                      backColor: importImagex != ''
-                          ? sys_color_defaultorange
-                          : button_color_grey,
+                      backColor: [btn_color_orangelight, btn_color_orangedark],
                       textColor: iconButtonTextColor,
                     ),
                     onTap: () {
@@ -676,14 +674,13 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                       onTap: () async {
                         createMenuImport(menuCount);
                       },
-                      child: IconButtonMenu(
+                      child: ButtonMenu(
                         text: 'UPLOAD MENU',
-                        iconMenu: Icons.add,
                         width: 200,
                         height: 30,
                         backColor: importImagex != ''
-                            ? button_color_green
-                            : button_color_grey,
+                            ? [btn_color_greenlight, btn_color_greendark]
+                            : [btn_color_graylight, btn_color_graydark],
                         textColor: iconButtonTextColor,
                       )),
                 ],
@@ -941,12 +938,14 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                             onTap: () {
                               chooseImageUpdate();
                             },
-                            child: IconButtonMenu(
+                            child: ButtonMenu(
                               text: 'CHOOSE FILE',
-                              iconMenu: Icons.upload,
                               width: 200,
                               height: 35,
-                              backColor: sys_color_defaultorange,
+                              backColor: [
+                                btn_color_orangelight,
+                                btn_color_orangedark
+                              ],
                               textColor: iconButtonTextColor,
                               // backColor: isImagedLoaded == true
                               //     ? const sys_color_defaultorange
@@ -961,8 +960,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                             width: 200,
                             height: 35,
                             backColor: menuNameUpdate.text != ''
-                                ? button_color_green
-                                : button_color_grey,
+                                ? [btn_color_greenlight, btn_color_greendark]
+                                : [btn_color_graylight, btn_color_graydark],
                             textColor: iconButtonTextColor,
                           ),
                           onTap: () async {
@@ -1145,12 +1144,11 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                               .selectedMenu('', '', '', '', '');
                         });
                       },
-                      child: IconButtonMenu(
+                      child: ButtonMenu(
                         text: 'Delete',
-                        iconMenu: Icons.delete,
                         width: 150,
                         height: 35,
-                        backColor: const Color.fromARGB(255, 210, 69, 69),
+                        backColor: [btn_color_redlight, btn_color_reddark],
                         textColor: iconButtonTextColor,
                       )),
                 ],
@@ -1274,13 +1272,13 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                             Navigator.pop(context);
                           });
                         },
-                        child: IconButtonMenu(
+                        child: ButtonMenu(
                           text: 'IMPORT',
-                          iconMenu: Icons.import_export,
+
                           width: 150,
                           height: 35,
                           // backColor: const Color.fromARGB(255, 210, 69, 69),
-                          backColor: button_color_red,
+                          backColor: [btn_color_redlight, btn_color_reddark],
                           textColor: iconButtonTextColor,
                         )),
                   ],
@@ -1331,11 +1329,23 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                         alignment: Alignment.center,
                         height: 70,
                         decoration: BoxDecoration(
-                          color: indexOutletMenuSelected == index
-                              ? const Color(0xffef7700)
-                              : indexOutletMenu == index
-                                  ? const Color(0xffef7700)
-                                  : button_color_grey,
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: indexOutletMenuSelected == index
+                                  ? [
+                                      btn_color_purplelight,
+                                      btn_color_purpledark
+                                    ]
+                                  : indexOutletMenu == index
+                                      ? [
+                                          btn_color_purplelight,
+                                          btn_color_purpledark
+                                        ]
+                                      : [
+                                          btn_color_graylight,
+                                          btn_color_graydark
+                                        ]),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: Padding(

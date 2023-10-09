@@ -155,6 +155,7 @@ class _DashBoardState extends State<DashBoard> {
         body: Stack(
           children: [
             SingleChildScrollView(
+              physics: const NeverScrollableScrollPhysics(),
               child: Column(children: [
                 Container(
                   decoration: const BoxDecoration(
@@ -256,316 +257,349 @@ class _DashBoardState extends State<DashBoard> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                indexMenu = 0;
-                              });
-                            },
-                            child: isMenuOpen
-                                ? dropdown
-                                : MenuButton(
-                                    text: currentItem,
-                                    val: 0,
-                                    iconMenu: Icons.business,
-                                    height: 50,
-                                    paddingLeft: 0),
-                          ),
-                          Visibility(
-                            visible: businessDocId != '',
-                            // visible: true,
+                      SizedBox(
+                        height: MediaQuery.sizeOf(context).height - 100,
+                        child: RawScrollbar(
+                          minThumbLength: 50.0,
+                          thumbColor: btn_color_purplelight,
+                          // thumbVisibility: true, //always show scrollbar
+                          thickness: 10, //width of scrollbar
+                          radius: const Radius.circular(
+                              20), //corner radius of scrollbar
+                          scrollbarOrientation: ScrollbarOrientation.right,
+
+                          child: SingleChildScrollView(
+                            padding:
+                                const EdgeInsets.fromLTRB(10.0, 0.0, 20.0, 0.0),
                             child: Column(
                               children: [
-                                const SizedBox(
-                                  height: 12,
-                                ),
                                 GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      setIndexMenuNameProvider('');
-                                      context
-                                          .read<MenuProvider>()
-                                          .menuRefresh();
-                                      indexMenu = 1;
+                                      indexMenu = 0;
                                     });
                                   },
-                                  child: MenuButton(
-                                      text: 'TABLE BOOKINGS',
-                                      val: 1,
-                                      iconMenu: Icons.book,
-                                      height: 30,
-                                      paddingLeft: 0),
+                                  child: isMenuOpen
+                                      ? dropdown
+                                      : MenuButton(
+                                          text: currentItem,
+                                          val: 0,
+                                          iconMenu: Icons.business,
+                                          height: 50,
+                                          paddingLeft: 0),
                                 ),
-                                // const SizedBox(
-                                //   height: 4,
-                                // ),
-                                // Divider(thickness: 2, color: Colors.black, ),
-                                // const SizedBox(
-                                //   height: 4,
-                                // ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                                  child: Container(
-                                    height: 2,
-                                    color: Colors.black45,
-                                    width: isMenuOpen ? 200 : 50,
-                                  ),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                Visibility(
+                                  visible: businessDocId != '',
+                                  // visible: true,
+                                  child: Column(
                                     children: [
-                                      Text(
-                                        'Choose one',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          fontFamily: 'SFPro',
+                                      const SizedBox(
+                                        height: 12,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            setIndexMenuNameProvider('');
+                                            context
+                                                .read<MenuProvider>()
+                                                .menuRefresh();
+                                            indexMenu = 1;
+                                          });
+                                        },
+                                        child: MenuButton(
+                                            text: 'TABLE BOOKINGS',
+                                            val: 1,
+                                            iconMenu: Icons.book,
+                                            height: 35,
+                                            paddingLeft: 0),
+                                      ),
+                                      // const SizedBox(
+                                      //   height: 4,
+                                      // ),
+                                      // Divider(thickness: 2, color: Colors.black, ),
+                                      // const SizedBox(
+                                      //   height: 4,
+                                      // ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 8, 0, 8),
+                                        child: Container(
+                                          height: 2,
+                                          color: Colors.black45,
+                                          width: isMenuOpen ? 200 : 50,
                                         ),
+                                      ),
+                                      const Padding(
+                                        padding:
+                                            EdgeInsets.fromLTRB(0, 4, 0, 4),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Choose one',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400,
+                                                fontFamily: 'SFPro',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            indexMenu = 2;
+                                            setIndexMenuNameProvider(
+                                                'CONSULTATION MENU');
+                                          });
+                                        },
+                                        child: MenuButton(
+                                            text: 'CONSULTATION MENU',
+                                            val: 2,
+                                            iconMenu: Icons.picture_as_pdf,
+                                            height: 35,
+                                            paddingLeft: 0),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            indexMenu = 3;
+                                            setIndexMenuNameProvider(
+                                                'SMART MENU');
+                                          });
+                                        },
+                                        child: MenuButton(
+                                            text: 'SMART MENU',
+                                            val: 3,
+                                            iconMenu: Icons.menu_book_rounded,
+                                            height: 35,
+                                            paddingLeft: 0),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      if (isMenuOpen)
+                                        Visibility(
+                                          visible: indexMenu == 3,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(20.0),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(20.0)),
+                                                border: Border.fromBorderSide(
+                                                    BorderSide(
+                                                        width: 1.0,
+                                                        color:
+                                                            sys_color_defaultorange))),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'WORKING STATIONS',
+                                                  style: TextStyle(
+                                                      color:
+                                                          sys_color_purpleDark),
+                                                ),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Text(
+                                                  'WORKTOPS',
+                                                  style: TextStyle(
+                                                      color:
+                                                          sys_color_purpleDark),
+                                                ),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Text(
+                                                  'SMART MENU',
+                                                  style: TextStyle(
+                                                      color:
+                                                          sys_color_purpleDark),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 8, 0, 8),
+                                        child: Container(
+                                          height: 2,
+                                          color: Colors.black45,
+                                          width: isMenuOpen ? 200 : 50,
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            indexMenu = 4;
+                                            setIndexMenuNameProvider('');
+                                          });
+                                        },
+                                        child: MenuButton(
+                                            text: 'EXPLORE VENUE',
+                                            val: 4,
+                                            iconMenu: Icons.explore,
+                                            height: 35,
+                                            paddingLeft: 0),
+                                      ),
+                                      const SizedBox(
+                                        height: 12,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            indexMenu = 5;
+                                            setIndexMenuNameProvider('');
+                                          });
+                                        },
+                                        child: MenuButton(
+                                            text: 'EVENTS/WEEKLY \nPROGRAMS',
+                                            val: 5,
+                                            iconMenu: Icons.calendar_month,
+                                            height: 50,
+                                            paddingLeft: 0),
+                                      ),
+                                      const SizedBox(
+                                        height: 12,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            indexMenu = 6;
+                                            setIndexMenuNameProvider('');
+                                          });
+                                        },
+                                        child: MenuButton(
+                                            text: 'MEDIA CONTENT',
+                                            val: 6,
+                                            iconMenu: Icons.image,
+                                            height: 35,
+                                            paddingLeft: 0),
+                                      ),
+                                      const SizedBox(
+                                        height: 12,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            indexMenu = 7;
+                                            setIndexMenuNameProvider('');
+                                          });
+                                        },
+                                        child: MenuButton(
+                                            text: 'EXPERIENCE',
+                                            val: 7,
+                                            iconMenu: Icons.history,
+                                            height: 35,
+                                            paddingLeft: 0),
+                                      ),
+                                      const SizedBox(
+                                        height: 12,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            indexMenu = 8;
+                                            setIndexMenuNameProvider('');
+                                          });
+                                        },
+                                        child: MenuButton(
+                                            text: 'YOUR ADS',
+                                            val: 8,
+                                            iconMenu: Icons.branding_watermark,
+                                            height: 35,
+                                            paddingLeft: 0),
+                                      ),
+                                      const SizedBox(
+                                        height: 12,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            indexMenu = 9;
+                                            setIndexMenuNameProvider('');
+                                          });
+                                        },
+                                        child: MenuButton(
+                                            text: 'YOUR STAFF',
+                                            val: 9,
+                                            iconMenu: Icons.person_add,
+                                            height: 35,
+                                            paddingLeft: 0),
+                                      ),
+                                      const SizedBox(
+                                        height: 12,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            indexMenu = 10;
+                                            setIndexMenuNameProvider('');
+                                          });
+                                        },
+                                        child: MenuButton(
+                                            text: 'REPORT',
+                                            val: 10,
+                                            iconMenu: Icons.bar_chart_outlined,
+                                            height: 35,
+                                            paddingLeft: 0),
+                                      ),
+                                      const SizedBox(
+                                        height: 12,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            indexMenu = 11;
+                                            setIndexMenuNameProvider('');
+                                          });
+                                        },
+                                        child: MenuButton(
+                                            text: 'PAYMENT',
+                                            val: 11,
+                                            iconMenu: Icons.payment,
+                                            height: 35,
+                                            paddingLeft: 0),
+                                      ),
+                                      const SizedBox(
+                                        height: 12,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            indexMenu = 12;
+                                            setIndexMenuNameProvider('');
+                                          });
+                                        },
+                                        child: MenuButton(
+                                            text: 'BUSINESS CONTACT',
+                                            val: 12,
+                                            iconMenu:
+                                                Icons.contact_mail_rounded,
+                                            height: 35,
+                                            paddingLeft: 0),
                                       ),
                                     ],
                                   ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      indexMenu = 2;
-                                      setIndexMenuNameProvider(
-                                          'CONSULTATION MENU');
-                                    });
-                                  },
-                                  child: MenuButton(
-                                      text: 'CONSULTATION MENU',
-                                      val: 2,
-                                      iconMenu: Icons.picture_as_pdf,
-                                      height: 30,
-                                      paddingLeft: 0),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      indexMenu = 3;
-                                      setIndexMenuNameProvider('SMART MENU');
-                                    });
-                                  },
-                                  child: MenuButton(
-                                      text: 'SMART MENU',
-                                      val: 3,
-                                      iconMenu: Icons.menu_book_rounded,
-                                      height: 30,
-                                      paddingLeft: 0),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                if (isMenuOpen)
-                                  Visibility(
-                                    visible: indexMenu == 3,
-                                    child: Container(
-                                      padding: const EdgeInsets.all(20.0),
-                                      decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(20.0)),
-                                          border: Border.fromBorderSide(
-                                              BorderSide(
-                                                  width: 1.0,
-                                                  color:
-                                                      sys_color_defaultorange))),
-                                      child: const Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Text('WORKING STATIONS'),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text('WORKTOPS'),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text('INVENTORIES'),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text('SMART MENU'),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                                  child: Container(
-                                    height: 2,
-                                    color: Colors.black45,
-                                    width: isMenuOpen ? 200 : 50,
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      indexMenu = 4;
-                                      setIndexMenuNameProvider('');
-                                    });
-                                  },
-                                  child: MenuButton(
-                                      text: 'EXPLORE VENUE',
-                                      val: 4,
-                                      iconMenu: Icons.explore,
-                                      height: 30,
-                                      paddingLeft: 0),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      indexMenu = 5;
-                                      setIndexMenuNameProvider('');
-                                    });
-                                  },
-                                  child: MenuButton(
-                                      text: 'EVENTS/WEEKLY \nPROGRAMS',
-                                      val: 5,
-                                      iconMenu: Icons.calendar_month,
-                                      height: 50,
-                                      paddingLeft: 0),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      indexMenu = 6;
-                                      setIndexMenuNameProvider('');
-                                    });
-                                  },
-                                  child: MenuButton(
-                                      text: 'MEDIA CONTENT',
-                                      val: 6,
-                                      iconMenu: Icons.image,
-                                      height: 30,
-                                      paddingLeft: 0),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      indexMenu = 7;
-                                      setIndexMenuNameProvider('');
-                                    });
-                                  },
-                                  child: MenuButton(
-                                      text: 'EXPERIENCE',
-                                      val: 7,
-                                      iconMenu: Icons.history,
-                                      height: 30,
-                                      paddingLeft: 0),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      indexMenu = 8;
-                                      setIndexMenuNameProvider('');
-                                    });
-                                  },
-                                  child: MenuButton(
-                                      text: 'YOUR ADS',
-                                      val: 8,
-                                      iconMenu: Icons.branding_watermark,
-                                      height: 30,
-                                      paddingLeft: 0),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      indexMenu = 9;
-                                      setIndexMenuNameProvider('');
-                                    });
-                                  },
-                                  child: MenuButton(
-                                      text: 'YOUR STAFF',
-                                      val: 9,
-                                      iconMenu: Icons.person_add,
-                                      height: 30,
-                                      paddingLeft: 0),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      indexMenu = 10;
-                                      setIndexMenuNameProvider('');
-                                    });
-                                  },
-                                  child: MenuButton(
-                                      text: 'REPORT',
-                                      val: 30,
-                                      iconMenu: Icons.bar_chart_outlined,
-                                      height: 40,
-                                      paddingLeft: 0),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      indexMenu = 11;
-                                      setIndexMenuNameProvider('');
-                                    });
-                                  },
-                                  child: MenuButton(
-                                      text: 'PAYMENT',
-                                      val: 30,
-                                      iconMenu: Icons.payment,
-                                      height: 40,
-                                      paddingLeft: 0),
-                                ),
-                                const SizedBox(
-                                  height: 12,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      indexMenu = 12;
-                                      setIndexMenuNameProvider('');
-                                    });
-                                  },
-                                  child: MenuButton(
-                                      text: 'BUSINESS CONTACT',
-                                      val: 30,
-                                      iconMenu: Icons.contact_mail_rounded,
-                                      height: 40,
-                                      paddingLeft: 0),
-                                ),
+                                )
                               ],
                             ),
-                          )
-                        ],
+                          ),
+                        ),
                       ),
                       Column(
                         children: [
