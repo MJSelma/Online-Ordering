@@ -9,10 +9,10 @@ import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-import '../../provider/businessOutletProvider.dart';
+import '../../provider/business_outlet_provider.dart';
 import '../../widgets/button.dart';
 import '../constant/theme_color.dart';
-import '../../widgets/showDialog.dart';
+import '../../widgets/show_dialog.dart';
 import '../data_class/outlet_class.dart';
 import 'ipaddress.dart';
 
@@ -400,7 +400,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                           text: 'Edit',
                           width: 100,
                           height: 30,
-                          backColor: [btn_color_graylight, btn_color_graydark],
+                          backColor: [btnColorGreyLight, btnColorGreyDark],
                           textColor: iconButtonTextColor,
                         ),
                         onTap: () async {
@@ -487,7 +487,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                         text: 'Delete',
                         width: 100,
                         height: 30,
-                        backColor: [btn_color_redlight, btn_color_reddark],
+                        backColor: [btnColorRedLight, btnColorRedDark],
                         textColor: iconButtonTextColor,
                       )),
                 ),
@@ -564,7 +564,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
 
                 width: 200,
                 height: 30,
-                backColor: [btn_color_orangelight, btn_color_orangedark],
+                backColor: [btnColorOrangeLight, btnColorOrangeDark],
                 textColor: iconButtonTextColor,
 
                 // backColor: fileName != ''
@@ -601,8 +601,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                 width: 200,
                 height: 30,
                 backColor: fileName != '' && menuName.text != ''
-                    ? [btn_color_greenlight, btn_color_greendark]
-                    : [btn_color_graylight, btn_color_graydark],
+                    ? [btnColorGreenLight, btnColorGreenDark]
+                    : [btnColorGreyLight, btnColorGreyDark],
                 textColor: iconButtonTextColor,
               )),
           const SizedBox(
@@ -631,7 +631,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
-                    color: sys_color_defaultorange,
+                    color: systemDefaultColorOrange,
                   ),
                 ),
               ],
@@ -649,7 +649,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                       text: 'Choose OUTLET'.toUpperCase(),
                       width: 200,
                       height: 30,
-                      backColor: [btn_color_orangelight, btn_color_orangedark],
+                      backColor: [btnColorOrangeLight, btnColorOrangeDark],
                       textColor: iconButtonTextColor,
                     ),
                     onTap: () {
@@ -679,8 +679,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                         width: 200,
                         height: 30,
                         backColor: importImagex != ''
-                            ? [btn_color_greenlight, btn_color_greendark]
-                            : [btn_color_graylight, btn_color_graydark],
+                            ? [btnColorGreenLight, btnColorGreenDark]
+                            : [btnColorGreyLight, btnColorGreyDark],
                         textColor: iconButtonTextColor,
                       )),
                 ],
@@ -839,7 +839,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
           shape: RoundedRectangleBorder(
               side: BorderSide(
                 width: 3,
-                color: sys_color_defaultorange,
+                color: systemDefaultColorOrange,
               ),
               borderRadius: BorderRadius.circular(20.0)),
           title: DecoratedBox(
@@ -859,7 +859,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                     children: [
                       Text('UPDATE MENU',
                           style: TextStyle(
-                              color: sys_color_defaultorange,
+                              color: systemDefaultColorOrange,
                               fontWeight: FontWeight.bold)),
                       Container(
                         alignment: Alignment.topRight,
@@ -943,8 +943,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                               width: 200,
                               height: 35,
                               backColor: [
-                                btn_color_orangelight,
-                                btn_color_orangedark
+                                btnColorOrangeLight,
+                                btnColorOrangeDark
                               ],
                               textColor: iconButtonTextColor,
                               // backColor: isImagedLoaded == true
@@ -960,8 +960,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                             width: 200,
                             height: 35,
                             backColor: menuNameUpdate.text != ''
-                                ? [btn_color_greenlight, btn_color_greendark]
-                                : [btn_color_graylight, btn_color_graydark],
+                                ? [btnColorGreenLight, btnColorGreenDark]
+                                : [btnColorGreyLight, btnColorGreyDark],
                             textColor: iconButtonTextColor,
                           ),
                           onTap: () async {
@@ -1072,7 +1072,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
       shape: RoundedRectangleBorder(
           side: BorderSide(
             width: 3,
-            color: sys_color_defaultorange,
+            color: systemDefaultColorOrange,
           ),
           borderRadius: BorderRadius.circular(20.0)),
       title: DecoratedBox(
@@ -1092,7 +1092,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                 children: [
                   Text('DELETE MENU',
                       style: TextStyle(
-                          color: sys_color_defaultorange,
+                          color: systemDefaultColorOrange,
                           fontWeight: FontWeight.bold)),
                   Container(
                     alignment: Alignment.topRight,
@@ -1117,7 +1117,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Text(
-                    'Are you sure you want to cancel menu $menuName ?',
+                    'Are you sure you want to cancel menu $menuName ?'
+                        .toUpperCase(),
+                    style: const TextStyle(fontSize: 14),
                   ),
                 ),
               ),
@@ -1146,9 +1148,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                       },
                       child: ButtonMenu(
                         text: 'Delete',
-                        width: 150,
+                        width: 100,
                         height: 35,
-                        backColor: [btn_color_redlight, btn_color_reddark],
+                        backColor: [btnColorRedLight, btnColorRedDark],
                         textColor: iconButtonTextColor,
                       )),
                 ],
@@ -1278,7 +1280,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                           width: 150,
                           height: 35,
                           // backColor: const Color.fromARGB(255, 210, 69, 69),
-                          backColor: [btn_color_redlight, btn_color_reddark],
+                          backColor: importFilenamex != ''
+                              ? [btnColorGreenLight, btnColorGreenDark]
+                              : [btnColorGreyLight, btnColorGreyDark],
                           textColor: iconButtonTextColor,
                         )),
                   ],
@@ -1333,19 +1337,13 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: indexOutletMenuSelected == index
-                                  ? [
-                                      btn_color_purplelight,
-                                      btn_color_purpledark
-                                    ]
+                                  ? [btnColorPurpleLight, btnColorPurpleDark]
                                   : indexOutletMenu == index
                                       ? [
-                                          btn_color_purplelight,
-                                          btn_color_purpledark
+                                          btnColorPurpleLight,
+                                          btnColorPurpleDark
                                         ]
-                                      : [
-                                          btn_color_graylight,
-                                          btn_color_graydark
-                                        ]),
+                                      : [btnColorGreyLight, btnColorGreyDark]),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: Padding(
@@ -1404,66 +1402,70 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
 
         return Padding(
           padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-          child: Column(children: [
-            SizedBox(
-              width: 300,
-              height: MediaQuery.sizeOf(context).height - 200,
-              child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('merchant')
-                    .doc('X6odvQ5gqesAzwtJLaFl')
-                    .collection('consultationMenu')
-                    .where('outletId', isEqualTo: choosenOutletId)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 300,
-                              // childAspectRatio: 3 / 2,
-                              crossAxisSpacing: 20,
-                              mainAxisSpacing: 20),
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) {
-                        DocumentSnapshot doc = snapshot.data!.docs[index];
-                        return Column(
-                          children: [
-                            GestureDetector(
-                              child: Container(
-                                height: 200,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15)),
-                                child: Image.network(
-                                  doc['image'],
-                                  fit: BoxFit.cover,
+          child: ScrollConfiguration(
+            behavior:
+                ScrollConfiguration.of(context).copyWith(scrollbars: false),
+            child: Column(children: [
+              SizedBox(
+                width: 300,
+                height: MediaQuery.sizeOf(context).height - 200,
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('merchant')
+                      .doc('X6odvQ5gqesAzwtJLaFl')
+                      .collection('consultationMenu')
+                      .where('outletId', isEqualTo: choosenOutletId)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 300,
+                                // childAspectRatio: 3 / 2,
+                                crossAxisSpacing: 20,
+                                mainAxisSpacing: 20),
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          DocumentSnapshot doc = snapshot.data!.docs[index];
+                          return Column(
+                            children: [
+                              GestureDetector(
+                                child: Container(
+                                  height: 200,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Image.network(
+                                    doc['image'],
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
+                                onTap: () {
+                                  setState(() {
+                                    outletImageUrl = doc['image'];
+                                    print(outletImageUrl);
+                                    context.read<MenuProvider>().setImportImage(
+                                        doc['fileName'],
+                                        doc['image'],
+                                        doc['type'],
+                                        doc['name']);
+                                  });
+                                },
                               ),
-                              onTap: () {
-                                setState(() {
-                                  outletImageUrl = doc['image'];
-                                  print(outletImageUrl);
-                                  context.read<MenuProvider>().setImportImage(
-                                      doc['fileName'],
-                                      doc['image'],
-                                      doc['type'],
-                                      doc['name']);
-                                });
-                              },
-                            ),
-                            Text(doc['name'])
-                          ],
-                        );
-                      },
-                    );
-                  } else {
-                    return Container();
-                  }
-                },
-              ),
-            )
-          ]),
+                              Text(doc['name'])
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
+              )
+            ]),
+          ),
         );
       },
     );

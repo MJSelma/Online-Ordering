@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
-import '../../provider/businessOutletProvider.dart';
+import '../../provider/business_outlet_provider.dart';
 import '../../provider/menu_provider.dart';
-import '../controller/outletController.dart';
+import '../controller/outlet_controller.dart';
 import '../data_class/businesses_class.dart';
 import '../data_class/outlet_class.dart';
 import '../data_class/region_class.dart';

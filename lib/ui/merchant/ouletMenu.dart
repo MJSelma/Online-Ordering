@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../provider/businessOutletProvider.dart';
+import '../../provider/business_outlet_provider.dart';
 import '../../provider/menu_provider.dart';
 import '../constant/theme_color.dart';
 import '../data_class/outlet_class.dart';
@@ -57,7 +57,7 @@ class _OutletMenuState extends State<OutletMenu> {
                   fontWeight: FontWeight.bold,
                   fontFamily: 'SFPro',
                   fontSize: 20,
-                  color: sys_color_defaultorange),
+                  color: systemDefaultColorOrange),
             ),
           ),
           SizedBox(
@@ -70,7 +70,7 @@ class _OutletMenuState extends State<OutletMenu> {
                       Text(
                         'Choose Outlet',
                         style: TextStyle(
-                            color: sys_color_defaultorange,
+                            color: systemDefaultColorOrange,
                             fontWeight: FontWeight.bold),
                       ),
                       Container(

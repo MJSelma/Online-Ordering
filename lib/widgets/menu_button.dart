@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../provider/businessOutletProvider.dart';
+import '../provider/business_outlet_provider.dart';
 import '../provider/menu_provider.dart';
 import '../ui/constant/theme_color.dart';
 
@@ -56,7 +56,7 @@ class _MenuButtonState extends State<MenuButton> {
             )),
             boxShadow: [
               BoxShadow(
-                color: button_color_grey,
+                color: btnColorGreyLight0,
                 // blurStyle: BlurStyle.normal,
                 offset: const Offset(
                   1.0,
@@ -79,10 +79,10 @@ class _MenuButtonState extends State<MenuButton> {
                 colors: indexMenu == widget.val &&
                         indexMenuHover == 100 &&
                         outletId != ''
-                    ? [btn_color_purplelight, btn_color_purpledark]
+                    ? [btnColorPurpleLight, btnColorPurpleDark]
                     : indexMenuHover == widget.val
-                        ? [btn_color_purplelight, btn_color_purpledark]
-                        : [btn_color_graylight, btn_color_graydark]),
+                        ? [btnColorPurpleLight, btnColorPurpleDark]
+                        : [btnColorGreyLight, btnColorGreyDark]),
 
             // color: indexMenu == 0 && indexMenuHover == 100
             //     ? sys_color_purpleLight
@@ -103,10 +103,10 @@ class _MenuButtonState extends State<MenuButton> {
                   size: 20,
                   widget.iconMenu,
                   color: indexMenu == widget.val
-                      ? btn_color_graylight
+                      ? btnColorGreyLight
                       : indexMenuHover == widget.val
-                          ? sys_color_purpleDark
-                          : sys_color_purpleDark,
+                          ? iconButtonTextColorPurple
+                          : iconButtonTextColorPurple,
                 ),
               ),
               Visibility(
@@ -117,10 +117,10 @@ class _MenuButtonState extends State<MenuButton> {
                     fontFamily: 'SFPro',
                     fontSize: 13,
                     color: indexMenu == widget.val
-                        ? btn_color_graylight
+                        ? btnColorGreyLight
                         : indexMenuHover == widget.val
-                            ? btn_color_graylight
-                            : sys_color_purpleDark,
+                            ? btnColorGreyLight
+                            : iconButtonTextColorPurple,
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
