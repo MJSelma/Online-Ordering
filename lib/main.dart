@@ -1,15 +1,16 @@
 import 'package:drinklinkmerchant/provider/menu_provider.dart';
 import 'package:drinklinkmerchant/ui/data_class/cases_class.dart';
-import 'package:drinklinkmerchant/provider/messageProvider.dart';
+import 'package:drinklinkmerchant/provider/message_provider.dart';
 import 'package:drinklinkmerchant/routes/route_generator.dart';
 import 'package:drinklinkmerchant/routes/routes.dart';
 import 'package:drinklinkmerchant/ui/web_main.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:get_ip_address/get_ip_address.dart';
 import 'package:provider/provider.dart';
 
-import 'provider/businessOutletProvider.dart';
+import 'provider/business_outlet_provider.dart';
 import 'ui/data_class/businesses_class.dart';
 import 'ui/services/businesses_services.dart';
 import 'ui/services/cases_services.dart';
@@ -66,6 +67,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> getIp() async {
+      try {
+        /// Initialize Ip Address
+        var ipAddress = IpAddress(type: RequestType.text);
+
+        /// Get the IpAddress based on requestType.
+        dynamic data = await ipAddress.getIp();
+        print(data.toString());
+      } on IpAddressException catch (exception) {
+        /// Handle the exception.
+        print(exception.message);
+      }
+    }
+
+    getIp();
+
     return MaterialApp(
       title: 'DrinkLink',
       initialRoute: Routes.splash,

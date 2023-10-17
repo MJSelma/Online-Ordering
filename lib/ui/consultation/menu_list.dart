@@ -6,7 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 import 'package:reorderable_grid/reorderable_grid.dart';
 
-import '../../provider/businessOutletProvider.dart';
+import '../../provider/business_outlet_provider.dart';
 
 class ConsultMenuPage extends HookWidget {
   const ConsultMenuPage({Key? key}) : super(key: key);

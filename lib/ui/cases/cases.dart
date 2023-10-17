@@ -15,8 +15,8 @@ import 'package:path/path.dart' as pathx;
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
-import '../../provider/casesMessagesProvider.dart';
-import '../controller/casesMessages_controller.dart';
+import '../../provider/cases_messages_provider.dart';
+import '../controller/cases_messages_controller.dart';
 import '../controller/cases_controller.dart';
 import '../data_class/cases_class.dart';
 import '../data_class/cases_messages_class.dart';
@@ -24,7 +24,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'casesMessages.dart';
+import 'cases_messages.dart';
 
 enum Options { forward, take }
 

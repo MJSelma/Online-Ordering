@@ -8,11 +8,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
-import '../../provider/businessOutletProvider.dart';
+import '../../provider/business_outlet_provider.dart';
 import '../../provider/menu_provider.dart';
-import '../../widgets/showDialog.dart';
+import '../../widgets/show_dialog.dart';
 import '../constant/theme_color.dart';
-import '../controller/outletController.dart';
+import '../controller/outlet_controller.dart';
 import '../data_class/businesses_class.dart';
 import '../data_class/outlet_class.dart';
 import '../data_class/region_class.dart';
@@ -359,9 +359,9 @@ class _OutletsPageState extends State<OutletsPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Main Wall',
-                    style: TextStyle(
+                  Text(
+                    'Main Wall'.toUpperCase(),
+                    style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: Color(0xffef7700)),
@@ -376,7 +376,7 @@ class _OutletsPageState extends State<OutletsPage> {
                               Text(
                                 'Choose Outlet',
                                 style: TextStyle(
-                                    color: sys_color_defaultorange,
+                                    color: systemDefaultColorOrange,
                                     fontWeight: FontWeight.bold),
                               ),
                               Container(

@@ -9,11 +9,11 @@ warningDialog(BuildContext context, String title, String message) {
       return AlertDialog(
         shape: RoundedRectangleBorder(
             side: BorderSide(
-                width: 3, color: sys_color_defaultorange, strokeAlign: 1),
+                width: 3, color: systemDefaultColorOrange, strokeAlign: 1),
             borderRadius: BorderRadius.circular(20.0)),
         title: DecoratedBox(
           decoration: BoxDecoration(
-            color: sys_color_white,
+            color: showDialogBackgrounddColor,
             borderRadius: BorderRadius.circular(20),
           ),
           child: SizedBox(
@@ -26,7 +26,7 @@ warningDialog(BuildContext context, String title, String message) {
                   children: [
                     Text(title,
                         style: TextStyle(
-                            color: sys_color_defaultorange,
+                            color: systemDefaultColorOrange,
                             fontWeight: FontWeight.bold)),
                     Container(
                       alignment: Alignment.topRight,
@@ -51,7 +51,8 @@ warningDialog(BuildContext context, String title, String message) {
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Text(
-                      message,
+                      message.toUpperCase(),
+                      style: const TextStyle(fontSize: 14),
                     ),
                   ),
                 ),
@@ -103,5 +104,5 @@ Color getColor(Set<MaterialState> states) {
   if (states.any(interactiveStates.contains)) {
     return Colors.blue;
   }
-  return sys_color_defaultorange;
+  return systemDefaultColorOrange;
 }

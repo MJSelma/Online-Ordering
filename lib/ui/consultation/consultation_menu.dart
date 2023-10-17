@@ -3,18 +3,18 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:drinklinkmerchant/provider/menu_provider.dart';
 import 'package:drinklinkmerchant/ui/consultation/menu_list.dart';
-import 'package:drinklinkmerchant/widgets/icon_button.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-import '../../provider/businessOutletProvider.dart';
+import '../../provider/business_outlet_provider.dart';
 import '../../widgets/button.dart';
 import '../constant/theme_color.dart';
-import '../../widgets/showDialog.dart';
+import '../../widgets/show_dialog.dart';
 import '../data_class/outlet_class.dart';
+import 'ipaddress.dart';
 
 class ConsultationMenu extends StatefulWidget {
   const ConsultationMenu({super.key});
@@ -62,8 +62,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
       // fileNameUpdate = result.files.first.name;
       results = result;
       fileType = fileName.split('.')[1];
-      menuUpdateUrl =
-          'http://192.168.8.108/uploads/uploads/${result.files.first.name}';
+      menuUpdateUrl = '$ipAddress/uploads/uploads/${result.files.first.name}';
+      // menuUpdateUrl =
+      //     'http://192.168.8.108/uploads/uploads/${result.files.first.name}';
       context.read<MenuProvider>().setImageLoaded(true);
     });
   }
@@ -80,8 +81,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
       // fileNameUpdate = result.files.first.name;
       results = result;
       fileTypeUpdate = fileNamex.split('.')[1];
-      menuUpdateUrl =
-          'http://192.168.8.108/uploads/uploads/${result.files.first.name}';
+      menuUpdateUrl = '$ipAddress/uploads/uploads/${result.files.first.name}';
+      // menuUpdateUrl =
+      //     'http://192.168.8.108/uploads/uploads/${result.files.first.name}';
       context.read<MenuProvider>().setImageLoaded(true);
     });
   }
@@ -89,7 +91,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   Future<void> uploadImage(int menuCount) async {
     //show your own loading or progressing code here
 
-    String uploadurl = "http://192.168.8.108/uploads/image.php";
+    String uploadurl = "$ipAddress/uploads/image.php";
     // String uploadurl = "http://192.168.1.7/uploads/image.php";
     //dont use http://localhost , because emulator don't get that address
     //insted use your local IP address or use live URL
@@ -125,7 +127,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
   Future<void> uploadImageUpdate() async {
     //show your own loading or progressing code here
 
-    String uploadurl = "http://192.168.8.108/uploads/image.php";
+    String uploadurl = "$ipAddress/uploads/image.php";
+    // String uploadurl = "http://192.168.8.108/uploads/image.php";
     //dont use http://localhost , because emulator don't get that address
     //insted use your local IP address or use live URL
     //hit "ipconfig" in windows or "ip a" in linux to get you local IP
@@ -164,7 +167,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
         'order': menuCount,
         'date': DateTime.now(),
         'fileName': fileName,
-        'image': 'http://192.168.8.108/uploads/uploads/$fileName',
+        'image': '$ipAddress/uploads/uploads/$fileName',
         'name': menuName.text,
         'status': true,
         'type': fileType,
@@ -186,7 +189,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
         'order': menuCount,
         'date': DateTime.now(),
         'fileName': importFilenamex,
-        'image': 'http://192.168.8.108/uploads/uploads/$importFilenamex',
+        'image': '$ipAddress/uploads/uploads/$importFilenamex',
         'name': importMenuNamex,
         'status': true,
         'type': importTypex,
@@ -397,7 +400,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                           text: 'Edit',
                           width: 100,
                           height: 30,
-                          backColor: button_color_grey,
+                          backColor: [btnColorGreyLight, btnColorGreyDark],
                           textColor: iconButtonTextColor,
                         ),
                         onTap: () async {
@@ -480,12 +483,11 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                               deleteMenuDialog(context, menuID, menuName),
                         );
                       },
-                      child: IconButtonMenu(
+                      child: ButtonMenu(
                         text: 'Delete',
-                        iconMenu: Icons.delete,
                         width: 100,
                         height: 30,
-                        backColor: const Color.fromARGB(255, 210, 69, 69),
+                        backColor: [btnColorRedLight, btnColorRedDark],
                         textColor: iconButtonTextColor,
                       )),
                 ),
@@ -557,12 +559,12 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
 
                 chooseImage();
               },
-              child: IconButtonMenu(
+              child: ButtonMenu(
                 text: 'CHOOSE FILE',
-                iconMenu: Icons.upload,
+
                 width: 200,
                 height: 30,
-                backColor: sys_color_defaultorange,
+                backColor: [btnColorOrangeLight, btnColorOrangeDark],
                 textColor: iconButtonTextColor,
 
                 // backColor: fileName != ''
@@ -594,14 +596,13 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
 
                 uploadImage(menuCount);
               },
-              child: IconButtonMenu(
+              child: ButtonMenu(
                 text: 'UPLOAD MENU',
-                iconMenu: Icons.add,
                 width: 200,
                 height: 30,
                 backColor: fileName != '' && menuName.text != ''
-                    ? button_color_green
-                    : button_color_grey,
+                    ? [btnColorGreenLight, btnColorGreenDark]
+                    : [btnColorGreyLight, btnColorGreyDark],
                 textColor: iconButtonTextColor,
               )),
           const SizedBox(
@@ -630,7 +631,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
-                    color: sys_color_defaultorange,
+                    color: systemDefaultColorOrange,
                   ),
                 ),
               ],
@@ -644,14 +645,11 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
               child: Column(
                 children: [
                   GestureDetector(
-                    child: IconButtonMenu(
+                    child: ButtonMenu(
                       text: 'Choose OUTLET'.toUpperCase(),
-                      iconMenu: Icons.storefront_outlined,
                       width: 200,
                       height: 30,
-                      backColor: importImagex != ''
-                          ? sys_color_defaultorange
-                          : button_color_grey,
+                      backColor: [btnColorOrangeLight, btnColorOrangeDark],
                       textColor: iconButtonTextColor,
                     ),
                     onTap: () {
@@ -676,14 +674,13 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                       onTap: () async {
                         createMenuImport(menuCount);
                       },
-                      child: IconButtonMenu(
+                      child: ButtonMenu(
                         text: 'UPLOAD MENU',
-                        iconMenu: Icons.add,
                         width: 200,
                         height: 30,
                         backColor: importImagex != ''
-                            ? button_color_green
-                            : button_color_grey,
+                            ? [btnColorGreenLight, btnColorGreenDark]
+                            : [btnColorGreyLight, btnColorGreyDark],
                         textColor: iconButtonTextColor,
                       )),
                 ],
@@ -842,7 +839,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
           shape: RoundedRectangleBorder(
               side: BorderSide(
                 width: 3,
-                color: sys_color_defaultorange,
+                color: systemDefaultColorOrange,
               ),
               borderRadius: BorderRadius.circular(20.0)),
           title: DecoratedBox(
@@ -862,7 +859,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                     children: [
                       Text('UPDATE MENU',
                           style: TextStyle(
-                              color: sys_color_defaultorange,
+                              color: systemDefaultColorOrange,
                               fontWeight: FontWeight.bold)),
                       Container(
                         alignment: Alignment.topRight,
@@ -941,12 +938,14 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                             onTap: () {
                               chooseImageUpdate();
                             },
-                            child: IconButtonMenu(
+                            child: ButtonMenu(
                               text: 'CHOOSE FILE',
-                              iconMenu: Icons.upload,
                               width: 200,
                               height: 35,
-                              backColor: sys_color_defaultorange,
+                              backColor: [
+                                btnColorOrangeLight,
+                                btnColorOrangeDark
+                              ],
                               textColor: iconButtonTextColor,
                               // backColor: isImagedLoaded == true
                               //     ? const sys_color_defaultorange
@@ -961,8 +960,8 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                             width: 200,
                             height: 35,
                             backColor: menuNameUpdate.text != ''
-                                ? button_color_green
-                                : button_color_grey,
+                                ? [btnColorGreenLight, btnColorGreenDark]
+                                : [btnColorGreyLight, btnColorGreyDark],
                             textColor: iconButtonTextColor,
                           ),
                           onTap: () async {
@@ -1073,7 +1072,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
       shape: RoundedRectangleBorder(
           side: BorderSide(
             width: 3,
-            color: sys_color_defaultorange,
+            color: systemDefaultColorOrange,
           ),
           borderRadius: BorderRadius.circular(20.0)),
       title: DecoratedBox(
@@ -1093,7 +1092,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                 children: [
                   Text('DELETE MENU',
                       style: TextStyle(
-                          color: sys_color_defaultorange,
+                          color: systemDefaultColorOrange,
                           fontWeight: FontWeight.bold)),
                   Container(
                     alignment: Alignment.topRight,
@@ -1118,7 +1117,9 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Text(
-                    'Are you sure you want to cancel menu $menuName ?',
+                    'Are you sure you want to cancel menu $menuName ?'
+                        .toUpperCase(),
+                    style: const TextStyle(fontSize: 14),
                   ),
                 ),
               ),
@@ -1145,12 +1146,11 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                               .selectedMenu('', '', '', '', '');
                         });
                       },
-                      child: IconButtonMenu(
+                      child: ButtonMenu(
                         text: 'Delete',
-                        iconMenu: Icons.delete,
-                        width: 150,
+                        width: 100,
                         height: 35,
-                        backColor: const Color.fromARGB(255, 210, 69, 69),
+                        backColor: [btnColorRedLight, btnColorRedDark],
                         textColor: iconButtonTextColor,
                       )),
                 ],
@@ -1274,13 +1274,15 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                             Navigator.pop(context);
                           });
                         },
-                        child: IconButtonMenu(
+                        child: ButtonMenu(
                           text: 'IMPORT',
-                          iconMenu: Icons.import_export,
+
                           width: 150,
                           height: 35,
                           // backColor: const Color.fromARGB(255, 210, 69, 69),
-                          backColor: button_color_red,
+                          backColor: importFilenamex != ''
+                              ? [btnColorGreenLight, btnColorGreenDark]
+                              : [btnColorGreyLight, btnColorGreyDark],
                           textColor: iconButtonTextColor,
                         )),
                   ],
@@ -1331,11 +1333,17 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                         alignment: Alignment.center,
                         height: 70,
                         decoration: BoxDecoration(
-                          color: indexOutletMenuSelected == index
-                              ? const Color(0xffef7700)
-                              : indexOutletMenu == index
-                                  ? const Color(0xffef7700)
-                                  : button_color_grey,
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: indexOutletMenuSelected == index
+                                  ? [btnColorPurpleLight, btnColorPurpleDark]
+                                  : indexOutletMenu == index
+                                      ? [
+                                          btnColorPurpleLight,
+                                          btnColorPurpleDark
+                                        ]
+                                      : [btnColorGreyLight, btnColorGreyDark]),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: Padding(
@@ -1394,66 +1402,70 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
 
         return Padding(
           padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-          child: Column(children: [
-            SizedBox(
-              width: 300,
-              height: MediaQuery.sizeOf(context).height - 200,
-              child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('merchant')
-                    .doc('X6odvQ5gqesAzwtJLaFl')
-                    .collection('consultationMenu')
-                    .where('outletId', isEqualTo: choosenOutletId)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 300,
-                              // childAspectRatio: 3 / 2,
-                              crossAxisSpacing: 20,
-                              mainAxisSpacing: 20),
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) {
-                        DocumentSnapshot doc = snapshot.data!.docs[index];
-                        return Column(
-                          children: [
-                            GestureDetector(
-                              child: Container(
-                                height: 200,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15)),
-                                child: Image.network(
-                                  doc['image'],
-                                  fit: BoxFit.cover,
+          child: ScrollConfiguration(
+            behavior:
+                ScrollConfiguration.of(context).copyWith(scrollbars: false),
+            child: Column(children: [
+              SizedBox(
+                width: 300,
+                height: MediaQuery.sizeOf(context).height - 200,
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('merchant')
+                      .doc('X6odvQ5gqesAzwtJLaFl')
+                      .collection('consultationMenu')
+                      .where('outletId', isEqualTo: choosenOutletId)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithMaxCrossAxisExtent(
+                                maxCrossAxisExtent: 300,
+                                // childAspectRatio: 3 / 2,
+                                crossAxisSpacing: 20,
+                                mainAxisSpacing: 20),
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          DocumentSnapshot doc = snapshot.data!.docs[index];
+                          return Column(
+                            children: [
+                              GestureDetector(
+                                child: Container(
+                                  height: 200,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Image.network(
+                                    doc['image'],
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
+                                onTap: () {
+                                  setState(() {
+                                    outletImageUrl = doc['image'];
+                                    print(outletImageUrl);
+                                    context.read<MenuProvider>().setImportImage(
+                                        doc['fileName'],
+                                        doc['image'],
+                                        doc['type'],
+                                        doc['name']);
+                                  });
+                                },
                               ),
-                              onTap: () {
-                                setState(() {
-                                  outletImageUrl = doc['image'];
-                                  print(outletImageUrl);
-                                  context.read<MenuProvider>().setImportImage(
-                                      doc['fileName'],
-                                      doc['image'],
-                                      doc['type'],
-                                      doc['name']);
-                                });
-                              },
-                            ),
-                            Text(doc['name'])
-                          ],
-                        );
-                      },
-                    );
-                  } else {
-                    return Container();
-                  }
-                },
-              ),
-            )
-          ]),
+                              Text(doc['name'])
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
+              )
+            ]),
+          ),
         );
       },
     );

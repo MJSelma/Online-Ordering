@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:drinklinkmerchant/provider/messageProvider.dart';
+import 'package:drinklinkmerchant/provider/message_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
