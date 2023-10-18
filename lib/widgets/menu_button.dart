@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../provider/business_outlet_provider.dart';
 import '../provider/menu_provider.dart';
-import '../ui/constant/theme_color.dart';
+import '../ui/constant/theme_data.dart';
 
 class MenuButton extends StatefulWidget {
   String text;
@@ -46,7 +46,7 @@ class _MenuButtonState extends State<MenuButton> {
           });
         },
         child: Container(
-          width: isMenuOpen ? 200 : 50,
+          width: isMenuOpen ? menuButtonWidthOpen : menuButtonWidthClose,
           height: widget.height,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
@@ -111,19 +111,25 @@ class _MenuButtonState extends State<MenuButton> {
               ),
               Visibility(
                 visible: isMenuOpen,
-                child: Text(
-                  widget.text,
-                  style: TextStyle(
-                    fontFamily: 'SFPro',
-                    fontSize: 13,
-                    color: indexMenu == widget.val
-                        ? btnColorGreyLight
-                        : indexMenuHover == widget.val
+                child: Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(
+                      widget.text,
+                      style: TextStyle(
+                        // fontFamily: 'SFPro',
+                        fontFamily: defaultFontFamily,
+                        fontSize: defaultMenuButtonFontSize,
+                        color: indexMenu == widget.val
                             ? btnColorGreyLight
-                            : iconButtonTextColorPurple,
-                    fontWeight: FontWeight.bold,
+                            : indexMenuHover == widget.val
+                                ? btnColorGreyLight
+                                : iconButtonTextColorPurple,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.left,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ),
             ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../ui/constant/theme_color.dart';
+import '../ui/constant/theme_data.dart';
 
 class ButtonMenu extends StatelessWidget {
   String text;
@@ -63,8 +62,8 @@ class ButtonMenu extends StatelessWidget {
           Text(
             text,
             style: TextStyle(
-              fontFamily: 'SFPro',
-              fontSize: 12,
+              fontFamily: defaultFontFamily,
+              fontSize: defaultMenuButtonFontSize,
               color: textColor,
               fontWeight: FontWeight.w500,
             ),

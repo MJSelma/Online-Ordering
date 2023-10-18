@@ -11,8 +11,8 @@ import 'package:provider/provider.dart';
 
 import '../../provider/business_outlet_provider.dart';
 import '../../widgets/button.dart';
-import '../constant/theme_color.dart';
 import '../../widgets/show_dialog.dart';
+import '../constant/theme_data.dart';
 import '../data_class/outlet_class.dart';
 import 'ipaddress.dart';
 
@@ -859,6 +859,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                     children: [
                       Text('UPDATE MENU',
                           style: TextStyle(
+                              fontFamily: defaultFontFamily,
                               color: systemDefaultColorOrange,
                               fontWeight: FontWeight.bold)),
                       Container(
@@ -888,8 +889,11 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         // ignore: prefer_const_literals_to_create_immutables
                         children: [
-                          const Text(
+                          Text(
                             'Name',
+                            style: TextStyle(
+                              fontFamily: defaultFontFamily,
+                            ),
                           ),
                           const SizedBox(
                             height: 5,
@@ -1092,6 +1096,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                 children: [
                   Text('DELETE MENU',
                       style: TextStyle(
+                          fontFamily: defaultFontFamily,
                           color: systemDefaultColorOrange,
                           fontWeight: FontWeight.bold)),
                   Container(
@@ -1119,7 +1124,10 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                   child: Text(
                     'Are you sure you want to cancel menu $menuName ?'
                         .toUpperCase(),
-                    style: const TextStyle(fontSize: 14),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: defaultFontFamily,
+                    ),
                   ),
                 ),
               ),

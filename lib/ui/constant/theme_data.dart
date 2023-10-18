@@ -1,13 +1,33 @@
 import 'package:flutter/material.dart';
 
+//Fonts
+// String defaultFontFamily = 'SFPro';
+String defaultFontFamily = 'Avenir';
+double defaultFontSize = 12;
+
+//Menu button font size
+double defaultMenuButtonFontSize = 13;
+
+//Main wall font size
+double defaultMainWallFontSize = 20;
+
+//Main wall font size
+double defaultDrinkLinkFontSize = 30;
+
+//Menu button width
+double menuButtonWidthOpen = 200;
+double menuButtonWidthClose = 50;
+
+//Show dialog description font size
+double defaultShowDialogDescriptionFontSize = 14;
+
+//Text Colors
 Color iconButtonTextColor = Colors.white;
 Color iconButtonTextColorPurple = const Color(0xff6f1e86);
-
 Color showDialogBackgrounddColor = const Color(0xffFFFFFF);
-
 Color systemDefaultColorOrange = const Color(0xffef7700);
 
-//Used in buttons
+//Buttons
 Color btnColorOrangeLight = const Color(0xfff9aa00);
 Color btnColorOrangeDark = const Color(0xffef6d00);
 

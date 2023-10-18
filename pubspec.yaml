@@ -110,6 +110,9 @@ flutter:
     - family: SFPro
       fonts:
         - asset: assets/fonts/SF_pro.ttf
+    - family: Avenir
+      fonts:
+        - asset: assets/fonts/Avenir Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

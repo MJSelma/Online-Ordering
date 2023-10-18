@@ -18,7 +18,7 @@ import '../widgets/menu_button.dart';
 import 'cases/cases.dart';
 import 'cases/cases_messages.dart';
 import 'cases/cases_menu.dart';
-import 'constant/theme_color.dart';
+import 'constant/theme_data.dart';
 import 'data_class/businesses_class.dart';
 import 'merchant/ouletMenu.dart';
 import 'merchant/outlets.dart';
@@ -168,12 +168,12 @@ class _DashBoardState extends State<DashBoard> {
                       children: [
                         Column(
                           children: [
-                            const Text(
+                            Text(
                               'DRINKLINK',
                               style: TextStyle(
                                   fontFamily: 'SFPro',
-                                  color: Color(0xffbef7700),
-                                  fontSize: 30,
+                                  color: systemDefaultColorOrange,
+                                  fontSize: defaultDrinkLinkFontSize,
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
@@ -181,7 +181,7 @@ class _DashBoardState extends State<DashBoard> {
                               style: TextStyle(
                                   fontFamily: 'SFPro',
                                   color: btnColorPurpleDark,
-                                  fontSize: 12,
+                                  fontSize: defaultFontSize,
                                   fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -189,12 +189,12 @@ class _DashBoardState extends State<DashBoard> {
                         const Spacer(),
                         Column(
                           children: [
-                            const Text(
+                            Text(
                               'Welcome',
                               style: TextStyle(
-                                  fontFamily: 'SFPro',
-                                  color: Color(0xF8737474),
-                                  fontSize: 12,
+                                  fontFamily: defaultFontFamily,
+                                  color: btnColorGreyDark,
+                                  fontSize: defaultFontSize,
                                   fontWeight: FontWeight.w300),
                             ),
                             Text(
@@ -258,7 +258,7 @@ class _DashBoardState extends State<DashBoard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        height: MediaQuery.sizeOf(context).height - 100,
+                        height: MediaQuery.sizeOf(context).height - 130,
                         child: RawScrollbar(
                           padding: const EdgeInsets.symmetric(vertical: 50.0),
                           // mainAxisMargin: 200.0,
@@ -487,7 +487,8 @@ class _DashBoardState extends State<DashBoard> {
                                             });
                                           },
                                           child: MenuButton(
-                                              text: 'EVENTS/WEEKLY \nPROGRAMS',
+                                              text:
+                                                  'EVENTS/WEEKLY/PROMOTIONS \nPROGRAMS',
                                               val: 5,
                                               iconMenu: Icons.calendar_month,
                                               height: 50,
