@@ -4,6 +4,7 @@ import 'package:drinklinkmerchant/ui/merchant/merchant.dart';
 import 'package:drinklinkmerchant/ui/messages/message.dart';
 import 'package:drinklinkmerchant/ui/products/products.dart';
 import 'package:drinklinkmerchant/ui/smart_menu/smart_menu.dart';
+import 'package:drinklinkmerchant/ui/smart_menu/smart_menu_page.dart';
 import 'package:drinklinkmerchant/ui/smart_menu/workStation.dart';
 import 'package:drinklinkmerchant/ui/smart_menu/worktop.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -453,15 +454,15 @@ class _DashBoardState extends State<DashBoard> {
                         ] else if (indexMenu == 2) ...[
                           ConsultationMenu()
                         ] else if (indexMenu == 3) ...[
-                          WorkStation()
+                          SmartMenuPage()
                         ] else if (indexMenu == 6) ...[
                           CasesMenu()
                         ] else if (indexMenu == 13) ...[
-                          WorkStation()
+                          SmartMenuPage()
                         ] else if (indexMenu == 14) ...[
-                          WorkTop()
+                          SmartMenuPage()
                         ] else if (indexMenu == 15) ...[
-                          SmartMenu()
+                          SmartMenuPage()
                         ] else ...[
                           const widgetWall()
                         ]

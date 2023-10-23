@@ -1,5 +1,13 @@
+import 'dart:convert';
+import 'package:drinklinkmerchant/ui/consultation/menu_list.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:http/http.dart' as http;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:drinklinkmerchant/provider/menu_provider.dart';
 import 'package:drinklinkmerchant/widgets/icon_button.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class WorkStation extends StatefulWidget {
   const WorkStation({super.key});
@@ -21,9 +29,31 @@ class _WorkStationState extends State<WorkStation> {
   bool isServeCollection = false;
   TextEditingController prepTime = TextEditingController(text: '');
   TextEditingController stationController = TextEditingController(text: '');
+
+  //Serve
+  PlatformFile? uploadimage; //variable for choosed file
+  String fileName = '';
+  String fileType = '';
+  FilePickerResult? results;
+  TextEditingController menuName = TextEditingController();
+
+  TextEditingController menuNameUpdate = TextEditingController();
+  String menuUpdateUrl = '';
   bool showGraph = false;
   int stationMulMenu = 3;
   List<String> stations = [];
+
+  init() {
+    // showOrderingMenu = true;
+    showStationMenu = true;
+    isActiveWst = false;
+    isPayOrder = false;
+    isOrderOnly = false;
+    isSelfCollection = false;
+    isServeCollection = false;
+    stations = [];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -46,6 +76,11 @@ class _WorkStationState extends State<WorkStation> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                Container(
+                  width: 2,
+                  color: Colors.black87,
+                  height: MediaQuery.of(context).size.height - 200,
+                ),
                 Visibility(
                     visible: !showOrderingMenu,
                     child: Padding(
@@ -172,6 +207,7 @@ class _WorkStationState extends State<WorkStation> {
                                     onTap: () {
                                       setState(() {
                                         stationMenu = 1;
+                                        init();
                                       });
                                     },
                                     child: stationButton('One Station Required',
@@ -188,6 +224,7 @@ class _WorkStationState extends State<WorkStation> {
                                     onTap: () {
                                       setState(() {
                                         stationMenu = 2;
+                                        init();
                                       });
                                     },
                                     child: stationButton(
@@ -220,6 +257,7 @@ class _WorkStationState extends State<WorkStation> {
                                             onTap: () {
                                               setState(() {
                                                 stationMulMenu = 1;
+                                                init();
                                               });
                                             },
                                             child: stationMultipleButton(
@@ -241,6 +279,7 @@ class _WorkStationState extends State<WorkStation> {
                                             onTap: () {
                                               setState(() {
                                                 stationMulMenu = 2;
+                                                init();
                                               });
                                             },
                                             child: stationMultipleButton(
@@ -264,7 +303,12 @@ class _WorkStationState extends State<WorkStation> {
                   ),
                 ),
                 Visibility(
-                  visible: orderingMenu == 1,
+                    visible: orderingMenu == 2,
+                    child: Container(
+                      child: serveWidget(),
+                    )),
+                Visibility(
+                  visible: orderingMenu == 1 || orderingMenu == 2,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
@@ -282,8 +326,9 @@ class _WorkStationState extends State<WorkStation> {
                       widgetMultipleStation()
                     ]
                   ]
-                ] else
-                  ...[]
+                ] else ...[
+                  Visibility(visible: orderingMenu == 2, child: itemServeMenu())
+                ]
               ],
             ),
           ],
@@ -683,7 +728,7 @@ class _WorkStationState extends State<WorkStation> {
             ],
           ),
           SizedBox(
-            height: 100,
+            height: 20,
           ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -696,7 +741,7 @@ class _WorkStationState extends State<WorkStation> {
                     child: Text('Choose Service Option'),
                   ),
                   Container(
-                    width: isSelfCollection || isServeCollection ? 380 : 250,
+                    width: 250,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
@@ -752,20 +797,14 @@ class _WorkStationState extends State<WorkStation> {
                               SizedBox(
                                 height: 20,
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    isServeCollection = !isServeCollection;
-                                  });
-                                },
+                              Visibility(
+                                visible: isSelfCollection,
                                 child: Container(
                                   width: 200,
                                   height: 50,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10.0),
-                                    color: isServeCollection
-                                        ? const Color(0xffef7700)
-                                        : Colors.grey.shade500,
+                                    color: const Color(0xffef7700),
                                   ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -773,7 +812,7 @@ class _WorkStationState extends State<WorkStation> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'Serve',
+                                        'Order and Pay',
                                         style: TextStyle(
                                           fontFamily: 'SFPro',
                                           fontSize: 18,
@@ -791,32 +830,8 @@ class _WorkStationState extends State<WorkStation> {
                           SizedBox(
                             width: 20,
                           ),
-                          Visibility(
-                            visible: isSelfCollection || isServeCollection,
-                            child: Column(
-                              children: [
-                                Text('Collection Instruction'),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Container(
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          color: const Color(0xffef7700))),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'Example: Please proceed to Drinklink Cube situated next to the cashier',
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
+
+                          //ADD here
                         ],
                       ),
                     ),
@@ -824,150 +839,246 @@ class _WorkStationState extends State<WorkStation> {
                 ],
               ),
               SizedBox(
-                width: isSelfCollection || isServeCollection ? 10 : 150,
+                width: isSelfCollection || isServeCollection ? 10 : 120,
+              ),
+              Visibility(
+                visible: isSelfCollection || isServeCollection,
+                child: Column(
+                  children: [
+                    Text('Collection Instruction'),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      width: 120,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                          border: Border.all(color: const Color(0xffef7700))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Example: Please proceed to Drinklink Cube situated next to the cashier',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
               Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('Choose Payment Option'),
-                  ),
-                  Container(
-                    width: 200,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text('Choose one'),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isOrderOnly = !isOrderOnly;
-                                if (isOrderOnly) {
-                                  isPayOrder = false;
-                                } else {
-                                  isPayOrder = true;
-                                }
-                              });
-                            },
-                            child: Container(
-                              width: 200,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                color: !isOrderOnly
-                                    ? const Color(0xffef7700)
-                                    : Colors.grey.shade500,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Order and Pay',
-                                    style: TextStyle(
-                                      fontFamily: 'SFPro',
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
+                  Visibility(
+                    // visible: isSelfCollection,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 28,
+                        ),
+                        Container(
+                          width: 200,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                              border: Border.all(color: Colors.grey)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 26,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isServeCollection = !isServeCollection;
+                                    });
+                                  },
+                                  child: Container(
+                                    width: 200,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: isServeCollection
+                                          ? const Color(0xffef7700)
+                                          : Colors.grey.shade500,
                                     ),
-                                    textAlign: TextAlign.center,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Serve',
+                                          style: TextStyle(
+                                            fontFamily: 'SFPro',
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Visibility(
+                                  visible: isServeCollection,
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text('Choose one'),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            isOrderOnly = !isOrderOnly;
+                                            if (isOrderOnly) {
+                                              isPayOrder = false;
+                                            } else {
+                                              isPayOrder = true;
+                                            }
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 200,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            color: !isOrderOnly
+                                                ? const Color(0xffef7700)
+                                                : Colors.grey.shade500,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Order and Pay',
+                                                style: TextStyle(
+                                                  fontFamily: 'SFPro',
+                                                  fontSize: 18,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            isOrderOnly = !isOrderOnly;
+                                            if (isOrderOnly) {
+                                              isPayOrder = false;
+                                            } else {
+                                              isPayOrder = true;
+                                            }
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 200,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            color: isOrderOnly
+                                                ? const Color(0xffef7700)
+                                                : Colors.grey.shade500,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Order Only',
+                                                style: TextStyle(
+                                                  fontFamily: 'SFPro',
+                                                  fontSize: 18,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isOrderOnly = !isOrderOnly;
-                                if (isOrderOnly) {
-                                  isPayOrder = false;
-                                } else {
-                                  isPayOrder = true;
-                                }
-                              });
-                            },
-                            child: Container(
-                              width: 200,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                color: isOrderOnly
-                                    ? const Color(0xffef7700)
-                                    : Colors.grey.shade500,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Pay Only',
-                                    style: TextStyle(
-                                      fontFamily: 'SFPro',
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                      ],
                     ),
                   ),
                 ],
-              ),
+              )
             ],
           ),
           SizedBox(
-            height: 100,
+            height: 80,
           ),
           Row(
             children: [
               SizedBox(
                 width: 400,
               ),
-              Container(
-                width: 200,
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: isActiveWst && isServeCollection == true ||
-                          isSelfCollection == true
-                      ? Colors.green[600]
-                      : Colors.grey.withOpacity(.8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Save',
-                      style: TextStyle(
-                        fontFamily: 'SFPro',
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
+              GestureDetector(
+                onTap: () {
+                  if (isActiveWst && isServeCollection == true ||
+                      isSelfCollection == true) {
+                        context.read<MenuProvider>().updateMenuCount(1);
+                      }
+                },
+                child: Container(
+                  width: 200,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: isActiveWst && isServeCollection == true ||
+                            isSelfCollection == true
+                        ? Colors.green[600]
+                        : Colors.grey.withOpacity(.8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Go to Worktop',
+                        style: TextStyle(
+                          fontFamily: 'SFPro',
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -1007,81 +1118,85 @@ class _WorkStationState extends State<WorkStation> {
               ],
             ),
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    isActiveWst = !isActiveWst;
-                  });
-                },
-                child: Container(
-                  width: 200,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: isActiveWst
-                        ? const Color(0xffef7700)
-                        : Colors.grey.shade500,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        !isActiveWst ? 'Activate WST' : 'WST Activated',
-                        style: TextStyle(
-                          fontFamily: 'SFPro',
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 150,
-              ),
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Text('Enter Average Preparation Time(mins)'),
-                  ),
-                  Container(
-                    width: 80,
-                    height: 45,
+          Visibility(
+            visible: stationMulMenu == 1,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isActiveWst = !isActiveWst;
+                    });
+                  },
+                  child: Container(
+                    width: 200,
+                    height: 50,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      color: const Color(0xffffffff),
-                      border: Border.all(
-                          width: 1.0, color: const Color(0xff707070)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color(0x29000000),
-                          offset: Offset(0, 3),
-                          blurRadius: 6,
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: isActiveWst
+                          ? const Color(0xffef7700)
+                          : Colors.grey.shade500,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          !isActiveWst ? 'Activate WST' : 'WST Activated',
+                          style: TextStyle(
+                            fontFamily: 'SFPro',
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
                       ],
                     ),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextField(
-                          controller: prepTime,
-                          decoration: InputDecoration.collapsed(hintText: '5'),
+                  ),
+                ),
+                SizedBox(
+                  width: 150,
+                ),
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Text('Enter Average Preparation Time(mins)'),
+                    ),
+                    Container(
+                      width: 80,
+                      height: 45,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15.0),
+                        color: const Color(0xffffffff),
+                        border: Border.all(
+                            width: 1.0, color: const Color(0xff707070)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0x29000000),
+                            offset: Offset(0, 3),
+                            blurRadius: 6,
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: prepTime,
+                            decoration:
+                                InputDecoration.collapsed(hintText: '5'),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
           SizedBox(
             height: 20,
@@ -1095,7 +1210,7 @@ class _WorkStationState extends State<WorkStation> {
                   Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Text(stationMulMenu == 1
-                        ? 'Create slave station'
+                        ? 'Create sub station'
                         : 'Create station'),
                   ),
                   Container(
@@ -1169,7 +1284,7 @@ class _WorkStationState extends State<WorkStation> {
             width: 20,
           ),
           //List of station
-          ListOfStation(),
+          ListOfStation(300),
           SizedBox(
             height: 50,
           ),
@@ -1184,7 +1299,7 @@ class _WorkStationState extends State<WorkStation> {
                     child: Text('Choose Service Option'),
                   ),
                   Container(
-                    width: isSelfCollection || isServeCollection ? 380 : 250,
+                    width: 250,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
@@ -1240,20 +1355,14 @@ class _WorkStationState extends State<WorkStation> {
                               SizedBox(
                                 height: 20,
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    isServeCollection = !isServeCollection;
-                                  });
-                                },
+                              Visibility(
+                                visible: isSelfCollection,
                                 child: Container(
                                   width: 200,
                                   height: 50,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10.0),
-                                    color: isServeCollection
-                                        ? const Color(0xffef7700)
-                                        : Colors.grey.shade500,
+                                    color: const Color(0xffef7700),
                                   ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -1261,7 +1370,7 @@ class _WorkStationState extends State<WorkStation> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'Serve',
+                                        'Order and Pay',
                                         style: TextStyle(
                                           fontFamily: 'SFPro',
                                           fontSize: 18,
@@ -1279,32 +1388,8 @@ class _WorkStationState extends State<WorkStation> {
                           SizedBox(
                             width: 20,
                           ),
-                          Visibility(
-                            visible: isSelfCollection || isServeCollection,
-                            child: Column(
-                              children: [
-                                Text('Collection Instruction'),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                Container(
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          color: const Color(0xffef7700))),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'Example: Please proceed to Drinklink Cube situated next to the cashier',
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
+
+                          //ADD here
                         ],
                       ),
                     ),
@@ -1312,115 +1397,203 @@ class _WorkStationState extends State<WorkStation> {
                 ],
               ),
               SizedBox(
-                width: isSelfCollection || isServeCollection ? 10 : 150,
+                width: isSelfCollection || isServeCollection ? 10 : 120,
+              ),
+              Visibility(
+                visible: isSelfCollection || isServeCollection,
+                child: Column(
+                  children: [
+                    Text('Collection Instruction'),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      width: 120,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                          border: Border.all(color: const Color(0xffef7700))),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Example: Please proceed to Drinklink Cube situated next to the cashier',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
               Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('Choose Payment Option'),
-                  ),
-                  Container(
-                    width: 200,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text('Choose one'),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isOrderOnly = !isOrderOnly;
-                                if (isOrderOnly) {
-                                  isPayOrder = false;
-                                } else {
-                                  isPayOrder = true;
-                                }
-                              });
-                            },
-                            child: Container(
-                              width: 200,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                color: !isOrderOnly
-                                    ? const Color(0xffef7700)
-                                    : Colors.grey.shade500,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Order and Pay',
-                                    style: TextStyle(
-                                      fontFamily: 'SFPro',
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
+                  Visibility(
+                    // visible: isSelfCollection,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 28,
+                        ),
+                        Container(
+                          width: 200,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                              border: Border.all(color: Colors.grey)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 26,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isServeCollection = !isServeCollection;
+                                    });
+                                  },
+                                  child: Container(
+                                    width: 200,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: isServeCollection
+                                          ? const Color(0xffef7700)
+                                          : Colors.grey.shade500,
                                     ),
-                                    textAlign: TextAlign.center,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Serve',
+                                          style: TextStyle(
+                                            fontFamily: 'SFPro',
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                Visibility(
+                                  visible: isServeCollection,
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text('Choose one'),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            isOrderOnly = !isOrderOnly;
+                                            if (isOrderOnly) {
+                                              isPayOrder = false;
+                                            } else {
+                                              isPayOrder = true;
+                                            }
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 200,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            color: !isOrderOnly
+                                                ? const Color(0xffef7700)
+                                                : Colors.grey.shade500,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Order and Pay',
+                                                style: TextStyle(
+                                                  fontFamily: 'SFPro',
+                                                  fontSize: 18,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            isOrderOnly = !isOrderOnly;
+                                            if (isOrderOnly) {
+                                              isPayOrder = false;
+                                            } else {
+                                              isPayOrder = true;
+                                            }
+                                          });
+                                        },
+                                        child: Container(
+                                          width: 200,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0),
+                                            color: isOrderOnly
+                                                ? const Color(0xffef7700)
+                                                : Colors.grey.shade500,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                'Order Only',
+                                                style: TextStyle(
+                                                  fontFamily: 'SFPro',
+                                                  fontSize: 18,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
                             ),
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isOrderOnly = !isOrderOnly;
-                                if (isOrderOnly) {
-                                  isPayOrder = false;
-                                } else {
-                                  isPayOrder = true;
-                                }
-                              });
-                            },
-                            child: Container(
-                              width: 200,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0),
-                                color: isOrderOnly
-                                    ? const Color(0xffef7700)
-                                    : Colors.grey.shade500,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Pay Only',
-                                    style: TextStyle(
-                                      fontFamily: 'SFPro',
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                      ],
                     ),
                   ),
                 ],
-              ),
+              )
             ],
           ),
           SizedBox(
@@ -1431,31 +1604,39 @@ class _WorkStationState extends State<WorkStation> {
               SizedBox(
                 width: 400,
               ),
-              Container(
-                width: 200,
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: isActiveWst && isServeCollection == true ||
-                          isSelfCollection == true
-                      ? Colors.green[600]
-                      : Colors.grey.withOpacity(.8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Save',
-                      style: TextStyle(
-                        fontFamily: 'SFPro',
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
+              GestureDetector(
+                onTap: () {
+                   if (isActiveWst && isServeCollection == true ||
+                      isSelfCollection == true) {
+                        context.read<MenuProvider>().updateMenuCount(1);
+                      }
+                },
+                child: Container(
+                  width: 200,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: stations.length > 0 && isActiveWst && isServeCollection == true &&
+                            isSelfCollection == true 
+                        ? Colors.green[600]
+                        : Colors.grey.withOpacity(.8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Go to Worktop',
+                        style: TextStyle(
+                          fontFamily: 'SFPro',
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -1465,9 +1646,9 @@ class _WorkStationState extends State<WorkStation> {
     );
   }
 
-  Widget ListOfStation() {
+  Widget ListOfStation(double width) {
     return SizedBox(
-      width: 300,
+      width: width,
       height: 100,
       child: ListView.builder(
           itemCount: stations.length,
@@ -1480,19 +1661,617 @@ class _WorkStationState extends State<WorkStation> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(stations[index]),
-                    
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         setState(() {
                           stations.removeAt(index);
                         });
-                      },child: Icon(Icons.close, color: const Color(0xffef7700),),
+                      },
+                      child: Icon(
+                        Icons.close,
+                        color: const Color(0xffef7700),
+                      ),
                     )
                   ],
                 ),
               ),
             );
           }),
+    );
+  }
+
+  serveWidget() {
+    return Container(
+      width: 200,
+      child: Column(children: [
+        Container(
+          width: 200,
+          height: 45,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: const Color(0xffffffff),
+            border: Border.all(width: 1.0, color: const Color(0xff707070)),
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: menuName,
+                decoration: InputDecoration.collapsed(hintText: 'Menu name'),
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Ex: Lunch, Dinner, Korian, Itallian',
+            style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        GestureDetector(
+            onTap: () {
+              chooseImage();
+            },
+            child: IconButtonMenu(
+              text: 'Upload Menu',
+              iconMenu: Icons.upload,
+              width: 200,
+              height: 35,
+              backColor: Color.fromARGB(255, 186, 186, 186),
+            )),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            'Format available: pdf, png, jpg',
+            style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+          ),
+        ),
+        SizedBox(
+          height: 30,
+        ),
+        GestureDetector(
+            onTap: () {
+              //need to change the count
+              uploadImage(10);
+            },
+            child: IconButtonMenu(
+              text: 'SAVE',
+              iconMenu: Icons.add,
+              width: 200,
+              height: 35,
+              backColor: const Color(0xffef7700),
+            )),
+        SizedBox(
+          height: 50,
+        ),
+        Container(
+          width: 200,
+          height: 45,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: const Color(0xffffffff),
+            border: Border.all(width: 1.0, color: const Color(0xff707070)),
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: stationController,
+                decoration: InputDecoration.collapsed(hintText: 'Station Name'),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              stations.add(stationController.text);
+              stationController.text = '';
+            });
+          },
+          child: Container(
+            width: 200,
+            height: 35,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              color: const Color(0xffef7700),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'ADD',
+                  style: TextStyle(
+                    fontFamily: 'SFPro',
+                    fontSize: 18,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 30,
+        ),
+        ListOfStation(200),
+      ]),
+    );
+  }
+
+  Future<void> chooseImage() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.any,
+    );
+    //set source: ImageSource.camera to get image from camera
+    setState(() {
+      uploadimage = result!.files.first;
+      print(result.files.first.name);
+      fileName = result.files.first.name;
+      results = result;
+      fileType = fileName.split('.')[1];
+      menuUpdateUrl = result.files.first.name;
+    });
+  }
+
+  Future<void> uploadImage(int menuCount) async {
+    //show your own loading or progressing code here
+
+    String uploadurl = "http://192.168.1.7/uploads/image.php";
+    //dont use http://localhost , because emulator don't get that address
+    //insted use your local IP address or use live URL
+    //hit "ipconfig" in windows or "ip a" in linux to get you local IP
+
+    try {
+      List<int>? imageBytes = await uploadimage!.bytes;
+      String baseimage = base64Encode(imageBytes!);
+      print(baseimage.length);
+      //convert file image to Base64 encoding
+      var response = await http.post(Uri.parse(uploadurl), body: {
+        'file_name': fileName,
+        'base64_data': baseimage,
+      });
+
+      print(response.toString());
+
+      if (response.statusCode == 200) {
+      } else {
+        print("Error during connection to server");
+      }
+    } catch (e) {
+      print(e.toString());
+      //there is error during converting file image to base64 encoding.
+    }
+
+    createMenu(menuCount);
+  }
+
+  Future<void> uploadImageUpdate() async {
+    //show your own loading or progressing code here
+
+    String uploadurl = "http://192.168.1.7/uploads/image.php";
+    //dont use http://localhost , because emulator don't get that address
+    //insted use your local IP address or use live URL
+    //hit "ipconfig" in windows or "ip a" in linux to get you local IP
+
+    try {
+      List<int>? imageBytes = await uploadimage!.bytes;
+      String baseimage = base64Encode(imageBytes!);
+      print(baseimage.length);
+      //convert file image to Base64 encoding
+      var response = await http.post(Uri.parse(uploadurl), body: {
+        'file_name': fileName,
+        'base64_data': baseimage,
+      });
+
+      print(response.toString());
+
+      if (response.statusCode == 200) {
+      } else {
+        print("Error during connection to server");
+      }
+    } catch (e) {
+      print(e.toString());
+      //there is error during converting file image to base64 encoding.
+    }
+  }
+
+  Future<void> createMenu(int menuCount) async {
+    if (menuName.text != '' && fileName != '') {
+      FirebaseFirestore.instance
+          .collection('merchant')
+          .doc('X6odvQ5gqesAzwtJLaFl')
+          .collection('consultationMenu')
+          .add({
+        'order': menuCount,
+        'date': DateTime.now(),
+        'fileName': fileName,
+        'image': 'http://192.168.1.7/uploads/uploads/$fileName',
+        'name': menuName.text,
+        'status': true,
+        'type': fileType,
+      }).then((value) async {
+        context.read<MenuProvider>().menuRefresh();
+      });
+    }
+  }
+
+  itemServeMenu() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Color.fromARGB(255, 228, 228, 228),
+                ),
+                child: SizedBox(
+                  width: 400,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 200,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: const Color(0xffffffff),
+                            border: Border.all(
+                                width: 1.0, color: const Color(0xff707070)),
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(
+                                // controller: userController,
+                                decoration: InputDecoration.collapsed(
+                                    hintText: 'Search'),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Spacer(),
+                        GestureDetector(
+                          child: Icon(Icons.filter_list_alt),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height - 200,
+                width: 400,
+                child: ConsultMenuPage(),
+              ),
+            ],
+          ),
+          menuViewer()
+        ],
+      ),
+    );
+  }
+
+  Widget updateMenuDialog(BuildContext context, String mID) {
+    return AlertDialog(
+      title: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: SizedBox(
+          width: 400,
+          height: 330,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Update Menu',
+              ),
+              const SizedBox(height: 15),
+              DecoratedBox(
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: [
+                      const Text(
+                        'Name',
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              maxLines: 1,
+                              controller: menuNameUpdate,
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                menuUpdateUrl,
+                style: TextStyle(fontStyle: FontStyle.italic, fontSize: 14),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              GestureDetector(
+                  onTap: () {
+                    chooseImage();
+                  },
+                  child: IconButtonMenu(
+                    text: 'Upload new menu',
+                    iconMenu: Icons.upload,
+                    width: 200,
+                    height: 30,
+                    backColor: Color.fromARGB(255, 120, 120, 120),
+                  )),
+              SizedBox(
+                height: 30,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: IconButtonMenu(
+                            text: 'Cancel',
+                            iconMenu: Icons.close,
+                            width: 200,
+                            height: 35,
+                            backColor: Color.fromARGB(255, 120, 120, 120),
+                          )),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: GestureDetector(
+                          onTap: () async {
+                            uploadImageUpdate();
+                            FirebaseFirestore.instance
+                                .collection('merchant')
+                                .doc('X6odvQ5gqesAzwtJLaFl')
+                                .collection('consultationMenu')
+                                .doc(mID)
+                                .update({
+                              'name': menuNameUpdate.text,
+                              'image':
+                                  'http://192.168.1.7/uploads/uploads/$menuUpdateUrl',
+                              'type': fileType
+                            }).then((value) async {
+                              context.read<MenuProvider>().menuRefresh();
+                              Navigator.of(context).pop();
+                            });
+                          },
+                          child: IconButtonMenu(
+                            text: 'Update',
+                            iconMenu: Icons.edit,
+                            width: 200,
+                            height: 35,
+                            backColor: const Color(0xffef7700),
+                          )),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  menuViewer() {
+    final String menuID = context.select((MenuProvider p) => p.menuID);
+    final String menuName = context.select((MenuProvider p) => p.menuName);
+    final String imageUrl = context.select((MenuProvider p) => p.imageUrl);
+    final String type = context.select((MenuProvider p) => p.type);
+    final String pdfData = context.select((MenuProvider p) => p.pdfData);
+
+    return SizedBox(
+      width: 450,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+        child: Stack(
+          children: [
+            if (imageUrl != '')
+              if (type != 'pdf') ...[
+                SizedBox(
+                    width: 500,
+                    child: Image.network(
+                      imageUrl,
+                      fit: BoxFit.fitWidth,
+                    )),
+              ] else ...[
+                SizedBox(
+                  width: 500,
+                  child: HtmlWidget(
+                    pdfData,
+                    // customStylesBuilder: (element) {
+                    //   if (element.classes.contains('foo')) {
+                    //     return {'color': 'red'};
+                    //   }
+                    //   return null;
+                    // },
+                    onErrorBuilder: (context, element, error) =>
+                        Text('$element error: $error'),
+                    onLoadingBuilder: (context, element, loadingProgress) =>
+                        CircularProgressIndicator(),
+                    textStyle: TextStyle(fontSize: 14),
+                    webView: true,
+                  ),
+                )
+              ],
+            if (imageUrl != '')
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: GestureDetector(
+                      onTap: () async {
+                        setState(() {
+                          menuNameUpdate.text = menuName;
+                          menuUpdateUrl = imageUrl;
+                        });
+                        await showDialog<bool>(
+                          context: context,
+                          builder: (context) =>
+                              updateMenuDialog(context, menuID),
+                        );
+                      },
+                      child: IconButtonMenu(
+                        text: 'Edit',
+                        iconMenu: Icons.edit,
+                        width: 100,
+                        height: 30,
+                        backColor: Color.fromARGB(255, 186, 186, 186),
+                      )),
+                ),
+              ),
+            if (imageUrl != '')
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: GestureDetector(
+                      onTap: () async {
+                        await showDialog<bool>(
+                          context: context,
+                          builder: (context) =>
+                              deleteMenuDialog(context, menuID, menuName),
+                        );
+                      },
+                      child: IconButtonMenu(
+                        text: 'Delete',
+                        iconMenu: Icons.delete,
+                        width: 100,
+                        height: 30,
+                        backColor: Color.fromARGB(255, 210, 69, 69),
+                      )),
+                ),
+              )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget deleteMenuDialog(BuildContext context, String mID, menuName) {
+    return AlertDialog(
+      title: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: SizedBox(
+          width: 300,
+          height: 170,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Delete Menu',
+              ),
+              const SizedBox(height: 15),
+              Text(
+                'Are you sure you want to delete this menu $menuName ?',
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: IconButtonMenu(
+                            text: 'Cancel',
+                            iconMenu: Icons.close,
+                            width: 200,
+                            height: 35,
+                            backColor: Color.fromARGB(255, 120, 120, 120),
+                          )),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: GestureDetector(
+                          onTap: () async {
+                            uploadImageUpdate();
+                            FirebaseFirestore.instance
+                                .collection('merchant')
+                                .doc('X6odvQ5gqesAzwtJLaFl')
+                                .collection('consultationMenu')
+                                .doc(mID)
+                                .delete()
+                                .then((value) async {
+                              context.read<MenuProvider>().menuRefresh();
+                              Navigator.of(context).pop();
+                            });
+                          },
+                          child: IconButtonMenu(
+                            text: 'Delete',
+                            iconMenu: Icons.delete,
+                            width: 200,
+                            height: 35,
+                            backColor: Color.fromARGB(255, 210, 69, 69),
+                          )),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
