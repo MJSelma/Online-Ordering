@@ -14,8 +14,8 @@ import 'package:provider/provider.dart';
 import '../provider/business_outlet_provider.dart';
 import '../provider/cases_messages_provider.dart';
 import '../provider/menu_provider.dart';
-import '../routes/routes.dart';
 import '../widgets/menu_button.dart';
+import '../widgets/smartMenu_button.dart';
 import 'cases/cases.dart';
 import 'cases/cases_messages.dart';
 import 'cases/cases_menu.dart';
@@ -24,8 +24,9 @@ import 'data_class/businesses_class.dart';
 import 'merchant/ouletMenu.dart';
 import 'merchant/outlets.dart';
 import 'merchant/sample.dart';
+import 'smart_menu/smart_menu_page.dart';
 
-enum Options { cases, logout }
+enum Options { cases, exit }
 
 class DashBoard extends StatefulWidget {
   const DashBoard({Key? key}) : super(key: key);
@@ -37,6 +38,8 @@ class DashBoard extends StatefulWidget {
 class _DashBoardState extends State<DashBoard> {
   bool showChat = false;
   int indexMenu = 100;
+  bool showSmartMenu = false;
+  int smartMenuIndex = 0;
   String currentItem = 'SELECT BUSINESS';
   String businessDocId = '';
 
@@ -77,12 +80,9 @@ class _DashBoardState extends State<DashBoard> {
       _changeColorAccordingToMenuItem = Colors.red;
       print('cases');
       setState(() {
-        indexMenu = 13;
-        setIndexMenuNameProvider('MY CASES');
+        indexMenu = 6;
         // showChat = false;
       });
-    } else if (value == Options.logout.index) {
-      Navigator.of(context).pushReplacementNamed(Routes.webMain);
     } else {
       _changeColorAccordingToMenuItem = Colors.purple;
     }
@@ -172,12 +172,12 @@ class _DashBoardState extends State<DashBoard> {
                       children: [
                         Column(
                           children: [
-                            Text(
+                            const Text(
                               'DRINKLINK',
                               style: TextStyle(
                                   fontFamily: 'SFPro',
-                                  color: systemDefaultColorOrange,
-                                  fontSize: defaultDrinkLinkFontSize,
+                                  color: Color(0xffbef7700),
+                                  fontSize: 30,
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
@@ -185,7 +185,7 @@ class _DashBoardState extends State<DashBoard> {
                               style: TextStyle(
                                   fontFamily: 'SFPro',
                                   color: btnColorPurpleDark,
-                                  fontSize: defaultFontSize,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -193,12 +193,12 @@ class _DashBoardState extends State<DashBoard> {
                         const Spacer(),
                         Column(
                           children: [
-                            Text(
+                            const Text(
                               'Welcome',
                               style: TextStyle(
-                                  fontFamily: defaultFontFamily,
-                                  color: btnColorGreyDark,
-                                  fontSize: defaultFontSize,
+                                  fontFamily: 'SFPro',
+                                  color: Color(0xF8737474),
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w300),
                             ),
                             Text(
@@ -218,8 +218,6 @@ class _DashBoardState extends State<DashBoard> {
                             width: 50,
                             height: 50,
                             decoration: BoxDecoration(
-                              // border: Border.all(
-                              //     strokeAlign: 1, color: btnColorGreenDark),
                               borderRadius: BorderRadius.circular(113.0),
                               image: const DecorationImage(
                                 image: AssetImage('assets/images/Goodfun.jpg'),
@@ -250,8 +248,8 @@ class _DashBoardState extends State<DashBoard> {
                                     'New Manager', Icons.manage_accounts, 4),
                                 _buildPopupMenuItem(
                                     'Settings', Icons.settings, 5),
-                                _buildPopupMenuItem('Logout', Icons.exit_to_app,
-                                    Options.logout.index),
+                                _buildPopupMenuItem('Exit', Icons.exit_to_app,
+                                    Options.exit.index),
                               ],
                             ))
                       ],
@@ -264,7 +262,7 @@ class _DashBoardState extends State<DashBoard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        height: MediaQuery.sizeOf(context).height - 130,
+                        height: MediaQuery.sizeOf(context).height - 100,
                         child: RawScrollbar(
                           padding: const EdgeInsets.symmetric(vertical: 50.0),
                           // mainAxisMargin: 200.0,
@@ -371,12 +369,16 @@ class _DashBoardState extends State<DashBoard> {
                                         const SizedBox(
                                           height: 10,
                                         ),
+
                                         GestureDetector(
                                           onTap: () {
                                             setState(() {
                                               indexMenu = 3;
                                               setIndexMenuNameProvider(
-                                                  'SMART MENU');
+                                                  'SMART MENU > WORKING STATIONS');
+                                              context
+                                                  .read<MenuProvider>()
+                                                  .updateMenuCount(0);
                                             });
                                           },
                                           child: MenuButton(
@@ -411,29 +413,128 @@ class _DashBoardState extends State<DashBoard> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    'WORKING STATIONS',
-                                                    style: TextStyle(
-                                                        color:
-                                                            iconButtonTextColorPurple),
+                                                  // GestureDetector(
+                                                  //   onTap: () {
+                                                  //     setState(() {
+                                                  //       smartMenuIndex = 0;
+                                                  //       indexMenu = 13;
+                                                  //     });
+                                                  //     context
+                                                  //         .read<MenuProvider>()
+                                                  //         .updateMenuCount(0);
+                                                  //   },
+                                                  //   child: SmartMenuButton(
+                                                  //       text: 'Work Station',
+                                                  //       val: 0,
+                                                  //       iconMenu: Icons
+                                                  //           .menu_book_rounded,
+                                                  //       height: 12,
+                                                  //       paddingLeft: 0),
+                                                  // ),
+                                                  // const SizedBox(
+                                                  //   height: 6,
+                                                  // ),
+                                                  // GestureDetector(
+                                                  //   onTap: () {
+                                                  //     setState(() {
+                                                  //       smartMenuIndex = 1;
+                                                  //       indexMenu = 14;
+                                                  //     });
+                                                  //     context
+                                                  //         .read<MenuProvider>()
+                                                  //         .updateMenuCount(1);
+                                                  //   },
+                                                  //   child: SmartMenuButton(
+                                                  //       text: 'Worktop',
+                                                  //       val: 0,
+                                                  //       iconMenu: Icons
+                                                  //           .menu_book_rounded,
+                                                  //       height: 12,
+                                                  //       paddingLeft: 0),
+                                                  // ),
+                                                  // const SizedBox(
+                                                  //   height: 6,
+                                                  // ),
+                                                  // GestureDetector(
+                                                  //   onTap: () {
+                                                  //     setState(() {
+                                                  //       smartMenuIndex = 2;
+                                                  //       indexMenu = 15;
+                                                  //     });
+                                                  //     context
+                                                  //         .read<MenuProvider>()
+                                                  //         .updateMenuCount(2);
+                                                  //   },
+                                                  //   child: SmartMenuButton(
+                                                  //       text: 'Smart Menu',
+                                                  //       val: 0,
+                                                  //       iconMenu: Icons
+                                                  //           .menu_book_rounded,
+                                                  //       height: 12,
+                                                  //       paddingLeft: 0),
+                                                  // ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        // indexMenu = 3;
+                                                        setIndexMenuNameProvider(
+                                                            'SMART MENU > WORKING STATIONS');
+                                                        context
+                                                            .read<
+                                                                MenuProvider>()
+                                                            .updateMenuCount(0);
+                                                      });
+                                                    },
+                                                    child: Text(
+                                                      'WORKING STATIONS',
+                                                      style: TextStyle(
+                                                          color:
+                                                              iconButtonTextColorPurple),
+                                                    ),
                                                   ),
                                                   const SizedBox(
                                                     height: 5,
                                                   ),
-                                                  Text(
-                                                    'WORKTOPS',
-                                                    style: TextStyle(
-                                                        color:
-                                                            iconButtonTextColorPurple),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        // indexMenu = 3;
+                                                        setIndexMenuNameProvider(
+                                                            'SMART MENU > WORKTOPS');
+                                                        context
+                                                            .read<
+                                                                MenuProvider>()
+                                                            .updateMenuCount(1);
+                                                      });
+                                                    },
+                                                    child: Text(
+                                                      'WORKTOPS',
+                                                      style: TextStyle(
+                                                          color:
+                                                              iconButtonTextColorPurple),
+                                                    ),
                                                   ),
                                                   const SizedBox(
                                                     height: 5,
                                                   ),
-                                                  Text(
-                                                    'SMART MENU',
-                                                    style: TextStyle(
-                                                        color:
-                                                            iconButtonTextColorPurple),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        // indexMenu = 3;
+                                                        setIndexMenuNameProvider(
+                                                            'SMART MENU > SMART MENU');
+                                                        context
+                                                            .read<
+                                                                MenuProvider>()
+                                                            .updateMenuCount(2);
+                                                      });
+                                                    },
+                                                    child: Text(
+                                                      'SMART MENU',
+                                                      style: TextStyle(
+                                                          color:
+                                                              iconButtonTextColorPurple),
+                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -493,8 +594,7 @@ class _DashBoardState extends State<DashBoard> {
                                             });
                                           },
                                           child: MenuButton(
-                                              text:
-                                                  'EVENTS/WEEKLY/PROMOTIONS \nPROGRAMS',
+                                              text: 'EVENTS/WEEKLY \nPROGRAMS',
                                               val: 5,
                                               iconMenu: Icons.calendar_month,
                                               height: 50,
@@ -683,8 +783,8 @@ class _DashBoardState extends State<DashBoard> {
                               ] else if (indexMenu == 2) ...[
                                 const ConsultationMenu(),
                               ] else if (indexMenu == 3) ...[
-                                const SmartMenu()
-                              ] else if (indexMenu == 13) ...[
+                                SmartMenuPage()
+                              ] else if (indexMenu == 6) ...[
                                 const CasesMenu()
                               ] else ...[
                                 // const widgetWall()
@@ -753,6 +853,7 @@ class _DashBoardState extends State<DashBoard> {
   }
 }
 
+  
 //   Widget MenuButton(String text, int val, IconData iconMenu, double height,
 //       double paddingLeft) {
 //     return Padding(
