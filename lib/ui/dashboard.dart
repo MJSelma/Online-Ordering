@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import '../provider/business_outlet_provider.dart';
 import '../provider/cases_messages_provider.dart';
 import '../provider/menu_provider.dart';
+import '../routes/routes.dart';
 import '../widgets/menu_button.dart';
 import 'cases/cases.dart';
 import 'cases/cases_messages.dart';
@@ -24,7 +25,7 @@ import 'merchant/ouletMenu.dart';
 import 'merchant/outlets.dart';
 import 'merchant/sample.dart';
 
-enum Options { cases, exit }
+enum Options { cases, logout }
 
 class DashBoard extends StatefulWidget {
   const DashBoard({Key? key}) : super(key: key);
@@ -76,9 +77,12 @@ class _DashBoardState extends State<DashBoard> {
       _changeColorAccordingToMenuItem = Colors.red;
       print('cases');
       setState(() {
-        indexMenu = 6;
+        indexMenu = 13;
+        setIndexMenuNameProvider('MY CASES');
         // showChat = false;
       });
+    } else if (value == Options.logout.index) {
+      Navigator.of(context).pushReplacementNamed(Routes.webMain);
     } else {
       _changeColorAccordingToMenuItem = Colors.purple;
     }
@@ -214,6 +218,8 @@ class _DashBoardState extends State<DashBoard> {
                             width: 50,
                             height: 50,
                             decoration: BoxDecoration(
+                              // border: Border.all(
+                              //     strokeAlign: 1, color: btnColorGreenDark),
                               borderRadius: BorderRadius.circular(113.0),
                               image: const DecorationImage(
                                 image: AssetImage('assets/images/Goodfun.jpg'),
@@ -244,8 +250,8 @@ class _DashBoardState extends State<DashBoard> {
                                     'New Manager', Icons.manage_accounts, 4),
                                 _buildPopupMenuItem(
                                     'Settings', Icons.settings, 5),
-                                _buildPopupMenuItem('Exit', Icons.exit_to_app,
-                                    Options.exit.index),
+                                _buildPopupMenuItem('Logout', Icons.exit_to_app,
+                                    Options.logout.index),
                               ],
                             ))
                       ],
@@ -661,8 +667,10 @@ class _DashBoardState extends State<DashBoard> {
                               Row(
                                 children: [
                                   SizedBox(
-                                    width:
-                                        MediaQuery.sizeOf(context).width - 300,
+                                    width: isMenuOpen == true
+                                        ? MediaQuery.sizeOf(context).width - 300
+                                        : MediaQuery.sizeOf(context).width -
+                                            200,
                                     child: const OutletMenu(),
                                   ),
                                 ],
@@ -676,7 +684,7 @@ class _DashBoardState extends State<DashBoard> {
                                 const ConsultationMenu(),
                               ] else if (indexMenu == 3) ...[
                                 const SmartMenu()
-                              ] else if (indexMenu == 6) ...[
+                              ] else if (indexMenu == 13) ...[
                                 const CasesMenu()
                               ] else ...[
                                 // const widgetWall()
