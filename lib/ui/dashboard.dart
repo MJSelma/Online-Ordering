@@ -3,6 +3,7 @@ import 'package:drinklinkmerchant/ui/merchant/merchant.dart';
 import 'package:drinklinkmerchant/ui/messages/message.dart';
 import 'package:drinklinkmerchant/ui/products/products.dart';
 import 'package:drinklinkmerchant/ui/smart_menu/smart_menu.dart';
+import 'package:drinklinkmerchant/ui/smart_menu/smart_menu_page.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -38,6 +39,7 @@ class _DashBoardState extends State<DashBoard> {
   int indexMenu = 100;
   String currentItem = 'SELECT BUSINESS';
   String businessDocId = '';
+  int smartMenuIndex = 0;
 
   BusinessesClass? dropDownValue;
 
@@ -405,29 +407,67 @@ class _DashBoardState extends State<DashBoard> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    'WORKING STATIONS',
-                                                    style: TextStyle(
-                                                        color:
-                                                            iconButtonTextColorPurple),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                             context
+                                                          .read<MenuProvider>()
+                                                          .updateMenuCount(0);
+                                                        smartMenuIndex = 0;
+                                                        indexMenu = 13;
+                                                      });
+                                                 
+                                                    },
+                                                    child: Text(
+                                                      'WORKING STATIONS',
+                                                      style: TextStyle(
+                                                          color:
+                                                              iconButtonTextColorPurple),
+                                                    ),
                                                   ),
                                                   const SizedBox(
                                                     height: 5,
                                                   ),
-                                                  Text(
-                                                    'WORKTOPS',
-                                                    style: TextStyle(
-                                                        color:
-                                                            iconButtonTextColorPurple),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                         context
+                                                          .read<MenuProvider>()
+                                                          .updateMenuCount(1);
+                                                        smartMenuIndex = 1;
+                                                        indexMenu = 14;
+                                                          
+                                                      });
+                                                   
+                                                    },
+                                                    child: Text(
+                                                      'WORKTOPS',
+                                                      style: TextStyle(
+                                                          color:
+                                                              iconButtonTextColorPurple),
+                                                    ),
                                                   ),
                                                   const SizedBox(
                                                     height: 5,
                                                   ),
-                                                  Text(
-                                                    'SMART MENU',
-                                                    style: TextStyle(
-                                                        color:
-                                                            iconButtonTextColorPurple),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        context
+                                                          .read<MenuProvider>()
+                                                          .updateMenuCount(2);
+                                                        smartMenuIndex = 2;
+                                                        indexMenu = 15;
+                                                        
+                                                      });
+                                                      
+                                                    },
+                                                    child: Text(
+                                                      'SMART MENU',
+                                                      style: TextStyle(
+                                                          color:
+                                                              iconButtonTextColorPurple),
+                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -674,7 +714,13 @@ class _DashBoardState extends State<DashBoard> {
                               ] else if (indexMenu == 2) ...[
                                 const ConsultationMenu(),
                               ] else if (indexMenu == 3) ...[
-                                const SmartMenu()
+                                SmartMenuPage()
+                              ] else if (indexMenu == 13) ...[
+                                SmartMenuPage()
+                              ] else if (indexMenu == 14) ...[
+                                SmartMenuPage()
+                              ] else if (indexMenu == 15) ...[
+                                SmartMenuPage()
                               ] else if (indexMenu == 6) ...[
                                 const CasesMenu()
                               ] else ...[

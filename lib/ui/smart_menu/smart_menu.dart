@@ -1,3 +1,4 @@
+import 'package:drinklinkmerchant/widgets/icon_button.dart';
 import 'package:flutter/material.dart';
 
 class SmartMenu extends StatefulWidget {
@@ -8,24 +9,24 @@ class SmartMenu extends StatefulWidget {
 }
 
 class _SmartMenuState extends State<SmartMenu> {
+
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Text(
             'Smart Menu',
             style: TextStyle(
-              fontWeight: FontWeight.w200,
-              fontFamily: 'SFPro',
-            ),
+                fontWeight: FontWeight.w400, fontFamily: 'SFPro', fontSize: 20),
           ),
         ),
-        Row(
-          children: [],
-        )
+      
       ],
     );
   }
+
 }

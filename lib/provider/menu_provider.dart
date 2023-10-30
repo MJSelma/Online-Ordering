@@ -21,7 +21,10 @@ class MenuProvider with ChangeNotifier {
   int _chooseOutletIndex = -1;
   int _chooseOutletIndexSelected = -1;
   String _searchMenuName = '';
+  List<String> _workStation = [];
 
+
+  List<String> get workStation => _workStation;
   bool get isImageLoaded => _isImageLoaded;
   String get menuName => _menuName;
   String get imageUrl => _imageUrl;
@@ -39,6 +42,8 @@ class MenuProvider with ChangeNotifier {
   String get searchMenuName => _searchMenuName;
   bool get isMenuOpen => _isMenuOpen;
   int get indexMenu => _indexMenu;
+
+  
 
   void selectedMenu(String id, name, image, type, pdfData) {
     _menuID = id;
@@ -101,6 +106,12 @@ class MenuProvider with ChangeNotifier {
 
   void setIndexMenu(int menu) {
     _indexMenu = menu;
+
+    notifyListeners();
+  }
+
+    void setWorkStation(List<String> value) {
+    _workStation = value;
 
     notifyListeners();
   }
