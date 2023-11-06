@@ -79,35 +79,48 @@ class _WorkStationState extends State<WorkStation> {
               children: [
                 Container(
                   width: 2,
-                  color: Colors.black87,
+                  color: Colors.grey.shade500,
                   height: MediaQuery.of(context).size.height - 200,
                 ),
                 Visibility(
-                    visible: !showOrderingMenu,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                      child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              showOrderingMenu = true;
-                            });
-                          },
-                          child: const Icon(Icons.arrow_forward_ios)),
-                    )),
+                  visible: !showOrderingMenu,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                    child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            showOrderingMenu = true;
+                          });
+                        },
+                        child: const Icon(Icons.arrow_forward_ios)),
+                  ),
+                ),
                 Visibility(
                   visible: showOrderingMenu,
                   child: SizedBox(
                     width: 250,
                     child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const SizedBox(
                             height: 24,
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Text('Choose one'),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 30.0),
+                                child: Text(
+                                  'Choose one',
+                                  style: TextStyle(
+                                      fontStyle: FontStyle.italic,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: defaultFontFamily),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
                               const Spacer(),
                               GestureDetector(
                                   onTap: () {
@@ -127,8 +140,42 @@ class _WorkStationState extends State<WorkStation> {
                                   orderingMenu = 1;
                                 });
                               },
-                              child: myButton1('Self Ordering Menu', 1,
-                                  Icons.payment, 50, 12, false)),
+                              child: ButtonMenu(
+                                text: 'Self Ordering Menu',
+                                width: 200,
+                                height: 30,
+                                backColor: orderingMenu == 1
+                                    ? [btnColorOrangeLight, btnColorOrangeDark]
+                                    : [btnColorBlueLight, btnColorBlueDark],
+                                textColor: iconButtonTextColor,
+                              )),
+                          // Row(
+                          //   children: [
+                          //     GestureDetector(
+                          //         onTap: () {
+                          //           setState(() {
+                          //             orderingMenu = 1;
+                          //           });
+                          //         },
+                          //         child: ButtonMenu(
+                          //           text: 'Self Ordering Menu',
+                          //           width: 200,
+                          //           height: 30,
+                          //           backColor: orderingMenu == 1
+                          //               ? [
+                          //                   btnColorOrang       btnColorOrangeDark
+                          //            eLight,
+                          //                 ]
+                          //               : [btnColorBlueLight, btnColorBlueDark],
+                          //           textColor: iconButtonTextColor,
+                          //         )),
+                          //     const IconButton(
+                          //         onPressed: null,
+                          //         icon: Icon(Icons.question_mark_outlined))
+                          //   ],
+                          // ),
+                          // child: myButton1('Self Ordering Menu', 1,
+                          //     Icons.payment, 50, 12, false)),
                           const Padding(
                             padding: EdgeInsets.all(12.0),
                             child: Text(
@@ -143,8 +190,17 @@ class _WorkStationState extends State<WorkStation> {
                                   orderingMenu = 2;
                                 });
                               },
-                              child: myButton1('Serve Ordering Menu', 2,
-                                  Icons.payment, 50, 12, false)),
+                              child: ButtonMenu(
+                                text: 'Serve Ordering Menu',
+                                width: 200,
+                                height: 30,
+                                backColor: orderingMenu == 2
+                                    ? [btnColorOrangeLight, btnColorOrangeDark]
+                                    : [btnColorBlueLight, btnColorBlueDark],
+                                textColor: iconButtonTextColor,
+                              )),
+                          // child: myButton1('Serve Ordering Menu', 2,
+                          //     Icons.payment, 50, 12, false)),
                           const Padding(
                             padding: EdgeInsets.all(12.0),
                             child: Text(
@@ -157,7 +213,7 @@ class _WorkStationState extends State<WorkStation> {
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     width: 2,
-                    color: Colors.black87,
+                    color: Colors.grey.shade500,
                     height: MediaQuery.of(context).size.height - 200,
                   ),
                 ),
@@ -182,8 +238,8 @@ class _WorkStationState extends State<WorkStation> {
                         SizedBox(
                           width: 250,
                           child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const SizedBox(
                                   height: 24,
@@ -211,8 +267,23 @@ class _WorkStationState extends State<WorkStation> {
                                         init();
                                       });
                                     },
-                                    child: stationButton('One Station Required',
-                                        1, Icons.payment, 50, 12, false)),
+                                    child: ButtonMenu(
+                                      text: 'One Station Required',
+                                      width: 200,
+                                      height: 30,
+                                      backColor: stationMenu == 1
+                                          ? [
+                                              btnColorOrangeLight,
+                                              btnColorOrangeDark
+                                            ]
+                                          : [
+                                              btnColorBlueLight,
+                                              btnColorBlueDark
+                                            ],
+                                      textColor: iconButtonTextColor,
+                                    )),
+                                // child: stationButton('One Station Required',
+                                //     1, Icons.payment, 50, 12, false)),
                                 const Padding(
                                   padding: EdgeInsets.all(12.0),
                                   child: Text(
@@ -228,13 +299,28 @@ class _WorkStationState extends State<WorkStation> {
                                         init();
                                       });
                                     },
-                                    child: stationButton(
-                                        'Multiple Working Station',
-                                        2,
-                                        Icons.payment,
-                                        50,
-                                        12,
-                                        false)),
+                                    child: ButtonMenu(
+                                      text: 'Multiple Working Station',
+                                      width: 200,
+                                      height: 30,
+                                      backColor: stationMenu == 2
+                                          ? [
+                                              btnColorOrangeLight,
+                                              btnColorOrangeDark
+                                            ]
+                                          : [
+                                              btnColorBlueLight,
+                                              btnColorBlueDark
+                                            ],
+                                      textColor: iconButtonTextColor,
+                                    )),
+                                // child: stationButton(
+                                //     'Multiple Working Station',
+                                //     2,
+                                //     Icons.payment,
+                                //     50,
+                                //     12,
+                                //     false)),
                                 const Padding(
                                   padding: EdgeInsets.all(12.0),
                                   child: Text(
@@ -247,9 +333,9 @@ class _WorkStationState extends State<WorkStation> {
                                     visible: stationMenu == 2,
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                          CrossAxisAlignment.center,
                                       mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                          MainAxisAlignment.center,
                                       children: [
                                         const SizedBox(
                                           height: 24,
@@ -261,13 +347,28 @@ class _WorkStationState extends State<WorkStation> {
                                                 init();
                                               });
                                             },
-                                            child: stationMultipleButton(
-                                                'Create Master Station',
-                                                1,
-                                                Icons.payment,
-                                                50,
-                                                12,
-                                                false)),
+                                            child: ButtonMenu(
+                                              text: 'Create Master Station',
+                                              width: 200,
+                                              height: 30,
+                                              backColor: stationMulMenu == 1
+                                                  ? [
+                                                      btnColorOrangeLight,
+                                                      btnColorOrangeDark
+                                                    ]
+                                                  : [
+                                                      btnColorBlueLight,
+                                                      btnColorBlueDark
+                                                    ],
+                                              textColor: iconButtonTextColor,
+                                            )),
+                                        // child: stationMultipleButton(
+                                        //     'Create Master Station',
+                                        //     1,
+                                        //     Icons.payment,
+                                        //     50,
+                                        //     12,
+                                        //     false)),
                                         const Padding(
                                           padding: EdgeInsets.all(12.0),
                                           child: Text(
@@ -283,13 +384,28 @@ class _WorkStationState extends State<WorkStation> {
                                                 init();
                                               });
                                             },
-                                            child: stationMultipleButton(
-                                                'Create Single Station',
-                                                2,
-                                                Icons.payment,
-                                                50,
-                                                12,
-                                                false)),
+                                            child: ButtonMenu(
+                                              text: 'Create Single Station',
+                                              width: 200,
+                                              height: 30,
+                                              backColor: stationMulMenu == 2
+                                                  ? [
+                                                      btnColorOrangeLight,
+                                                      btnColorOrangeDark
+                                                    ]
+                                                  : [
+                                                      btnColorBlueLight,
+                                                      btnColorBlueDark
+                                                    ],
+                                              textColor: iconButtonTextColor,
+                                            )),
+                                        // child: stationMultipleButton(
+                                        //     'Create Single Station',
+                                        //     2,
+                                        //     Icons.payment,
+                                        //     50,
+                                        //     12,
+                                        //     false)),
                                         const Padding(
                                           padding: EdgeInsets.all(12.0),
                                           child: Text(
@@ -314,7 +430,7 @@ class _WorkStationState extends State<WorkStation> {
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
                       width: 2,
-                      color: Colors.black87,
+                      color: Colors.grey.shade500,
                       height: MediaQuery.of(context).size.height - 200,
                     ),
                   ),
@@ -352,8 +468,8 @@ class _WorkStationState extends State<WorkStation> {
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(
                             width: 400,
@@ -537,52 +653,52 @@ class _WorkStationState extends State<WorkStation> {
     );
   }
 
-  Widget myButton1(String text, int val, IconData iconMenu, double height,
-      double paddingLeft, bool showIcon) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(paddingLeft, 0, 0, 0),
-      child: Container(
-        width: 200,
-        height: height,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          color: orderingMenu == val
-              ? const Color(0xffef7700)
-              : Colors.grey.shade200,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Visibility(
-              visible: showIcon,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(12, 0, 5, 0),
-                child: Icon(
-                  iconMenu,
-                  color: orderingMenu == val
-                      ? Colors.white
-                      : const Color.fromARGB(255, 66, 64, 64),
-                ),
-              ),
-            ),
-            Text(
-              text,
-              style: TextStyle(
-                fontFamily: 'SFPro',
-                fontSize: 18,
-                color: orderingMenu == val
-                    ? Colors.white
-                    : const Color.fromARGB(255, 66, 64, 64),
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget myButton1(String text, int val, IconData iconMenu, double height,
+  //     double paddingLeft, bool showIcon) {
+  //   return Padding(
+  //     padding: EdgeInsets.fromLTRB(paddingLeft, 0, 0, 0),
+  //     child: Container(
+  //       width: 200,
+  //       height: height,
+  //       decoration: BoxDecoration(
+  //         borderRadius: BorderRadius.circular(10.0),
+  //         color: orderingMenu == val
+  //             ? const Color(0xffef7700)
+  //             : Colors.grey.shade200,
+  //       ),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.center,
+  //         crossAxisAlignment: CrossAxisAlignment.center,
+  //         children: [
+  //           Visibility(
+  //             visible: showIcon,
+  //             child: Padding(
+  //               padding: const EdgeInsets.fromLTRB(12, 0, 5, 0),
+  //               child: Icon(
+  //                 iconMenu,
+  //                 color: orderingMenu == val
+  //                     ? Colors.white
+  //                     : const Color.fromARGB(255, 66, 64, 64),
+  //               ),
+  //             ),
+  //           ),
+  //           Text(
+  //             text,
+  //             style: TextStyle(
+  //               fontFamily: 'SFPro',
+  //               fontSize: 18,
+  //               color: orderingMenu == val
+  //                   ? Colors.white
+  //                   : const Color.fromARGB(255, 66, 64, 64),
+  //               fontWeight: FontWeight.w500,
+  //             ),
+  //             textAlign: TextAlign.center,
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget myButton(String text, int val, IconData iconMenu, double height,
       double paddingLeft, bool showIcon) {
