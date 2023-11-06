@@ -22,7 +22,9 @@ class MenuProvider with ChangeNotifier {
   int _chooseOutletIndexSelected = -1;
   String _searchMenuName = '';
   int _smartMenuSelected = 0;
+  List<String> _workStation = [];
 
+  List<String> get workStation => _workStation;
   bool get isImageLoaded => _isImageLoaded;
   String get menuName => _menuName;
   String get imageUrl => _imageUrl;
@@ -108,6 +110,12 @@ class MenuProvider with ChangeNotifier {
 
   void setIndexMenu(int menu) {
     _indexMenu = menu;
+
+    notifyListeners();
+  }
+
+  void setWorkStation(List<String> value) {
+    _workStation = value;
 
     notifyListeners();
   }

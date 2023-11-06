@@ -73,6 +73,16 @@ class _WorkStationState extends State<WorkStation> {
             //         fontSize: 20),
             //   ),
             // ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                'Smart Menu > Work Station',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'SFPro',
+                    fontSize: 20),
+              ),
+            ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -1367,6 +1377,7 @@ class _WorkStationState extends State<WorkStation> {
                 onTap: () {
                   setState(() {
                     stations.add(stationController.text);
+                    context.read<MenuProvider>().setWorkStation(stations);
                     stationController.text = '';
                   });
                 },
@@ -1905,6 +1916,7 @@ class _WorkStationState extends State<WorkStation> {
           onTap: () {
             setState(() {
               stations.add(stationController.text);
+              context.read<MenuProvider>().setWorkStation(stations);
               stationController.text = '';
             });
           },
