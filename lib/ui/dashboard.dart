@@ -261,7 +261,7 @@ class _DashBoardState extends State<DashBoard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        height: MediaQuery.sizeOf(context).height - 100,
+                        height: MediaQuery.sizeOf(context).height - 120,
                         child: RawScrollbar(
                           padding: const EdgeInsets.symmetric(vertical: 50.0),
                           // mainAxisMargin: 200.0,
