@@ -373,7 +373,7 @@ class _DashBoardState extends State<DashBoard> {
                                             setState(() {
                                               indexMenu = 3;
                                               setIndexMenuNameProvider(
-                                                  'SMART MENU');
+                                                  'SMART  > WORKING STATION (WST)');
                                             });
                                           },
                                           child: MenuButton(
