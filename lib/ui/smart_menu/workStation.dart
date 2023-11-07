@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:drinklinkmerchant/ui/consultation/menu_list.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -94,8 +93,10 @@ class _WorkStationState extends State<WorkStation> {
                               showOrderingMenu = true;
                             });
                           },
-                          child: Image.asset('assets/images/right-arrow.png',
-                              height: 24, color: Colors.grey.shade500))),
+                          child: Image.asset(
+                              'assets/images/single-right-arrow.png',
+                              height: 20,
+                              color: Colors.grey.shade500))),
                 ),
                 Visibility(
                   visible: showOrderingMenu,
@@ -132,8 +133,8 @@ class _WorkStationState extends State<WorkStation> {
                                     });
                                   },
                                   child: Image.asset(
-                                      'assets/images/left-arrow.png',
-                                      height: 24,
+                                      'assets/images/single-left-arrow.png',
+                                      height: 20,
                                       color: Colors.grey.shade500))
                             ],
                           ),
@@ -165,7 +166,9 @@ class _WorkStationState extends State<WorkStation> {
                                               btnColorBlueLight,
                                               btnColorBlueDark
                                             ],
-                                      textColor: iconButtonTextColor,
+                                      textColor: orderingMenu == 1
+                                          ? btnColorPurpleDark
+                                          : iconButtonTextColor,
                                     )),
                                 const SizedBox(
                                   width: 10,
@@ -252,7 +255,9 @@ class _WorkStationState extends State<WorkStation> {
                                               btnColorBlueLight,
                                               btnColorBlueDark
                                             ],
-                                      textColor: iconButtonTextColor,
+                                      textColor: orderingMenu == 2
+                                          ? btnColorPurpleDark
+                                          : iconButtonTextColor,
                                     )),
                                 const SizedBox(
                                   width: 10,
@@ -296,8 +301,10 @@ class _WorkStationState extends State<WorkStation> {
                                 showStationMenu = true;
                               });
                             },
-                            child: Image.asset('assets/images/right-arrow.png',
-                                height: 24, color: Colors.grey.shade500)))),
+                            child: Image.asset(
+                                'assets/images/single-right-arrow.png',
+                                height: 20,
+                                color: Colors.grey.shade500)))),
                 Visibility(
                   visible: orderingMenu == 1,
                   child: Visibility(
@@ -341,8 +348,8 @@ class _WorkStationState extends State<WorkStation> {
                                             });
                                           },
                                           child: Image.asset(
-                                              'assets/images/left-arrow.png',
-                                              height: 24,
+                                              'assets/images/single-left-arrow.png',
+                                              height: 20,
                                               color: Colors.grey.shade500))
                                     ],
                                   ),
@@ -369,7 +376,9 @@ class _WorkStationState extends State<WorkStation> {
                                                 btnColorBlueLight,
                                                 btnColorBlueDark
                                               ],
-                                        textColor: iconButtonTextColor,
+                                        textColor: stationMenu == 1
+                                            ? btnColorPurpleDark
+                                            : iconButtonTextColor,
                                       )),
                                   // child: stationButton('One Station Required',
                                   //     1, Icons.payment, 50, 12, false)),
@@ -407,7 +416,9 @@ class _WorkStationState extends State<WorkStation> {
                                                 btnColorBlueLight,
                                                 btnColorBlueDark
                                               ],
-                                        textColor: iconButtonTextColor,
+                                        textColor: stationMenu == 2
+                                            ? btnColorPurpleDark
+                                            : iconButtonTextColor,
                                       )),
                                   // child: stationButton(
                                   //     'Multiple Working Station',
@@ -483,8 +494,10 @@ class _WorkStationState extends State<WorkStation> {
                                                                 btnColorBlueLight,
                                                                 btnColorBlueDark
                                                               ],
-                                                    textColor:
-                                                        iconButtonTextColor,
+                                                    textColor: stationMulMenu ==
+                                                            1
+                                                        ? btnColorPurpleDark
+                                                        : iconButtonTextColor,
                                                   )),
                                               const SizedBox(
                                                 width: 10,
@@ -555,8 +568,10 @@ class _WorkStationState extends State<WorkStation> {
                                                                 btnColorBlueLight,
                                                                 btnColorBlueDark
                                                               ],
-                                                    textColor:
-                                                        iconButtonTextColor,
+                                                    textColor: stationMulMenu ==
+                                                            2
+                                                        ? btnColorPurpleDark
+                                                        : iconButtonTextColor,
                                                   )),
                                               const SizedBox(
                                                 width: 10,
@@ -685,6 +700,10 @@ class _WorkStationState extends State<WorkStation> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                        width: 3,
+                        strokeAlign: 1,
+                        color: systemDefaultColorOrange),
                     color: Colors.white,
                   ),
                   width: 400,
@@ -695,9 +714,10 @@ class _WorkStationState extends State<WorkStation> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const Text(
+                          Text(
                             'To use this feature you must pay \nthe premium account',
-                            style: TextStyle(fontSize: 20),
+                            style: TextStyle(
+                                fontSize: 20, fontFamily: defaultFontFamily),
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(
@@ -708,13 +728,22 @@ class _WorkStationState extends State<WorkStation> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      isPaid = false;
-                                    });
-                                  },
-                                  child: myButton('Pay Now', 1, Icons.payment,
-                                      50, 12, true))
+                                onTap: () {
+                                  setState(() {
+                                    isPaid = false;
+                                  });
+                                },
+                                child: ButtonMenu(
+                                  text: 'PAY NOW',
+                                  width: 200,
+                                  height: 35,
+                                  backColor: [
+                                    btnColorOrangeLight,
+                                    btnColorOrangeDark
+                                  ],
+                                  textColor: iconButtonTextColor,
+                                ),
+                              )
                             ],
                           )
                         ]),
@@ -945,7 +974,9 @@ class _WorkStationState extends State<WorkStation> {
                       },
                       child: SizedBox(
                           width: showStationMenu == false &&
-                                  showOrderingMenu == true
+                                      showOrderingMenu == true ||
+                                  showStationMenu == true &&
+                                      showOrderingMenu == false
                               ? 120
                               : showOrderingMenu == false &&
                                       showStationMenu == false
@@ -1024,7 +1055,9 @@ class _WorkStationState extends State<WorkStation> {
                                 style: TextStyle(
                                   fontFamily: defaultFontFamily,
                                   // fontSize: 18,
-                                  color: Colors.white,
+                                  color: !isActiveWst
+                                      ? iconButtonTextColor
+                                      : btnColorPurpleDark,
                                   fontWeight: FontWeight.w500,
                                 ),
                                 textAlign: TextAlign.center,
@@ -1180,7 +1213,9 @@ class _WorkStationState extends State<WorkStation> {
                                               btnColorBlueLight,
                                               btnColorBlueDark
                                             ],
-                                      textColor: iconButtonTextColor,
+                                      textColor: isSelfCollection
+                                          ? btnColorPurpleDark
+                                          : iconButtonTextColor,
                                     ),
                                   ),
                                   const SizedBox(
@@ -1207,7 +1242,9 @@ class _WorkStationState extends State<WorkStation> {
                                                 btnColorBlueLight,
                                                 btnColorBlueDark
                                               ],
-                                        textColor: iconButtonTextColor,
+                                        textColor: isOrderAndPay
+                                            ? btnColorPurpleDark
+                                            : iconButtonTextColor,
                                       ),
                                     ),
                                   ),
@@ -1243,7 +1280,9 @@ class _WorkStationState extends State<WorkStation> {
                             Container(
                               height: 200,
                               width: showStationMenu == false &&
-                                      showOrderingMenu == true
+                                          showOrderingMenu == true ||
+                                      showStationMenu == true &&
+                                          showOrderingMenu == false
                                   ? 400
                                   : showOrderingMenu == false &&
                                           showStationMenu == false
@@ -1355,7 +1394,9 @@ class _WorkStationState extends State<WorkStation> {
                                                 btnColorBlueLight,
                                                 btnColorBlueDark
                                               ],
-                                        textColor: iconButtonTextColor,
+                                        textColor: isServeCollection
+                                            ? btnColorPurpleDark
+                                            : iconButtonTextColor,
                                       ),
                                     ),
                                     // GestureDetector(
@@ -1435,7 +1476,9 @@ class _WorkStationState extends State<WorkStation> {
                                                       btnColorBlueLight,
                                                       btnColorBlueDark
                                                     ],
-                                              textColor: iconButtonTextColor,
+                                              textColor: isPayOrder
+                                                  ? btnColorPurpleDark
+                                                  : iconButtonTextColor,
                                             ),
                                           ),
                                           const SizedBox(
@@ -1463,7 +1506,9 @@ class _WorkStationState extends State<WorkStation> {
                                                       btnColorBlueLight,
                                                       btnColorBlueDark
                                                     ],
-                                              textColor: iconButtonTextColor,
+                                              textColor: isOrderOnly
+                                                  ? btnColorPurpleDark
+                                                  : iconButtonTextColor,
                                             ),
                                           ),
                                         ],
@@ -2491,11 +2536,11 @@ class _WorkStationState extends State<WorkStation> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height - 200,
-                width: 400,
-                child: const ConsultMenuPage(),
-              ),
+              // SizedBox(
+              //   height: MediaQuery.of(context).size.height - 200,
+              //   width: 400,
+              //   child: const ConsultMenuPage(),
+              // ),
             ],
           ),
           menuViewer()
