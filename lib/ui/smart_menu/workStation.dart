@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../widgets/button.dart';
+import '../../widgets/show_dialog.dart';
 import '../constant/theme_data.dart';
 
 class WorkStation extends StatefulWidget {
@@ -30,7 +31,8 @@ class _WorkStationState extends State<WorkStation> {
   bool isServeCollection = false;
   TextEditingController prepTime = TextEditingController(text: '');
   TextEditingController stationController = TextEditingController(text: '');
-
+  TextEditingController collectionInstruction = TextEditingController(text: '');
+  String strcollectionInstruction = '';
   //Serve
   PlatformFile? uploadimage; //variable for choosed file
   String fileName = '';
@@ -1268,7 +1270,7 @@ class _WorkStationState extends State<WorkStation> {
                         Column(
                           children: [
                             Text(
-                              'COLLECTION INSTRUCTION ',
+                              'COLLECTION INSTRUCTION',
                               style: TextStyle(
                                   fontSize: defaulDescriptiontFontSize,
                                   fontWeight: FontWeight.bold,
@@ -1296,6 +1298,7 @@ class _WorkStationState extends State<WorkStation> {
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: TextField(
+                                  controller: collectionInstruction,
                                   expands: true,
                                   maxLines: null,
                                   decoration: InputDecoration(
@@ -1306,6 +1309,12 @@ class _WorkStationState extends State<WorkStation> {
                                       border: InputBorder.none,
                                       hintText:
                                           'Example: Please proceed to Drinklink Cube situated next to the cashier'),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      strcollectionInstruction =
+                                          collectionInstruction.text;
+                                    });
+                                  },
                                 ),
                                 // child: Text(
                                 //   'Example: Please proceed to Drinklink Cube situated next to the cashier',
@@ -1543,6 +1552,7 @@ class _WorkStationState extends State<WorkStation> {
                                       height: 35,
                                       backColor: isActiveWst == true &&
                                               prepTime.text != '' &&
+                                              strcollectionInstruction != '' &&
                                               isOrderAndPay == true
                                           ? [
                                               btnColorGreenLight,
@@ -1575,641 +1585,757 @@ class _WorkStationState extends State<WorkStation> {
   Widget widgetMultipleStation() {
     return Padding(
       padding: const EdgeInsets.all(14.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 600,
-            child: Row(
+      child: SizedBox(
+        height: MediaQuery.sizeOf(context).height < 850
+            ? 550
+            : MediaQuery.sizeOf(context).height - 230,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
-                  'Your Dguests will be able to order and/or pay from their smartphones. \nIdeal for Clubs, Caffeteria or small Businesses',
-                  style: TextStyle(
-                      fontSize: 11,
-                      fontFamily: defaultFontFamily,
-                      fontStyle: FontStyle.italic),
-                  textAlign: TextAlign.start,
-                ),
-                const Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      showGraph = true;
-                    });
-                  },
-                  child: SizedBox(
-                      width: 100,
-                      child: Image.asset(
-                        'assets/images/graph1.jpeg',
-                        fit: BoxFit.fitWidth,
-                      )),
-                )
-              ],
-            ),
-          ),
-          Visibility(
-            visible: stationMulMenu == 1,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Image.asset(
-                      'assets/images/step1.png',
-                      height: 25,
-                      color: Colors.grey.shade500,
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isActiveWst = !isActiveWst;
-                        });
-                      },
-                      child: ButtonMenu(
-                        text: !isActiveWst ? 'Activate WST' : 'WST Activated',
-                        width: 200,
-                        height: 35,
-                        backColor: isActiveWst
-                            ? [btnColorOrangeLight, btnColorOrangeDark]
-                            : [btnColorBlueLight, btnColorBlueDark],
-                        textColor: iconButtonTextColor,
+                SizedBox(
+                  width: showStationMenu == false && showOrderingMenu == true
+                      ? 800
+                      : showOrderingMenu == false && showStationMenu == false
+                          ? 1000
+                          : 600,
+                  child: Row(
+                    children: [
+                      Text(
+                        'Your Dguests will be able to order and/or pay from their smartphones. \nIdeal for Clubs, Caffeteria or small Businesses',
+                        style: TextStyle(
+                            fontSize: 11,
+                            fontFamily: defaultFontFamily,
+                            fontStyle: FontStyle.italic),
+                        textAlign: TextAlign.start,
                       ),
-                    ),
-                  ],
+                      const Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            showGraph = true;
+                          });
+                        },
+                        child: SizedBox(
+                            width: 100,
+                            child: Image.asset(
+                              'assets/images/graph1.jpeg',
+                              fit: BoxFit.fitWidth,
+                            )),
+                      )
+                    ],
+                  ),
                 ),
-                // GestureDetector(
-                //   onTap: () {
-                //     setState(() {
-                //       isActiveWst = !isActiveWst;
-                //     });
-                //   },
-                //   child: Container(
-                //     width: 200,
-                //     height: 50,
-                //     decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.circular(10.0),
-                //       color: isActiveWst
-                //           ? const Color(0xffef7700)
-                //           : Colors.grey.shade500,
-                //     ),
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       crossAxisAlignment: CrossAxisAlignment.center,
-                //       children: [
-                //         Text(
-                //           !isActiveWst ? 'Activate WST' : 'WST Activated',
-                //           style: const TextStyle(
-                //             fontFamily: 'SFPro',
-                //             fontSize: 18,
-                //             color: Colors.white,
-                //             fontWeight: FontWeight.w500,
-                //           ),
-                //           textAlign: TextAlign.center,
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
-                const SizedBox(
-                  width: 150,
-                ),
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Row(
+                Visibility(
+                  visible: stationMulMenu == 1,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            isActiveWst = !isActiveWst;
+                          });
+                        },
+                        child: Container(
+                          width: 200,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0),
+                              border: const Border.fromBorderSide(BorderSide(
+                                strokeAlign: 1,
+                                color: Colors.white,
+                              )),
+                              gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: isActiveWst
+                                      ? [
+                                          btnColorOrangeLight,
+                                          btnColorOrangeDark
+                                        ]
+                                      : [btnColorGreyLight, btnColorGreyDark]),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: btnColorGreyDark2,
+                                  // blurStyle: BlurStyle.normal,
+                                  offset: const Offset(
+                                    1.0,
+                                    3.0,
+                                  ),
+                                  blurRadius: 3.0,
+                                  spreadRadius: 1.0,
+                                ),
+                              ]
+                              // color: isActiveWst
+                              //     ? const Color(0xffef7700)
+                              //     : Colors.grey.shade500,
+                              ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                !isActiveWst ? 'ACTIVATE WST' : 'WST ACTIVATED',
+                                style: TextStyle(
+                                  fontFamily: defaultFontFamily,
+                                  // fontSize: 18,
+                                  color: !isActiveWst
+                                      ? iconButtonTextColor
+                                      : btnColorPurpleDark,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 150,
+                      ),
+                      Column(
                         children: [
-                          Image.asset(
-                            'assets/images/step2.png',
-                            height: 25,
-                            color: Colors.grey.shade500,
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  'assets/images/step2.png',
+                                  height: 25,
+                                  color: Colors.grey.shade500,
+                                ),
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                Text(
+                                  'ENTER AVERAGE PREPARATION TIME(mins)',
+                                  style: TextStyle(
+                                    fontSize: defaulDescriptiontFontSize,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(
-                            width: 15,
+                          Container(
+                            width: 80,
+                            height: 45,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15.0),
+                              color: const Color(0xffffffff),
+                              border: Border.all(
+                                  width: 1.0, color: systemDefaultColorOrange),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color(0x29000000),
+                                  offset: Offset(0, 3),
+                                  blurRadius: 6,
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextField(
+                                  controller: prepTime,
+                                  decoration: const InputDecoration.collapsed(
+                                      hintText: '5'),
+                                ),
+                              ),
+                            ),
                           ),
-                          Text(
-                            'ENTER AVERAGE PREPARATION TIME(mins)',
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(
+                            stationMulMenu == 1
+                                ? 'CREATE SUB STATION'
+                                : 'CREATE STATION',
                             style: TextStyle(
                               fontSize: defaulDescriptiontFontSize,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+                        ),
+                        Container(
+                          width: 200,
+                          height: 45,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: const Color(0xffffffff),
+                            border: Border.all(
+                                width: 1.0, color: systemDefaultColorOrange),
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(
+                                controller: stationController,
+                                decoration: InputDecoration.collapsed(
+                                    hintStyle: TextStyle(
+                                        fontSize: 11,
+                                        fontFamily: defaultFontFamily,
+                                        fontStyle: FontStyle.italic),
+                                    border: InputBorder.none,
+                                    hintText: 'Station Name'),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(
+                            'EX. Kitchen, Bar, Lounge',
+                            style: TextStyle(
+                                fontSize: 11,
+                                fontFamily: defaultFontFamily,
+                                fontStyle: FontStyle.italic),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      width: 150,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          if (stationController.text == '') {
+                            warningDialog(context, 'CREATE SUB STATION',
+                                'Please enter station name');
+                            return;
+                          }
+
+                          stations.add(stationController.text);
+                          context.read<MenuProvider>().setWorkStation(stations);
+                          stationController.text = '';
+                        });
+                      },
+                      child: ButtonMenu(
+                        text: 'ADD',
+                        width: 200,
+                        height: 35,
+                        backColor: [btnColorOrangeLight, btnColorOrangeDark],
+                        textColor: iconButtonTextColor,
+                      ),
+                    ),
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     setState(() {
+                    //       stations.add(stationController.text);
+                    //       context.read<MenuProvider>().setWorkStation(stations);
+                    //       stationController.text = '';
+                    //     });
+                    //   },
+                    //   child: Container(
+                    //     width: 100,
+                    //     height: 50,
+                    //     decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.circular(10.0),
+                    //       color: const Color(0xffef7700),
+                    //     ),
+                    //     child: const Row(
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       crossAxisAlignment: CrossAxisAlignment.center,
+                    //       children: [
+                    //         Text(
+                    //           'ADD',
+                    //           style: TextStyle(
+                    //             fontFamily: 'SFPro',
+                    //             fontSize: 18,
+                    //             color: Colors.white,
+                    //             fontWeight: FontWeight.w500,
+                    //           ),
+                    //           textAlign: TextAlign.center,
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
+                ),
+
+                const SizedBox(
+                  width: 20,
+                ),
+                //List of station
+                Visibility(
+                    visible: stations.isNotEmpty, child: ListOfStation(300)),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'SERVICE OPTIONS (CHOOSE ONE OR MORE)',
+                    style: TextStyle(
+                        fontSize: defaulDescriptiontFontSize,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                      width:
+                          showStationMenu == false && showOrderingMenu == true
+                              ? 850
+                              : showOrderingMenu == false &&
+                                      showStationMenu == false
+                                  ? 1000
+                                  : 650,
+                      color: Colors.grey.shade500,
+                      height: 1),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Image.asset(
+                          'assets/images/step3.png',
+                          height: 25,
+                          color: Colors.grey.shade500,
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                              border: Border.all(color: Colors.grey)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'Your Dguests will collect the order from \n dedicated collection points',
+                                        style: TextStyle(
+                                            fontSize: 11,
+                                            fontFamily: defaultFontFamily,
+                                            fontStyle: FontStyle.italic),
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          isSelfCollection = !isSelfCollection;
+                                        });
+                                      },
+                                      child: ButtonMenu(
+                                        text: 'SELF COLLECTION',
+                                        width: 200,
+                                        height: 35,
+                                        backColor: isSelfCollection
+                                            ? [
+                                                btnColorOrangeLight,
+                                                btnColorOrangeDark
+                                              ]
+                                            : [
+                                                btnColorBlueLight,
+                                                btnColorBlueDark
+                                              ],
+                                        textColor: isSelfCollection
+                                            ? btnColorPurpleDark
+                                            : iconButtonTextColor,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Visibility(
+                                      visible: isSelfCollection,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            isOrderAndPay = !isOrderAndPay;
+                                          });
+                                        },
+                                        child: ButtonMenu(
+                                          text: 'ORDER AND PAY',
+                                          width: 200,
+                                          height: 35,
+                                          backColor: isOrderAndPay
+                                              ? [
+                                                  btnColorOrangeLight,
+                                                  btnColorOrangeDark
+                                                ]
+                                              : [
+                                                  btnColorBlueLight,
+                                                  btnColorBlueDark
+                                                ],
+                                          textColor: isOrderAndPay
+                                              ? btnColorPurpleDark
+                                              : iconButtonTextColor,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                //ADD here
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: isSelfCollection || isServeCollection ? 10 : 150,
+                    ),
+                    Visibility(
+                      visible: isSelfCollection || isServeCollection,
+                      child: Row(
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                'COLLECTION INSTRUCTION',
+                                style: TextStyle(
+                                    fontSize: defaulDescriptiontFontSize,
+                                    fontWeight: FontWeight.bold,
+                                    fontStyle: FontStyle.italic),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Container(
+                                height: 200,
+                                width: showStationMenu == false &&
+                                            showOrderingMenu == true ||
+                                        showStationMenu == true &&
+                                            showOrderingMenu == false
+                                    ? 400
+                                    : showOrderingMenu == false &&
+                                            showStationMenu == false
+                                        ? 600
+                                        : 200,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: const Color(0xffef7700))),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextField(
+                                    controller: collectionInstruction,
+                                    expands: true,
+                                    maxLines: null,
+                                    decoration: InputDecoration(
+                                        hintStyle: TextStyle(
+                                            fontSize: 11,
+                                            fontFamily: defaultFontFamily,
+                                            fontStyle: FontStyle.italic),
+                                        border: InputBorder.none,
+                                        hintText:
+                                            'Example: Please proceed to Drinklink Cube situated next to the cashier'),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        strcollectionInstruction =
+                                            collectionInstruction.text;
+                                      });
+                                    },
+                                  ),
+                                  // child: Text(
+                                  //   'Example: Please proceed to Drinklink Cube situated next to the cashier',
+                                  //   style: TextStyle(fontSize: 12),
+                                  // ),
+                                ),
+                              )
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                                width: 1,
+                                color: Colors.grey.shade500,
+                                // height: MediaQuery.sizeOf(context).height),
+                                height: 250),
+                          ),
                         ],
                       ),
                     ),
-                    Container(
-                      width: 80,
-                      height: 45,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.0),
-                        color: const Color(0xffffffff),
-                        border: Border.all(
-                            width: 1.0, color: systemDefaultColorOrange),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x29000000),
-                            offset: Offset(0, 3),
-                            blurRadius: 6,
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(
-                            controller: prepTime,
-                            decoration:
-                                const InputDecoration.collapsed(hintText: '5'),
+                    // Padding(
+                    //   padding: const EdgeInsets.all(8.0),
+                    //   child: Container(
+                    //       width: 1,
+                    //       color: Colors.grey.shade500,
+                    //       height: MediaQuery.sizeOf(context).height),
+                    // ),
+                    Column(
+                      children: [
+                        Visibility(
+                          // visible: isSelfCollection,
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'assets/images/step4.png',
+                                height: 25,
+                                color: Colors.grey.shade500,
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              Container(
+                                width: 200,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                    border: Border.all(color: Colors.grey)),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          'Your Dguests will served by your waiters to their tables',
+                                          style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: defaultFontFamily,
+                                              fontStyle: FontStyle.italic),
+                                          textAlign: TextAlign.start,
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            isServeCollection =
+                                                !isServeCollection;
+                                            if (isServeCollection == false) {
+                                              isPayOrder = false;
+                                              isOrderOnly = false;
+                                            }
+                                          });
+                                        },
+                                        child: ButtonMenu(
+                                          text: 'SERVED',
+                                          width: 200,
+                                          height: 35,
+                                          backColor: isServeCollection
+                                              ? [
+                                                  btnColorOrangeLight,
+                                                  btnColorOrangeDark
+                                                ]
+                                              : [
+                                                  btnColorBlueLight,
+                                                  btnColorBlueDark
+                                                ],
+                                          textColor: isServeCollection
+                                              ? btnColorPurpleDark
+                                              : iconButtonTextColor,
+                                        ),
+                                      ),
+                                      // GestureDetector(
+                                      //   onTap: () {
+                                      //     setState(() {
+                                      //       isServeCollection = !isServeCollection;
+                                      //     });
+                                      //   },
+                                      //   child: Container(
+                                      //     width: 200,
+                                      //     height: 50,
+                                      //     decoration: BoxDecoration(
+                                      //       borderRadius: BorderRadius.circular(10.0),
+                                      //       color: isServeCollection
+                                      //           ? const Color(0xffef7700)
+                                      //           : Colors.grey.shade500,
+                                      //     ),
+                                      //     child: const Row(
+                                      //       mainAxisAlignment:
+                                      //           MainAxisAlignment.center,
+                                      //       crossAxisAlignment:
+                                      //           CrossAxisAlignment.center,
+                                      //       children: [
+                                      //         Text(
+                                      //           'Serve',
+                                      //           style: TextStyle(
+                                      //             fontFamily: 'SFPro',
+                                      //             fontSize: 18,
+                                      //             color: Colors.white,
+                                      //             fontWeight: FontWeight.w500,
+                                      //           ),
+                                      //           textAlign: TextAlign.center,
+                                      //         ),
+                                      //       ],
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      Visibility(
+                                        visible: isServeCollection,
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                'CHOOSE ONE',
+                                                style: TextStyle(
+                                                    fontSize: 10,
+                                                    fontStyle: FontStyle.italic,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily:
+                                                        defaultFontFamily),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  if (isPayOrder == false) {
+                                                    isPayOrder = true;
+                                                    isOrderOnly = false;
+                                                  }
+                                                });
+                                              },
+                                              child: ButtonMenu(
+                                                text: 'ORDER AND PAY',
+                                                width: 200,
+                                                height: 35,
+                                                backColor: isPayOrder
+                                                    ? [
+                                                        btnColorOrangeLight,
+                                                        btnColorOrangeDark
+                                                      ]
+                                                    : [
+                                                        btnColorBlueLight,
+                                                        btnColorBlueDark
+                                                      ],
+                                                textColor: isPayOrder
+                                                    ? btnColorPurpleDark
+                                                    : iconButtonTextColor,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  if (isOrderOnly == false) {
+                                                    isOrderOnly = true;
+                                                    isPayOrder = false;
+                                                  }
+                                                });
+                                              },
+                                              child: ButtonMenu(
+                                                text: 'ORDER ONLY',
+                                                width: 200,
+                                                height: 35,
+                                                backColor: isOrderOnly
+                                                    ? [
+                                                        btnColorOrangeLight,
+                                                        btnColorOrangeDark
+                                                      ]
+                                                    : [
+                                                        btnColorBlueLight,
+                                                        btnColorBlueDark
+                                                      ],
+                                                textColor: isOrderOnly
+                                                    ? btnColorPurpleDark
+                                                    : iconButtonTextColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 50),
+                              Container(
+                                alignment: Alignment.bottomRight,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          if (isActiveWst == true &&
+                                              prepTime.text != '' &&
+                                              stations.isNotEmpty &&
+                                              isOrderAndPay == true) {
+                                            context
+                                                .read<MenuProvider>()
+                                                .updateMenuCount(1);
+                                          }
+                                        });
+                                      },
+                                      child: ButtonMenu(
+                                        text: 'SET UP WTPs',
+                                        width: 200,
+                                        height: 35,
+                                        backColor: isActiveWst == true &&
+                                                prepTime.text != '' &&
+                                                strcollectionInstruction !=
+                                                    '' &&
+                                                stations.isNotEmpty &&
+                                                isOrderAndPay == true
+                                            ? [
+                                                btnColorGreenLight,
+                                                btnColorGreenDark
+                                              ]
+                                            : [
+                                                btnColorGreyLight,
+                                                btnColorGreyDark
+                                              ],
+                                        textColor: iconButtonTextColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                            ],
                           ),
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Text(stationMulMenu == 1
-                        ? 'Create sub station'
-                        : 'Create station'),
-                  ),
-                  Container(
-                    width: 200,
-                    height: 45,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15.0),
-                      color: const Color(0xffffffff),
-                      border: Border.all(
-                          width: 1.0, color: const Color(0xff707070)),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x29000000),
-                          offset: Offset(0, 3),
-                          blurRadius: 6,
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextField(
-                          controller: stationController,
-                          decoration: const InputDecoration.collapsed(
-                              hintText: 'Station name'),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                width: 150,
-              ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    stations.add(stationController.text);
-                    context.read<MenuProvider>().setWorkStation(stations);
-                    stationController.text = '';
-                  });
-                },
-                child: ButtonMenu(
-                  text: 'ADD',
-                  width: 200,
-                  height: 35,
-                  backColor: [btnColorOrangeLight, btnColorOrangeDark],
-                  textColor: iconButtonTextColor,
-                ),
-              ),
-              // GestureDetector(
-              //   onTap: () {
-              //     setState(() {
-              //       stations.add(stationController.text);
-              //       context.read<MenuProvider>().setWorkStation(stations);
-              //       stationController.text = '';
-              //     });
-              //   },
-              //   child: Container(
-              //     width: 100,
-              //     height: 50,
-              //     decoration: BoxDecoration(
-              //       borderRadius: BorderRadius.circular(10.0),
-              //       color: const Color(0xffef7700),
-              //     ),
-              //     child: const Row(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       crossAxisAlignment: CrossAxisAlignment.center,
-              //       children: [
-              //         Text(
-              //           'ADD',
-              //           style: TextStyle(
-              //             fontFamily: 'SFPro',
-              //             fontSize: 18,
-              //             color: Colors.white,
-              //             fontWeight: FontWeight.w500,
-              //           ),
-              //           textAlign: TextAlign.center,
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
-            ],
-          ),
-
-          const SizedBox(
-            width: 20,
-          ),
-          //List of station
-          ListOfStation(300),
-          const SizedBox(
-            height: 50,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text('Choose Service Option'),
-                  ),
-                  Container(
-                    width: 250,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Text('Choose one or both'),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    isSelfCollection = !isSelfCollection;
-                                  });
-                                },
-                                child: Container(
-                                  width: 200,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    color: isSelfCollection
-                                        ? const Color(0xffef7700)
-                                        : Colors.grey.shade500,
-                                  ),
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Self Collection',
-                                        style: TextStyle(
-                                          fontFamily: 'SFPro',
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Visibility(
-                                visible: isSelfCollection,
-                                child: Container(
-                                  width: 200,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    color: const Color(0xffef7700),
-                                  ),
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        'Order and Pay',
-                                        style: TextStyle(
-                                          fontFamily: 'SFPro',
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-
-                          //ADD here
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                width: isSelfCollection || isServeCollection ? 10 : 120,
-              ),
-              Visibility(
-                visible: isSelfCollection || isServeCollection,
-                child: Column(
-                  children: [
-                    Text(
-                      'COLLECTION INSTRUCTION ',
-                      style: TextStyle(
-                          fontSize: defaulDescriptiontFontSize,
-                          fontWeight: FontWeight.bold,
-                          fontStyle: FontStyle.italic),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Container(
-                      width: showStationMenu == false ? 600 : 400,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                          border: Border.all(color: const Color(0xffef7700))),
-                      child: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: TextField(
-                          decoration: InputDecoration(
-                              hintText:
-                                  'Example: Please proceed to Drinklink Cube situated next to the cashier'),
-                        ),
-                        // child: Text(
-                        //   'Example: Please proceed to Drinklink Cube situated next to the cashier',
-                        //   style: TextStyle(fontSize: 12),
-                        // ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Column(
-                children: [
-                  Visibility(
-                    // visible: isSelfCollection,
-                    child: Column(
-                      children: [
-                        const SizedBox(
-                          height: 28,
-                        ),
-                        Container(
-                          width: 200,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                              border: Border.all(color: Colors.grey)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const SizedBox(
-                                  height: 26,
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      isServeCollection = !isServeCollection;
-                                    });
-                                  },
-                                  child: Container(
-                                    width: 200,
-                                    height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: isServeCollection
-                                          ? const Color(0xffef7700)
-                                          : Colors.grey.shade500,
-                                    ),
-                                    child: const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          'Serve',
-                                          style: TextStyle(
-                                            fontFamily: 'SFPro',
-                                            fontSize: 18,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Visibility(
-                                  visible: isServeCollection,
-                                  child: Column(
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Text('Choose one'),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            isOrderOnly = !isOrderOnly;
-                                            if (isOrderOnly) {
-                                              isPayOrder = false;
-                                            } else {
-                                              isPayOrder = true;
-                                            }
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 200,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                            color: !isOrderOnly
-                                                ? const Color(0xffef7700)
-                                                : Colors.grey.shade500,
-                                          ),
-                                          child: const Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                'Order and Pay',
-                                                style: TextStyle(
-                                                  fontFamily: 'SFPro',
-                                                  fontSize: 18,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            isOrderOnly = !isOrderOnly;
-                                            if (isOrderOnly) {
-                                              isPayOrder = false;
-                                            } else {
-                                              isPayOrder = true;
-                                            }
-                                          });
-                                        },
-                                        child: Container(
-                                          width: 200,
-                                          height: 50,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10.0),
-                                            color: isOrderOnly
-                                                ? const Color(0xffef7700)
-                                                : Colors.grey.shade500,
-                                          ),
-                                          child: const Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                'Order Only',
-                                                style: TextStyle(
-                                                  fontFamily: 'SFPro',
-                                                  fontSize: 18,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 100,
-          ),
-          Row(
-            children: [
-              const SizedBox(
-                width: 400,
-              ),
-              GestureDetector(
-                onTap: () {
-                  if (isActiveWst && isServeCollection == true ||
-                      isSelfCollection == true) {
-                    context.read<MenuProvider>().updateMenuCount(1);
-                  }
-                },
-                child: Container(
-                  width: 200,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: stations.isNotEmpty &&
-                            isActiveWst &&
-                            isServeCollection == true &&
-                            isSelfCollection == true
-                        ? Colors.green[600]
-                        : Colors.grey.withOpacity(.8),
-                  ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Go to Worktop',
-                        style: TextStyle(
-                          fontFamily: 'SFPro',
-                          fontSize: 18,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          )
-        ],
+        ),
       ),
     );
   }
@@ -2217,7 +2343,7 @@ class _WorkStationState extends State<WorkStation> {
   Widget ListOfStation(double width) {
     return SizedBox(
       width: width,
-      height: 100,
+      height: 150,
       child: ListView.builder(
           itemCount: stations.length,
           itemBuilder: (BuildContext context, int index) {
@@ -2327,24 +2453,43 @@ class _WorkStationState extends State<WorkStation> {
         const SizedBox(
           height: 50,
         ),
-        Container(
-          width: 200,
-          height: 45,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            color: const Color(0xffffffff),
-            border: Border.all(width: 1.0, color: const Color(0xff707070)),
-          ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: stationController,
-                decoration:
-                    const InputDecoration.collapsed(hintText: 'Station Name'),
+        Column(
+          children: [
+            Container(
+              width: 200,
+              height: 45,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                color: const Color(0xffffffff),
+                border: Border.all(width: 1.0, color: systemDefaultColorOrange),
+              ),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: stationController,
+                    decoration: InputDecoration.collapsed(
+                        hintStyle: TextStyle(
+                            fontSize: 11,
+                            fontFamily: defaultFontFamily,
+                            fontStyle: FontStyle.italic),
+                        border: InputBorder.none,
+                        hintText: 'Station Name'),
+                  ),
+                ),
               ),
             ),
-          ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              'EX. Kitchen, Bar, Lounge',
+              style: TextStyle(
+                  fontSize: 11,
+                  fontFamily: defaultFontFamily,
+                  fontStyle: FontStyle.italic),
+            ),
+          ],
         ),
         const SizedBox(
           height: 20,
