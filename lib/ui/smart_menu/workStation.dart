@@ -52,9 +52,14 @@ class _WorkStationState extends State<WorkStation> {
     isActiveWst = false;
     isPayOrder = false;
     isOrderOnly = false;
+    isOrderAndPay = false;
     isSelfCollection = false;
     isServeCollection = false;
     stations = [];
+    collectionInstruction.clear();
+    strcollectionInstruction = '';
+    prepTime.clear();
+    stationController.clear();
   }
 
   @override
@@ -1567,7 +1572,7 @@ class _WorkStationState extends State<WorkStation> {
                                   ),
                                 ],
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -1636,65 +1641,85 @@ class _WorkStationState extends State<WorkStation> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            isActiveWst = !isActiveWst;
-                          });
-                        },
-                        child: Container(
-                          width: 200,
-                          height: 40,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              border: const Border.fromBorderSide(BorderSide(
-                                strokeAlign: 1,
-                                color: Colors.white,
-                              )),
-                              gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: isActiveWst
-                                      ? [
-                                          btnColorOrangeLight,
-                                          btnColorOrangeDark
-                                        ]
-                                      : [btnColorGreyLight, btnColorGreyDark]),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: btnColorGreyDark2,
-                                  // blurStyle: BlurStyle.normal,
-                                  offset: const Offset(
-                                    1.0,
-                                    3.0,
-                                  ),
-                                  blurRadius: 3.0,
-                                  spreadRadius: 1.0,
-                                ),
-                              ]
-                              // color: isActiveWst
-                              //     ? const Color(0xffef7700)
-                              //     : Colors.grey.shade500,
-                              ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                !isActiveWst ? 'ACTIVATE WST' : 'WST ACTIVATED',
-                                style: TextStyle(
-                                  fontFamily: defaultFontFamily,
-                                  // fontSize: 18,
-                                  color: !isActiveWst
-                                      ? iconButtonTextColor
-                                      : btnColorPurpleDark,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Image.asset(
+                            'assets/images/step1.png',
+                            height: 25,
+                            color: Colors.grey.shade500,
                           ),
-                        ),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isActiveWst = !isActiveWst;
+                              });
+                            },
+                            child: Container(
+                              width: 200,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  border:
+                                      const Border.fromBorderSide(BorderSide(
+                                    strokeAlign: 1,
+                                    color: Colors.white,
+                                  )),
+                                  gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: isActiveWst
+                                          ? [
+                                              btnColorOrangeLight,
+                                              btnColorOrangeDark
+                                            ]
+                                          : [
+                                              btnColorGreyLight,
+                                              btnColorGreyDark
+                                            ]),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: btnColorGreyDark2,
+                                      // blurStyle: BlurStyle.normal,
+                                      offset: const Offset(
+                                        1.0,
+                                        3.0,
+                                      ),
+                                      blurRadius: 3.0,
+                                      spreadRadius: 1.0,
+                                    ),
+                                  ]
+                                  // color: isActiveWst
+                                  //     ? const Color(0xffef7700)
+                                  //     : Colors.grey.shade500,
+                                  ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    !isActiveWst
+                                        ? 'ACTIVATE WST'
+                                        : 'WST ACTIVATED',
+                                    style: TextStyle(
+                                      fontFamily: defaultFontFamily,
+                                      // fontSize: 18,
+                                      color: !isActiveWst
+                                          ? iconButtonTextColor
+                                          : btnColorPurpleDark,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         width: 150,
@@ -1818,27 +1843,46 @@ class _WorkStationState extends State<WorkStation> {
                     const SizedBox(
                       width: 150,
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          if (stationController.text == '') {
-                            warningDialog(context, 'CREATE SUB STATION',
-                                'Please enter station name');
-                            return;
-                          }
+                    Row(
+                      children: [
+                        Image.asset(
+                          stationMulMenu == 1
+                              ? 'assets/images/step3.png'
+                              : 'assets/images/step1.png',
+                          height: 25,
+                          color: Colors.grey.shade500,
+                        ),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              if (stationController.text == '') {
+                                warningDialog(context, 'CREATE SUB STATION',
+                                    'Please enter station name');
+                                return;
+                              }
 
-                          stations.add(stationController.text);
-                          context.read<MenuProvider>().setWorkStation(stations);
-                          stationController.text = '';
-                        });
-                      },
-                      child: ButtonMenu(
-                        text: 'ADD',
-                        width: 200,
-                        height: 35,
-                        backColor: [btnColorOrangeLight, btnColorOrangeDark],
-                        textColor: iconButtonTextColor,
-                      ),
+                              stations.add(stationController.text);
+                              context
+                                  .read<MenuProvider>()
+                                  .setWorkStation(stations);
+                              stationController.text = '';
+                            });
+                          },
+                          child: ButtonMenu(
+                            text: 'ADD',
+                            width: 200,
+                            height: 35,
+                            backColor: [
+                              btnColorOrangeLight,
+                              btnColorOrangeDark
+                            ],
+                            textColor: iconButtonTextColor,
+                          ),
+                        ),
+                      ],
                     ),
                     // GestureDetector(
                     //   onTap: () {
@@ -1914,7 +1958,9 @@ class _WorkStationState extends State<WorkStation> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Image.asset(
-                          'assets/images/step3.png',
+                          stationMulMenu == 2
+                              ? 'assets/images/step2.png'
+                              : 'assets/images/step4.png',
                           height: 25,
                           color: Colors.grey.shade500,
                         ),
@@ -2100,7 +2146,9 @@ class _WorkStationState extends State<WorkStation> {
                           child: Column(
                             children: [
                               Image.asset(
-                                'assets/images/step4.png',
+                                stationMulMenu == 2
+                                    ? 'assets/images/step3.png'
+                                    : 'assets/images/step5.png',
                                 height: 25,
                                 color: Colors.grey.shade500,
                               ),
@@ -2290,10 +2338,18 @@ class _WorkStationState extends State<WorkStation> {
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
-                                          if (isActiveWst == true &&
-                                              prepTime.text != '' &&
-                                              stations.isNotEmpty &&
-                                              isOrderAndPay == true) {
+                                          if (stationMulMenu == 1 &&
+                                                  isActiveWst == true &&
+                                                  prepTime.text != '' &&
+                                                  strcollectionInstruction !=
+                                                      '' &&
+                                                  stations.isNotEmpty &&
+                                                  isOrderAndPay == true ||
+                                              stationMulMenu == 2 &&
+                                                  strcollectionInstruction !=
+                                                      '' &&
+                                                  stations.isNotEmpty &&
+                                                  isOrderAndPay == true) {
                                             context
                                                 .read<MenuProvider>()
                                                 .updateMenuCount(1);
@@ -2304,12 +2360,18 @@ class _WorkStationState extends State<WorkStation> {
                                         text: 'SET UP WTPs',
                                         width: 200,
                                         height: 35,
-                                        backColor: isActiveWst == true &&
-                                                prepTime.text != '' &&
-                                                strcollectionInstruction !=
-                                                    '' &&
-                                                stations.isNotEmpty &&
-                                                isOrderAndPay == true
+                                        backColor: stationMulMenu == 1 &&
+                                                    isActiveWst == true &&
+                                                    prepTime.text != '' &&
+                                                    strcollectionInstruction !=
+                                                        '' &&
+                                                    stations.isNotEmpty &&
+                                                    isOrderAndPay == true ||
+                                                stationMulMenu == 2 &&
+                                                    strcollectionInstruction !=
+                                                        '' &&
+                                                    stations.isNotEmpty &&
+                                                    isOrderAndPay == true
                                             ? [
                                                 btnColorGreenLight,
                                                 btnColorGreenDark
