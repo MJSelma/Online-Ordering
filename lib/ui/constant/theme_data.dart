@@ -6,7 +6,7 @@ String defaultFontFamily = 'Avenir';
 double defaultFontSize = 12;
 
 //Description
-double defaulDescriptiontFontSize = 13;
+double defaulDescriptiontFontSize = 11;
 
 //Menu button font size
 double defaultMenuButtonFontSize = 13;
