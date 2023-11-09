@@ -1,3 +1,4 @@
+import 'package:drinklinkmerchant/%20model/smart_menu_model.dart';
 import 'package:flutter/material.dart';
 
 class MenuProvider with ChangeNotifier {
@@ -22,8 +23,9 @@ class MenuProvider with ChangeNotifier {
   int _chooseOutletIndexSelected = -1;
   String _searchMenuName = '';
   List<String> _workStation = [];
+  List<MenuModel> _smartMenu = [];
 
-
+  List<MenuModel> get smartMenu => _smartMenu;
   List<String> get workStation => _workStation;
   bool get isImageLoaded => _isImageLoaded;
   String get menuName => _menuName;
@@ -112,6 +114,12 @@ class MenuProvider with ChangeNotifier {
 
     void setWorkStation(List<String> value) {
     _workStation = value;
+
+    notifyListeners();
+  }
+
+  void addSmartMainMenu(MenuModel value) {
+    _smartMenu.add(value);
 
     notifyListeners();
   }

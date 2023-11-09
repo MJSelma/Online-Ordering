@@ -26,7 +26,7 @@ class _WorkTopState extends State<WorkTop> {
   TextEditingController textConPass = TextEditingController(text: '');
   List<OperatorsModel> operators = [];
   List<WaitersModel> waiters = [];
-  String selectedValue = 'asd';
+  String selectedValue = 'wst';
   int? selectedIndex;
 
   @override
@@ -368,7 +368,8 @@ class _WorkTopState extends State<WorkTop> {
                                                 ),
                                               ))
                                           .toList(),
-                                      value: selectedValue,
+                                      // value: selectedValue,
+                                      value: operators[index].workStation ?? 'wst',
                                       onChanged: (String? value) {
                                         setState(() {
                                           // selectedValue = value!;
@@ -621,7 +622,7 @@ class _WorkTopState extends State<WorkTop> {
                                                 ),
                                               ))
                                           .toList(),
-                                      value: selectedValue,
+                                      value: operators[index].workStation ?? 'wst',
                                       onChanged: (String? value) {
                                         setState(() {
                                           // selectedValue = value!;
