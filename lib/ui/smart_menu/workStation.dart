@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../../widgets/button.dart';
 import '../../widgets/show_dialog.dart';
 import '../constant/theme_data.dart';
+import '../consultation/ipaddress.dart';
 
 class WorkStation extends StatefulWidget {
   const WorkStation({super.key});
@@ -33,6 +34,7 @@ class _WorkStationState extends State<WorkStation> {
   TextEditingController stationController = TextEditingController(text: '');
   TextEditingController collectionInstruction = TextEditingController(text: '');
   String strcollectionInstruction = '';
+  String strprepTime = '';
   //Serve
   PlatformFile? uploadimage; //variable for choosed file
   String fileName = '';
@@ -226,7 +228,7 @@ class _WorkStationState extends State<WorkStation> {
                           Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Text(
-                              'Your Dguest will be able to order and/or pay from their smarthphones. Ideal fro clubs, Caffeteria, or small business',
+                              'Your Dguests will be able to order and/or pay from their smartphones. Ideal for Clubs, Caffeteria or small Businesses ',
                               style: TextStyle(
                                   fontSize: defaulDescriptiontFontSize,
                                   fontFamily: defaultFontFamily,
@@ -282,7 +284,7 @@ class _WorkStationState extends State<WorkStation> {
                           Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Text(
-                              'Your waiters will be able to place order from their smarthphones',
+                              'Your waiters will be able to place ordes from their smartphones',
                               style: TextStyle(
                                   fontSize: defaulDescriptiontFontSize,
                                   fontFamily: defaultFontFamily,
@@ -392,7 +394,7 @@ class _WorkStationState extends State<WorkStation> {
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      'Your Dguest will be able to order and/or pay from their smarthphones. Ideal fro clubs, Caffeteria, or small business',
+                                      'Your Dguest will be able to order and pay from their smartphone. Ideal for Clubs, Caffeteria or small Businesses',
                                       style: TextStyle(
                                           fontSize: defaulDescriptiontFontSize,
                                           fontFamily: defaultFontFamily,
@@ -437,7 +439,7 @@ class _WorkStationState extends State<WorkStation> {
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      'Your waiters will be able to place order from their smarthphones',
+                                      'Your Dguest will be able to order and pay from their smartphone. Ideal for Clubs, Pubs, Caffeteria, Restaurants',
                                       style: TextStyle(
                                           fontSize: defaulDescriptiontFontSize,
                                           fontFamily: defaultFontFamily,
@@ -562,7 +564,8 @@ class _WorkStationState extends State<WorkStation> {
                                                     });
                                                   },
                                                   child: ButtonMenu(
-                                                    text: 'SINGLE WSTs SETUP',
+                                                    text:
+                                                        'INDIVIDUAL WSTs SET UP',
                                                     width: 200,
                                                     height: 30,
                                                     backColor:
@@ -1127,6 +1130,11 @@ class _WorkStationState extends State<WorkStation> {
                               controller: prepTime,
                               decoration: const InputDecoration.collapsed(
                                   hintText: '5'),
+                              onChanged: (value) {
+                                setState(() {
+                                  strprepTime = prepTime.text;
+                                });
+                              },
                             ),
                           ),
                         ),
@@ -1151,7 +1159,9 @@ class _WorkStationState extends State<WorkStation> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                    width: showStationMenu == false && showOrderingMenu == true
+                    width: showStationMenu == false &&
+                                showOrderingMenu == true ||
+                            showStationMenu == true && showOrderingMenu == false
                         ? 850
                         : showOrderingMenu == false && showStationMenu == false
                             ? 1000
@@ -1205,10 +1215,15 @@ class _WorkStationState extends State<WorkStation> {
                                     onTap: () {
                                       setState(() {
                                         isSelfCollection = !isSelfCollection;
+                                        collectionInstruction.text = '';
+                                        strcollectionInstruction = '';
+                                        if (isOrderAndPay == true) {
+                                          isOrderAndPay = false;
+                                        }
                                       });
                                     },
                                     child: ButtonMenu(
-                                      text: 'SELF COLLECTION',
+                                      text: 'SELF SERVICE',
                                       width: 200,
                                       height: 35,
                                       backColor: isSelfCollection
@@ -1266,10 +1281,10 @@ class _WorkStationState extends State<WorkStation> {
                     ],
                   ),
                   SizedBox(
-                    width: isSelfCollection || isServeCollection ? 10 : 150,
+                    width: isSelfCollection ? 10 : 150,
                   ),
                   Visibility(
-                    visible: isSelfCollection || isServeCollection,
+                    visible: isSelfCollection,
                     child: Row(
                       children: [
                         Column(
@@ -1393,10 +1408,30 @@ class _WorkStationState extends State<WorkStation> {
                                             isPayOrder = false;
                                             isOrderOnly = false;
                                           }
+
+                                          // if (isSelfCollection == true &&
+                                          //     isOrderAndPay == false) {
+                                          //   warningDialog(
+                                          //       context,
+                                          //       'SELF SERVICE',
+                                          //       'Please select Service Option');
+                                          //   isServeCollection = false;
+                                          //   return;
+                                          // }
+
+                                          // if (isSelfCollection == true &&
+                                          //     strcollectionInstruction == '') {
+                                          //   warningDialog(
+                                          //       context,
+                                          //       'SELF SERVICE',
+                                          //       'Please enter Collection Instruction');
+                                          //   isServeCollection = false;
+                                          //   return;
+                                          // }
                                         });
                                       },
                                       child: ButtonMenu(
-                                        text: 'SERVED',
+                                        text: 'SERVED SERVICE',
                                         width: 200,
                                         height: 35,
                                         backColor: isServeCollection
@@ -1542,9 +1577,7 @@ class _WorkStationState extends State<WorkStation> {
                                   GestureDetector(
                                     onTap: () {
                                       setState(() {
-                                        if (isActiveWst == true &&
-                                            prepTime.text != '' &&
-                                            isOrderAndPay == true) {
+                                        if (singleStationVal()) {
                                           context
                                               .read<MenuProvider>()
                                               .updateMenuCount(1);
@@ -1555,10 +1588,7 @@ class _WorkStationState extends State<WorkStation> {
                                       text: 'SET UP WTPs',
                                       width: 200,
                                       height: 35,
-                                      backColor: isActiveWst == true &&
-                                              prepTime.text != '' &&
-                                              strcollectionInstruction != '' &&
-                                              isOrderAndPay == true
+                                      backColor: singleStationVal()
                                           ? [
                                               btnColorGreenLight,
                                               btnColorGreenDark
@@ -1585,6 +1615,37 @@ class _WorkStationState extends State<WorkStation> {
         ),
       ),
     );
+  }
+
+  bool singleStationVal() {
+    bool a = false;
+    bool b = false;
+    bool c = false;
+    if (isActiveWst == true && strprepTime != '' && isPayOrder == true ||
+        isActiveWst == true && strprepTime != '' && isOrderOnly == true) {
+      a = true;
+    }
+    if (isActiveWst == true &&
+        strprepTime != '' &&
+        isOrderAndPay == true &&
+        strcollectionInstruction != '') {
+      b = true;
+    }
+    if (isSelfCollection == true) {
+      c = b;
+    }
+    if (isServeCollection == true) {
+      c = a;
+    }
+    if (isSelfCollection == true && isServeCollection == true) {
+      if (a == true && b == true) {
+        c = true;
+      } else {
+        c = false;
+      }
+    }
+
+    return c;
   }
 
   Widget widgetMultipleStation() {
@@ -1939,13 +2000,15 @@ class _WorkStationState extends State<WorkStation> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
-                      width:
-                          showStationMenu == false && showOrderingMenu == true
-                              ? 850
-                              : showOrderingMenu == false &&
-                                      showStationMenu == false
-                                  ? 1000
-                                  : 650,
+                      width: showStationMenu == false &&
+                                  showOrderingMenu == true ||
+                              showStationMenu == true &&
+                                  showOrderingMenu == false
+                          ? 850
+                          : showOrderingMenu == false &&
+                                  showStationMenu == false
+                              ? 1000
+                              : 650,
                       color: Colors.grey.shade500,
                       height: 1),
                 ),
@@ -2000,7 +2063,7 @@ class _WorkStationState extends State<WorkStation> {
                                         });
                                       },
                                       child: ButtonMenu(
-                                        text: 'SELF COLLECTION',
+                                        text: 'SELF SERVICE',
                                         width: 200,
                                         height: 35,
                                         backColor: isSelfCollection
@@ -2191,7 +2254,7 @@ class _WorkStationState extends State<WorkStation> {
                                           });
                                         },
                                         child: ButtonMenu(
-                                          text: 'SERVED',
+                                          text: 'SERVED SERVICE',
                                           width: 200,
                                           height: 35,
                                           backColor: isServeCollection
@@ -2614,8 +2677,9 @@ class _WorkStationState extends State<WorkStation> {
 
   Future<void> uploadImage(int menuCount) async {
     //show your own loading or progressing code here
+    String uploadurl = "$ipAddress/uploads/image.php";
 
-    String uploadurl = "http://192.168.1.7/uploads/image.php";
+    // String uploadurl = "http://192.168.1.7/uploads/image.php";
     //dont use http://localhost , because emulator don't get that address
     //insted use your local IP address or use live URL
     //hit "ipconfig" in windows or "ip a" in linux to get you local IP
@@ -2647,7 +2711,7 @@ class _WorkStationState extends State<WorkStation> {
   Future<void> uploadImageUpdate() async {
     //show your own loading or progressing code here
 
-    String uploadurl = "http://192.168.1.7/uploads/image.php";
+    String uploadurl = "$ipAddress/uploads/image.php";
     //dont use http://localhost , because emulator don't get that address
     //insted use your local IP address or use live URL
     //hit "ipconfig" in windows or "ip a" in linux to get you local IP
@@ -2684,7 +2748,7 @@ class _WorkStationState extends State<WorkStation> {
         'order': menuCount,
         'date': DateTime.now(),
         'fileName': fileName,
-        'image': 'http://192.168.1.7/uploads/uploads/$fileName',
+        'image': '$ipAddress/uploads/uploads/$fileName',
         'name': menuName.text,
         'status': true,
         'type': fileType,
@@ -2878,7 +2942,7 @@ class _WorkStationState extends State<WorkStation> {
                                 .update({
                               'name': menuNameUpdate.text,
                               'image':
-                                  'http://192.168.1.7/uploads/uploads/$menuUpdateUrl',
+                                  '$ipAddress/uploads/uploads/$menuUpdateUrl',
                               'type': fileType
                             }).then((value) async {
                               context.read<MenuProvider>().menuRefresh();
