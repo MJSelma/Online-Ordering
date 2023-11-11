@@ -102,8 +102,8 @@ class _DashBoardState extends State<DashBoard> {
               child: Center(
                 child: Text(
                   e.name,
-                  style: const TextStyle(
-                    color: Color(0xffbef7700),
+                  style: TextStyle(
+                    color: iconButtonTextColorPurple,
                   ),
                 ),
               ),

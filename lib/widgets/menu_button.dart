@@ -79,9 +79,11 @@ class _MenuButtonState extends State<MenuButton> {
                 colors: indexMenu == widget.val &&
                         indexMenuHover == 100 &&
                         outletId != ''
-                    ? [btnColorPurpleLight, btnColorPurpleDark]
+                    // ? [btnColorPurpleLight, btnColorPurpleDark]
+                    ? [btnColorOrangeLight, btnColorOrangeDark]
                     : indexMenuHover == widget.val
-                        ? [btnColorPurpleLight, btnColorPurpleDark]
+                        // ? [btnColorPurpleLight, btnColorPurpleDark]
+                        ? [btnColorGreyLight0, btnColorGreyLight0]
                         : [btnColorGreyLight, btnColorGreyDark]),
 
             // color: indexMenu == 0 && indexMenuHover == 100
@@ -103,10 +105,10 @@ class _MenuButtonState extends State<MenuButton> {
                   size: 20,
                   widget.iconMenu,
                   color: indexMenu == widget.val
-                      ? btnColorGreyLight
+                      ? btnColorGreyDark1
                       : indexMenuHover == widget.val
-                          ? iconButtonTextColorPurple
-                          : iconButtonTextColorPurple,
+                          ? btnColorGreyDark1
+                          : btnColorGreyDark1,
                 ),
               ),
               Visibility(
@@ -121,11 +123,14 @@ class _MenuButtonState extends State<MenuButton> {
                         fontFamily: defaultFontFamily,
                         fontSize: defaultMenuButtonFontSize,
                         color: indexMenu == widget.val
-                            ? btnColorGreyLight
+                            ? btnColorGreyDark1
                             : indexMenuHover == widget.val
-                                ? btnColorGreyLight
-                                : iconButtonTextColorPurple,
-                        fontWeight: FontWeight.bold,
+                                ? btnColorGreyDark1
+                                : btnColorGreyDark1,
+                        fontWeight: indexMenu == widget.val ||
+                                indexMenuHover == widget.val
+                            ? FontWeight.w900
+                            : FontWeight.normal,
                       ),
                       textAlign: TextAlign.left,
                     ),
