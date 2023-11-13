@@ -116,7 +116,6 @@ class _DashBoardState extends State<DashBoard> {
   @override
   Widget build(BuildContext context) {
     _getProvider(context);
-
     final businessProvider = context.read<BusinessOutletProvider>();
     bool isMenuOpen = context.select((MenuProvider p) => p.isMenuOpen);
     context.read<MenuProvider>().setIndexMenu(indexMenu);
@@ -263,7 +262,7 @@ class _DashBoardState extends State<DashBoard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        height: MediaQuery.sizeOf(context).height - 120,
+                        height: MediaQuery.sizeOf(context).height - 130,
                         child: RawScrollbar(
                           padding: const EdgeInsets.symmetric(vertical: 50.0),
                           // mainAxisMargin: 200.0,

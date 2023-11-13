@@ -51,17 +51,59 @@ class _MenuButtonState extends State<MenuButton> {
           height: widget.height,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
-            color: widget.val == 0
-                ? btnColorPurpleLight
-                : indexMenu == widget.val &&
-                        indexMenuHover == 100 &&
-                        outletId != ''
-                    ? systemDefaultColorOrange
-                    : indexMenu == widget.val && indexMenuHover == widget.val
-                        ? systemDefaultColorOrange
-                        : indexMenuHover == widget.val
-                            ? Colors.grey.shade200
-                            : iconButtonTextColor,
+
+            border: const Border.fromBorderSide(BorderSide(
+              strokeAlign: 1,
+              color: Colors.white,
+            )),
+            boxShadow: [
+              indexMenu == widget.val && outletId != '' ||
+                      widget.val == 0 && outletId != ''
+                  ? BoxShadow(
+                      color: btnColorGreyLight0,
+                      // blurStyle: BlurStyle.normal,
+                      offset: const Offset(
+                        1.0,
+                        3.0,
+                      ),
+                      blurRadius: 3.0,
+                      spreadRadius: 1.0,
+                    )
+                  : BoxShadow(color: iconButtonTextColor)
+            ],
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: widget.val == 0 && outletId != ''
+                  ? [btnColorPurpleLight, btnColorPurpleLight]
+                  : indexMenu == widget.val &&
+                          indexMenuHover == 100 &&
+                          outletId != ''
+                      ? [systemDefaultColorOrange, systemDefaultColorOrange]
+                      : indexMenu == widget.val && indexMenuHover == widget.val
+                          ? [systemDefaultColorOrange, systemDefaultColorOrange]
+                          : indexMenu == widget.val &&
+                                  indexMenuHover == widget.val
+                              ? [
+                                  systemDefaultColorOrange,
+                                  systemDefaultColorOrange
+                                ]
+                              : indexMenuHover == widget.val
+                                  ? [Colors.grey.shade200, Colors.grey.shade200]
+                                  : [iconButtonTextColor, iconButtonTextColor],
+            ),
+
+            // color: widget.val == 0 && outletId != ''
+            //     ? btnColorPurpleLight
+            //     : indexMenu == widget.val &&
+            //             indexMenuHover == 100 &&
+            //             outletId != ''
+            //         ? systemDefaultColorOrange
+            //         : indexMenu == widget.val && indexMenuHover == widget.val
+            //             ? systemDefaultColorOrange
+            //             : indexMenuHover == widget.val
+            //                 ? Colors.grey.shade200
+            //                 : iconButtonTextColor,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -72,7 +114,7 @@ class _MenuButtonState extends State<MenuButton> {
                 child: Icon(
                   size: 20,
                   widget.iconMenu,
-                  color: widget.val == 0
+                  color: widget.val == 0 && outletId != ''
                       ? iconButtonTextColor
                       : indexMenu == widget.val
                           ? iconButtonTextColor
@@ -92,7 +134,7 @@ class _MenuButtonState extends State<MenuButton> {
                         // fontFamily: 'SFPro',
                         fontFamily: defaultFontFamily,
                         fontSize: defaultMenuButtonFontSize,
-                        color: widget.val == 0
+                        color: widget.val == 0 && outletId != ''
                             ? iconButtonTextColor
                             : indexMenu == widget.val
                                 ? iconButtonTextColor
