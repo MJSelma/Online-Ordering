@@ -133,11 +133,12 @@ class _DashBoardState extends State<DashBoard> {
       borderRadius: BorderRadius.circular(20),
       hint: Center(
         child: MenuButton(
-            text: currentItem,
-            val: 0,
-            iconMenu: Icons.business,
-            height: 50,
-            paddingLeft: 0),
+          text: currentItem,
+          val: 0,
+          iconMenu: Icons.business,
+          height: 50,
+          paddingLeft: 0,
+        ),
       ),
       onChanged: (BusinessesClass? value) {
         setState(() {
@@ -150,6 +151,7 @@ class _DashBoardState extends State<DashBoard> {
           print(currentItem);
           businessProvider.setBusinessName(currentItem);
           businessProvider.setDefaultOutletId(value.defaultOutletId);
+          context.read<MenuProvider>().setIndexMenu(0);
         });
       },
     );
@@ -294,6 +296,10 @@ class _DashBoardState extends State<DashBoard> {
                                     onTap: () {
                                       setState(() {
                                         indexMenu = 0;
+                                        context
+                                            .read<MenuProvider>()
+                                            .setIndexMenu(0);
+                                        smartMenuIndex = 0;
                                       });
                                     },
                                     child: isMenuOpen
@@ -303,7 +309,8 @@ class _DashBoardState extends State<DashBoard> {
                                             val: 0,
                                             iconMenu: Icons.business,
                                             height: 50,
-                                            paddingLeft: 0),
+                                            paddingLeft: 0,
+                                          ),
                                   ),
                                   Visibility(
                                     visible: businessDocId != '',
@@ -330,9 +337,9 @@ class _DashBoardState extends State<DashBoard> {
                                             width: isMenuOpen ? 200 : 50,
                                           ),
                                         ),
-                                        const Padding(
-                                          padding:
-                                              EdgeInsets.fromLTRB(0, 4, 0, 4),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0, 4, 0, 4),
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
@@ -340,12 +347,13 @@ class _DashBoardState extends State<DashBoard> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                'Choose one',
+                                                'CHOOSE ONE',
                                                 style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w400,
-                                                  fontFamily: 'SFPro',
-                                                ),
+                                                    fontSize: 10,
+                                                    fontStyle: FontStyle.italic,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontFamily:
+                                                        defaultFontFamily),
                                               ),
                                             ],
                                           ),
@@ -354,16 +362,20 @@ class _DashBoardState extends State<DashBoard> {
                                           onTap: () {
                                             setState(() {
                                               indexMenu = 2;
+                                              context
+                                                  .read<MenuProvider>()
+                                                  .setIndexMenu(2);
                                               setIndexMenuNameProvider(
                                                   'CONSULTATION MENU');
                                             });
                                           },
                                           child: MenuButton(
-                                              text: 'CONSULTATION MENU',
-                                              val: 2,
-                                              iconMenu: Icons.picture_as_pdf,
-                                              height: 35,
-                                              paddingLeft: 0),
+                                            text: 'CONSULTATION MENU',
+                                            val: 2,
+                                            iconMenu: Icons.picture_as_pdf,
+                                            height: 35,
+                                            paddingLeft: 0,
+                                          ),
                                         ),
                                         const SizedBox(
                                           height: 10,
@@ -372,16 +384,21 @@ class _DashBoardState extends State<DashBoard> {
                                           onTap: () {
                                             setState(() {
                                               indexMenu = 3;
+                                              smartMenuIndex = 0;
+                                              context
+                                                  .read<MenuProvider>()
+                                                  .setIndexMenu(3);
                                               setIndexMenuNameProvider(
                                                   'SMART  > WORKING STATION (WST)');
                                             });
                                           },
                                           child: MenuButton(
-                                              text: 'SMART MENU',
-                                              val: 3,
-                                              iconMenu: Icons.menu_book_rounded,
-                                              height: 35,
-                                              paddingLeft: 0),
+                                            text: 'SMART MENU',
+                                            val: 3,
+                                            iconMenu: Icons.menu_book_rounded,
+                                            height: 35,
+                                            paddingLeft: 0,
+                                          ),
                                         ),
                                         const SizedBox(
                                           height: 10,
@@ -390,9 +407,13 @@ class _DashBoardState extends State<DashBoard> {
                                           Visibility(
                                             visible: indexMenu == 3,
                                             child: Container(
+                                              margin: const EdgeInsets.only(
+                                                  right: 10.0),
+                                              width: 180,
                                               padding:
-                                                  const EdgeInsets.all(20.0),
+                                                  const EdgeInsets.all(15.0),
                                               decoration: BoxDecoration(
+                                                  // color: Colors.red,
                                                   borderRadius:
                                                       const BorderRadius.all(
                                                           Radius.circular(
@@ -416,14 +437,39 @@ class _DashBoardState extends State<DashBoard> {
                                                                 MenuProvider>()
                                                             .updateMenuCount(0);
                                                         smartMenuIndex = 0;
-                                                        indexMenu = 13;
+                                                        // indexMenu = 13;
                                                       });
                                                     },
-                                                    child: Text(
-                                                      'WORKING STATIONS',
-                                                      style: TextStyle(
-                                                          color:
-                                                              iconButtonTextColorPurple),
+                                                    child: Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                        color: smartMenuIndex ==
+                                                                0
+                                                            ? Colors
+                                                                .grey.shade200
+                                                            : iconButtonTextColor,
+                                                      ),
+                                                      child: Text(
+                                                        'WORKING STATIONS',
+                                                        style: TextStyle(
+                                                            fontSize: 11,
+                                                            fontWeight:
+                                                                smartMenuIndex ==
+                                                                        0
+                                                                    ? FontWeight
+                                                                        .w900
+                                                                    : FontWeight
+                                                                        .normal,
+                                                            color: smartMenuIndex ==
+                                                                    0
+                                                                ? systemDefaultColorOrange
+                                                                : systemDefaultColorOrange),
+                                                      ),
                                                     ),
                                                   ),
                                                   const SizedBox(
@@ -437,14 +483,39 @@ class _DashBoardState extends State<DashBoard> {
                                                                 MenuProvider>()
                                                             .updateMenuCount(1);
                                                         smartMenuIndex = 1;
-                                                        indexMenu = 14;
+                                                        // indexMenu = 14;
                                                       });
                                                     },
-                                                    child: Text(
-                                                      'WORKTOPS',
-                                                      style: TextStyle(
-                                                          color:
-                                                              iconButtonTextColorPurple),
+                                                    child: Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                        color: smartMenuIndex ==
+                                                                1
+                                                            ? Colors
+                                                                .grey.shade200
+                                                            : iconButtonTextColor,
+                                                      ),
+                                                      child: Text(
+                                                        'WORKTOPS',
+                                                        style: TextStyle(
+                                                            fontSize: 11,
+                                                            fontWeight:
+                                                                smartMenuIndex ==
+                                                                        1
+                                                                    ? FontWeight
+                                                                        .w900
+                                                                    : FontWeight
+                                                                        .normal,
+                                                            color: smartMenuIndex ==
+                                                                    1
+                                                                ? systemDefaultColorOrange
+                                                                : systemDefaultColorOrange),
+                                                      ),
                                                     ),
                                                   ),
                                                   const SizedBox(
@@ -458,14 +529,39 @@ class _DashBoardState extends State<DashBoard> {
                                                                 MenuProvider>()
                                                             .updateMenuCount(2);
                                                         smartMenuIndex = 2;
-                                                        indexMenu = 15;
+                                                        // indexMenu = 15;
                                                       });
                                                     },
-                                                    child: Text(
-                                                      'SMART MENU',
-                                                      style: TextStyle(
-                                                          color:
-                                                              iconButtonTextColorPurple),
+                                                    child: Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10.0),
+                                                        color: smartMenuIndex ==
+                                                                2
+                                                            ? Colors
+                                                                .grey.shade200
+                                                            : iconButtonTextColor,
+                                                      ),
+                                                      child: Text(
+                                                        'MENU SET UP',
+                                                        style: TextStyle(
+                                                            fontSize: 11,
+                                                            fontWeight:
+                                                                smartMenuIndex ==
+                                                                        2
+                                                                    ? FontWeight
+                                                                        .w900
+                                                                    : FontWeight
+                                                                        .normal,
+                                                            color: smartMenuIndex ==
+                                                                    2
+                                                                ? systemDefaultColorOrange
+                                                                : systemDefaultColorOrange),
+                                                      ),
                                                     ),
                                                   ),
                                                 ],
@@ -492,11 +588,12 @@ class _DashBoardState extends State<DashBoard> {
                                             });
                                           },
                                           child: MenuButton(
-                                              text: 'TABLE BOOKINGS',
-                                              val: 1,
-                                              iconMenu: Icons.book,
-                                              height: 35,
-                                              paddingLeft: 0),
+                                            text: 'TABLE BOOKINGS',
+                                            val: 1,
+                                            iconMenu: Icons.book,
+                                            height: 35,
+                                            paddingLeft: 0,
+                                          ),
                                         ),
                                         const SizedBox(
                                           height: 12,
@@ -509,11 +606,12 @@ class _DashBoardState extends State<DashBoard> {
                                             });
                                           },
                                           child: MenuButton(
-                                              text: 'EXPLORE VENUE',
-                                              val: 4,
-                                              iconMenu: Icons.explore,
-                                              height: 35,
-                                              paddingLeft: 0),
+                                            text: 'EXPLORE VENUE',
+                                            val: 4,
+                                            iconMenu: Icons.explore,
+                                            height: 35,
+                                            paddingLeft: 0,
+                                          ),
                                         ),
                                         const SizedBox(
                                           height: 12,
@@ -526,11 +624,12 @@ class _DashBoardState extends State<DashBoard> {
                                             });
                                           },
                                           child: MenuButton(
-                                              text: 'EVENTS/WEEKLY \nPROGRAMS',
-                                              val: 5,
-                                              iconMenu: Icons.calendar_month,
-                                              height: 50,
-                                              paddingLeft: 0),
+                                            text: 'EVENTS/WEEKLY \nPROGRAMS',
+                                            val: 5,
+                                            iconMenu: Icons.calendar_month,
+                                            height: 50,
+                                            paddingLeft: 0,
+                                          ),
                                         ),
                                         const SizedBox(
                                           height: 12,
@@ -543,11 +642,12 @@ class _DashBoardState extends State<DashBoard> {
                                             });
                                           },
                                           child: MenuButton(
-                                              text: 'MEDIA CONTENT',
-                                              val: 6,
-                                              iconMenu: Icons.image,
-                                              height: 35,
-                                              paddingLeft: 0),
+                                            text: 'MEDIA CONTENT',
+                                            val: 6,
+                                            iconMenu: Icons.image,
+                                            height: 35,
+                                            paddingLeft: 0,
+                                          ),
                                         ),
                                         const SizedBox(
                                           height: 12,
@@ -560,11 +660,12 @@ class _DashBoardState extends State<DashBoard> {
                                             });
                                           },
                                           child: MenuButton(
-                                              text: 'EXPERIENCE',
-                                              val: 7,
-                                              iconMenu: Icons.history,
-                                              height: 35,
-                                              paddingLeft: 0),
+                                            text: 'EXPERIENCE',
+                                            val: 7,
+                                            iconMenu: Icons.history,
+                                            height: 35,
+                                            paddingLeft: 0,
+                                          ),
                                         ),
                                         const SizedBox(
                                           height: 12,
@@ -577,12 +678,12 @@ class _DashBoardState extends State<DashBoard> {
                                             });
                                           },
                                           child: MenuButton(
-                                              text: 'YOUR ADS',
-                                              val: 8,
-                                              iconMenu:
-                                                  Icons.branding_watermark,
-                                              height: 35,
-                                              paddingLeft: 0),
+                                            text: 'YOUR ADS',
+                                            val: 8,
+                                            iconMenu: Icons.branding_watermark,
+                                            height: 35,
+                                            paddingLeft: 0,
+                                          ),
                                         ),
                                         const SizedBox(
                                           height: 12,
@@ -595,11 +696,12 @@ class _DashBoardState extends State<DashBoard> {
                                             });
                                           },
                                           child: MenuButton(
-                                              text: 'YOUR STAFF',
-                                              val: 9,
-                                              iconMenu: Icons.person_add,
-                                              height: 35,
-                                              paddingLeft: 0),
+                                            text: 'YOUR STAFF',
+                                            val: 9,
+                                            iconMenu: Icons.person_add,
+                                            height: 35,
+                                            paddingLeft: 0,
+                                          ),
                                         ),
                                         const SizedBox(
                                           height: 12,
@@ -612,12 +714,12 @@ class _DashBoardState extends State<DashBoard> {
                                             });
                                           },
                                           child: MenuButton(
-                                              text: 'REPORT',
-                                              val: 10,
-                                              iconMenu:
-                                                  Icons.bar_chart_outlined,
-                                              height: 35,
-                                              paddingLeft: 0),
+                                            text: 'REPORT',
+                                            val: 10,
+                                            iconMenu: Icons.bar_chart_outlined,
+                                            height: 35,
+                                            paddingLeft: 0,
+                                          ),
                                         ),
                                         const SizedBox(
                                           height: 12,
@@ -630,11 +732,12 @@ class _DashBoardState extends State<DashBoard> {
                                             });
                                           },
                                           child: MenuButton(
-                                              text: 'PAYMENT',
-                                              val: 11,
-                                              iconMenu: Icons.payment,
-                                              height: 35,
-                                              paddingLeft: 0),
+                                            text: 'PAYMENT',
+                                            val: 11,
+                                            iconMenu: Icons.payment,
+                                            height: 35,
+                                            paddingLeft: 0,
+                                          ),
                                         ),
                                         const SizedBox(
                                           height: 12,
@@ -647,12 +750,13 @@ class _DashBoardState extends State<DashBoard> {
                                             });
                                           },
                                           child: MenuButton(
-                                              text: 'BUSINESS CONTACT',
-                                              val: 12,
-                                              iconMenu:
-                                                  Icons.contact_mail_rounded,
-                                              height: 35,
-                                              paddingLeft: 0),
+                                            text: 'BUSINESS CONTACT',
+                                            val: 12,
+                                            iconMenu:
+                                                Icons.contact_mail_rounded,
+                                            height: 35,
+                                            paddingLeft: 0,
+                                          ),
                                         ),
                                       ],
                                     ),
