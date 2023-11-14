@@ -35,6 +35,7 @@ class _WorkStationState extends State<WorkStation> {
   TextEditingController collectionInstruction = TextEditingController(text: '');
   String strcollectionInstruction = '';
   String strprepTime = '';
+  String graphSrc = '';
   //Serve
   PlatformFile? uploadimage; //variable for choosed file
   String fileName = '';
@@ -369,6 +370,7 @@ class _WorkStationState extends State<WorkStation> {
                                       onTap: () {
                                         setState(() {
                                           stationMenu = 1;
+                                          graphSrc = 'graph1.jpeg';
                                           init();
                                         });
                                       },
@@ -409,6 +411,7 @@ class _WorkStationState extends State<WorkStation> {
                                       onTap: () {
                                         setState(() {
                                           stationMenu = 2;
+
                                           init();
                                         });
                                       },
@@ -486,6 +489,7 @@ class _WorkStationState extends State<WorkStation> {
                                                   onTap: () {
                                                     setState(() {
                                                       stationMulMenu = 1;
+                                                      graphSrc = 'graph2.jpeg';
                                                       init();
                                                     });
                                                   },
@@ -523,7 +527,7 @@ class _WorkStationState extends State<WorkStation> {
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Text(
-                                              'Having a Master Station will let your DGUESTS to order different menu categories Ex. Food & Drinks, which will be handled by different Working Stations. Ideal for Food-Courts, Restaurants, Bars, Caffetterias, Beach Clubs',
+                                              'Having a Master Station will let your DGUESTS to order different menu categories Ex. Food&Drinks, which will be preparedby different Working Stations. Ideal for Food-Courts, Restaurants, Bars, Caffetterias, Beach Clubs, Pubs',
                                               style: TextStyle(
                                                   fontSize:
                                                       defaulDescriptiontFontSize,
@@ -560,6 +564,7 @@ class _WorkStationState extends State<WorkStation> {
                                                   onTap: () {
                                                     setState(() {
                                                       stationMulMenu = 2;
+                                                      graphSrc = 'graph3.jpeg';
                                                       init();
                                                     });
                                                   },
@@ -658,7 +663,7 @@ class _WorkStationState extends State<WorkStation> {
                     color: Colors.white,
                   ),
                   width: 400,
-                  height: 300,
+                  height: 400,
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Column(
@@ -681,17 +686,13 @@ class _WorkStationState extends State<WorkStation> {
                               ],
                             ),
                           ),
-                          SizedBox(
-                              width: 400,
-                              child: SizedBox(
-                                width: 380,
-                                child: Center(
-                                  child: Image.asset(
-                                    'assets/images/graph1.jpeg',
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                                ),
-                              )),
+                          Expanded(
+                              child: Center(
+                            child: Image.asset(
+                              'assets/images/$graphSrc',
+                              fit: BoxFit.fitWidth,
+                            ),
+                          )),
                         ]),
                   ),
                 ),
@@ -1689,7 +1690,7 @@ class _WorkStationState extends State<WorkStation> {
                         child: SizedBox(
                             width: 100,
                             child: Image.asset(
-                              'assets/images/graph1.jpeg',
+                              'assets/images/$graphSrc',
                               fit: BoxFit.fitWidth,
                             )),
                       )
