@@ -1700,8 +1700,8 @@ class _WorkStationState extends State<WorkStation> {
                 Visibility(
                   visible: stationMulMenu == 1,
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1784,210 +1784,148 @@ class _WorkStationState extends State<WorkStation> {
                         ],
                       ),
                       const SizedBox(
-                        width: 150,
+                        width: 100,
                       ),
-                      Column(
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  'assets/images/step2.png',
-                                  height: 25,
-                                  color: Colors.grey.shade500,
-                                ),
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                Text(
-                                  'ENTER AVERAGE PREPARATION TIME(mins)',
-                                  style: TextStyle(
-                                    fontSize: defaulDescriptiontFontSize,
-                                    fontWeight: FontWeight.bold,
+                          Image.asset(
+                            stationMulMenu == 1
+                                ? 'assets/images/step2.png'
+                                : 'assets/images/step1.png',
+                            height: 25,
+                            color: Colors.grey.shade500,
+                          ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          Column(
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Text(
+                                      stationMulMenu == 1
+                                          ? 'CREATE SUB STATION'
+                                          : 'CREATE STATION',
+                                      style: TextStyle(
+                                        fontSize: defaulDescriptiontFontSize,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 300,
+                                    height: 45,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: const Color(0xffffffff),
+                                      border: Border.all(
+                                          width: 1.0,
+                                          color: systemDefaultColorOrange),
+                                    ),
+                                    child: Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextField(
+                                          controller: stationController,
+                                          decoration: InputDecoration.collapsed(
+                                              hintStyle: TextStyle(
+                                                  fontSize: 11,
+                                                  fontFamily: defaultFontFamily,
+                                                  fontStyle: FontStyle.italic),
+                                              border: InputBorder.none,
+                                              hintText: 'Station Name'),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Text(
+                                      'EX. Kitchen, Bar, Lounge',
+                                      style: TextStyle(
+                                          fontSize: 11,
+                                          fontFamily: defaultFontFamily,
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                padding: const EdgeInsets.only(left: 200.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      if (stationController.text == '') {
+                                        warningDialog(
+                                            context,
+                                            'CREATE SUB STATION',
+                                            'Please enter station name');
+                                        return;
+                                      }
+
+                                      stations.add(stationController.text);
+                                      context
+                                          .read<MenuProvider>()
+                                          .setWorkStation(stations);
+                                      stationController.text = '';
+                                    });
+                                  },
+                                  child: ButtonMenu(
+                                    text: 'ADD',
+                                    width: 100,
+                                    height: 35,
+                                    backColor: [
+                                      btnColorOrangeLight,
+                                      btnColorOrangeDark
+                                    ],
+                                    textColor: iconButtonTextColor,
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            width: 80,
-                            height: 45,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              color: const Color(0xffffffff),
-                              border: Border.all(
-                                  width: 1.0, color: systemDefaultColorOrange),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0x29000000),
-                                  offset: Offset(0, 3),
-                                  blurRadius: 6,
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                  controller: prepTime,
-                                  decoration: const InputDecoration.collapsed(
-                                      hintText: '5'),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              //List of station
+                              Visibility(
+                                  visible: stations.isNotEmpty,
+                                  child: ListOfStation(300)),
+                              Visibility(
+                                visible: stations.isNotEmpty,
+                                child: Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Container(
+                                      padding:
+                                          const EdgeInsets.only(left: 200.0),
+                                      child: ButtonMenu(
+                                        text: 'DELETE',
+                                        width: 100,
+                                        height: 35,
+                                        backColor: [
+                                          btnColorRedLight,
+                                          btnColorRedDark
+                                        ],
+                                        textColor: iconButtonTextColor,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Text(
-                            stationMulMenu == 1
-                                ? 'CREATE SUB STATION'
-                                : 'CREATE STATION',
-                            style: TextStyle(
-                              fontSize: defaulDescriptiontFontSize,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: 200,
-                          height: 45,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10.0),
-                            color: const Color(0xffffffff),
-                            border: Border.all(
-                                width: 1.0, color: systemDefaultColorOrange),
-                          ),
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(
-                                controller: stationController,
-                                decoration: InputDecoration.collapsed(
-                                    hintStyle: TextStyle(
-                                        fontSize: 11,
-                                        fontFamily: defaultFontFamily,
-                                        fontStyle: FontStyle.italic),
-                                    border: InputBorder.none,
-                                    hintText: 'Station Name'),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Text(
-                            'EX. Kitchen, Bar, Lounge',
-                            style: TextStyle(
-                                fontSize: 11,
-                                fontFamily: defaultFontFamily,
-                                fontStyle: FontStyle.italic),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 150,
-                    ),
-                    Row(
-                      children: [
-                        Image.asset(
-                          stationMulMenu == 1
-                              ? 'assets/images/step3.png'
-                              : 'assets/images/step1.png',
-                          height: 25,
-                          color: Colors.grey.shade500,
-                        ),
-                        const SizedBox(
-                          width: 15,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              if (stationController.text == '') {
-                                warningDialog(context, 'CREATE SUB STATION',
-                                    'Please enter station name');
-                                return;
-                              }
-
-                              stations.add(stationController.text);
-                              context
-                                  .read<MenuProvider>()
-                                  .setWorkStation(stations);
-                              stationController.text = '';
-                            });
-                          },
-                          child: ButtonMenu(
-                            text: 'ADD',
-                            width: 200,
-                            height: 35,
-                            backColor: [
-                              btnColorOrangeLight,
-                              btnColorOrangeDark
-                            ],
-                            textColor: iconButtonTextColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                    // GestureDetector(
-                    //   onTap: () {
-                    //     setState(() {
-                    //       stations.add(stationController.text);
-                    //       context.read<MenuProvider>().setWorkStation(stations);
-                    //       stationController.text = '';
-                    //     });
-                    //   },
-                    //   child: Container(
-                    //     width: 100,
-                    //     height: 50,
-                    //     decoration: BoxDecoration(
-                    //       borderRadius: BorderRadius.circular(10.0),
-                    //       color: const Color(0xffef7700),
-                    //     ),
-                    //     child: const Row(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       crossAxisAlignment: CrossAxisAlignment.center,
-                    //       children: [
-                    //         Text(
-                    //           'ADD',
-                    //           style: TextStyle(
-                    //             fontFamily: 'SFPro',
-                    //             fontSize: 18,
-                    //             color: Colors.white,
-                    //             fontWeight: FontWeight.w500,
-                    //           ),
-                    //           textAlign: TextAlign.center,
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
-                ),
-
-                const SizedBox(
-                  width: 20,
-                ),
-                //List of station
-                Visibility(
-                    visible: stations.isNotEmpty, child: ListOfStation(300)),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
@@ -2024,7 +1962,7 @@ class _WorkStationState extends State<WorkStation> {
                         Image.asset(
                           stationMulMenu == 2
                               ? 'assets/images/step2.png'
-                              : 'assets/images/step4.png',
+                              : 'assets/images/step3.png',
                           height: 25,
                           color: Colors.grey.shade500,
                         ),
@@ -2212,7 +2150,7 @@ class _WorkStationState extends State<WorkStation> {
                               Image.asset(
                                 stationMulMenu == 2
                                     ? 'assets/images/step3.png'
-                                    : 'assets/images/step5.png',
+                                    : 'assets/images/step4.png',
                                 height: 25,
                                 color: Colors.grey.shade500,
                               ),
@@ -2469,31 +2407,43 @@ class _WorkStationState extends State<WorkStation> {
   Widget ListOfStation(double width) {
     return SizedBox(
       width: width,
-      height: 150,
+      height: 250,
       child: ListView.builder(
           itemCount: stations.length,
           itemBuilder: (BuildContext context, int index) {
-            return Card(
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(stations[index]),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          stations.removeAt(index);
-                        });
-                      },
-                      child: const Icon(
-                        Icons.close,
-                        color: Color(0xffef7700),
-                      ),
-                    )
-                  ],
-                ),
+            return Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Text(stations[index]),
+                  ButtonMenu(
+                    text: stations[index],
+                    width: 200,
+                    height: 35,
+                    backColor: [btnColorOrangeLight, btnColorOrangeDark],
+                    textColor: iconButtonTextColor,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        stations.removeAt(index);
+                      });
+                    },
+                    child: ButtonMenu(
+                      text: 'ACT',
+                      width: 50,
+                      height: 35,
+                      backColor: [btnColorPurpleLight, btnColorPurpleDark],
+                      textColor: iconButtonTextColor,
+                    ),
+                    // child: const Icon(
+                    //   Icons.close,
+                    //   color: Color(0xffef7700),
+                    // ),
+                  )
+                ],
               ),
             );
           }),
