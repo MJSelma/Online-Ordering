@@ -7,6 +7,7 @@ class ButtonMenu extends StatelessWidget {
   double width;
   List<Color> backColor;
   Color textColor;
+  Color? borderColor;
 
   ButtonMenu(
       {super.key,
@@ -14,7 +15,8 @@ class ButtonMenu extends StatelessWidget {
       required this.height,
       required this.width,
       required this.backColor,
-      required this.textColor});
+      required this.textColor,
+      required this.borderColor});
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +30,10 @@ class ButtonMenu extends StatelessWidget {
           //         : ''),
           //     fit: BoxFit.cover),
           borderRadius: BorderRadius.circular(10.0),
-          border: const Border.fromBorderSide(BorderSide(
+          border: Border.fromBorderSide(BorderSide(
+            width: borderColor != null ? 4 : 0,
             strokeAlign: 1,
-            color: Colors.white,
+            color: borderColor != null ? btnColorPurpleLight : Colors.white,
           )),
           // color: backColor,
           gradient: LinearGradient(

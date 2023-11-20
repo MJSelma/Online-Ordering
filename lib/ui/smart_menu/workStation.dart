@@ -10,6 +10,7 @@ import '../../widgets/button.dart';
 import '../../widgets/show_dialog.dart';
 import '../constant/theme_data.dart';
 import '../consultation/ipaddress.dart';
+import '../data_class/subStation_class.dart';
 
 class WorkStation extends StatefulWidget {
   const WorkStation({super.key});
@@ -48,6 +49,12 @@ class _WorkStationState extends State<WorkStation> {
   bool showGraph = false;
   int stationMulMenu = 3;
   List<String> stations = [];
+
+  List<dynamic> indexListSubStation = [];
+  int indexListSubStationDelete = 0;
+  bool isSubStationSelected = false;
+  bool isSubStationDiactivated = false;
+  List<SubStationClass> listSubStation = [];
 
   init() {
     // showOrderingMenu = true;
@@ -179,6 +186,7 @@ class _WorkStationState extends State<WorkStation> {
                                       textColor: orderingMenu == 1
                                           ? btnColorPurpleDark
                                           : iconButtonTextColor,
+                                      borderColor: null,
                                     )),
                                 const SizedBox(
                                   width: 10,
@@ -268,6 +276,7 @@ class _WorkStationState extends State<WorkStation> {
                                       textColor: orderingMenu == 2
                                           ? btnColorPurpleDark
                                           : iconButtonTextColor,
+                                      borderColor: null,
                                     )),
                                 const SizedBox(
                                   width: 10,
@@ -390,6 +399,7 @@ class _WorkStationState extends State<WorkStation> {
                                         textColor: stationMenu == 1
                                             ? btnColorPurpleDark
                                             : iconButtonTextColor,
+                                        borderColor: null,
                                       )),
                                   // child: stationButton('One Station Required',
                                   //     1, Icons.payment, 50, 12, false)),
@@ -431,6 +441,7 @@ class _WorkStationState extends State<WorkStation> {
                                         textColor: stationMenu == 2
                                             ? btnColorPurpleDark
                                             : iconButtonTextColor,
+                                        borderColor: null,
                                       )),
                                   // child: stationButton(
                                   //     'Multiple Working Station',
@@ -511,6 +522,7 @@ class _WorkStationState extends State<WorkStation> {
                                                             1
                                                         ? btnColorPurpleDark
                                                         : iconButtonTextColor,
+                                                    borderColor: null,
                                                   )),
                                               const SizedBox(
                                                 width: 10,
@@ -587,6 +599,7 @@ class _WorkStationState extends State<WorkStation> {
                                                             2
                                                         ? btnColorPurpleDark
                                                         : iconButtonTextColor,
+                                                    borderColor: null,
                                                   )),
                                               const SizedBox(
                                                 width: 10,
@@ -753,6 +766,7 @@ class _WorkStationState extends State<WorkStation> {
                                     btnColorOrangeDark
                                   ],
                                   textColor: iconButtonTextColor,
+                                  borderColor: null,
                                 ),
                               )
                             ],
@@ -1239,6 +1253,7 @@ class _WorkStationState extends State<WorkStation> {
                                       textColor: isSelfCollection
                                           ? btnColorPurpleDark
                                           : iconButtonTextColor,
+                                      borderColor: null,
                                     ),
                                   ),
                                   const SizedBox(
@@ -1268,6 +1283,7 @@ class _WorkStationState extends State<WorkStation> {
                                         textColor: isOrderAndPay
                                             ? btnColorPurpleDark
                                             : iconButtonTextColor,
+                                        borderColor: null,
                                       ),
                                     ),
                                   ),
@@ -1447,6 +1463,7 @@ class _WorkStationState extends State<WorkStation> {
                                         textColor: isServeCollection
                                             ? btnColorPurpleDark
                                             : iconButtonTextColor,
+                                        borderColor: null,
                                       ),
                                     ),
                                     // GestureDetector(
@@ -1529,6 +1546,7 @@ class _WorkStationState extends State<WorkStation> {
                                               textColor: isPayOrder
                                                   ? btnColorPurpleDark
                                                   : iconButtonTextColor,
+                                              borderColor: null,
                                             ),
                                           ),
                                           const SizedBox(
@@ -1559,6 +1577,7 @@ class _WorkStationState extends State<WorkStation> {
                                               textColor: isOrderOnly
                                                   ? btnColorPurpleDark
                                                   : iconButtonTextColor,
+                                              borderColor: null,
                                             ),
                                           ),
                                         ],
@@ -1599,6 +1618,7 @@ class _WorkStationState extends State<WorkStation> {
                                               btnColorGreyDark
                                             ],
                                       textColor: iconButtonTextColor,
+                                      borderColor: null,
                                     ),
                                   ),
                                 ],
@@ -1765,8 +1785,8 @@ class _WorkStationState extends State<WorkStation> {
                                 children: [
                                   Text(
                                     !isActiveWst
-                                        ? 'ACTIVATE WST'
-                                        : 'WST ACTIVATED',
+                                        ? 'ACTIVATE MASTER'
+                                        : 'MASTER WST ACTIVATED',
                                     style: TextStyle(
                                       fontFamily: defaultFontFamily,
                                       // fontSize: 18,
@@ -1846,57 +1866,73 @@ class _WorkStationState extends State<WorkStation> {
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(12.0),
-                                    child: Text(
-                                      'EX. Kitchen, Bar, Lounge',
-                                      style: TextStyle(
-                                          fontSize: 11,
-                                          fontFamily: defaultFontFamily,
-                                          fontStyle: FontStyle.italic),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'EX. Kitchen, Bar, Lounge',
+                                          style: TextStyle(
+                                              fontSize: 11,
+                                              fontFamily: defaultFontFamily,
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                        const SizedBox(width: 50),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              if (stationController.text ==
+                                                  '') {
+                                                warningDialog(
+                                                    context,
+                                                    'CREATE SUB STATION',
+                                                    'Please enter station name');
+                                                return;
+                                              }
+
+                                              // stations
+                                              //     .add(stationController.text);
+
+                                              int idexno =
+                                                  listSubStation.length;
+                                              SubStationClass subStationx =
+                                                  SubStationClass(
+                                                      index: idexno,
+                                                      stationName:
+                                                          stationController
+                                                              .text,
+                                                      status: true);
+                                              listSubStation.add(subStationx);
+                                              context
+                                                  .read<MenuProvider>()
+                                                  .setWorkStation(stations);
+                                              stationController.text = '';
+                                            });
+                                          },
+                                          child: ButtonMenu(
+                                            text: 'ADD',
+                                            width: 100,
+                                            height: 35,
+                                            backColor: [
+                                              btnColorPurpleLight,
+                                              btnColorPurpleDark
+                                            ],
+                                            textColor: btnColorGreyLight,
+                                            borderColor: null,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
-                              Container(
-                                padding: const EdgeInsets.only(left: 200.0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (stationController.text == '') {
-                                        warningDialog(
-                                            context,
-                                            'CREATE SUB STATION',
-                                            'Please enter station name');
-                                        return;
-                                      }
 
-                                      stations.add(stationController.text);
-                                      context
-                                          .read<MenuProvider>()
-                                          .setWorkStation(stations);
-                                      stationController.text = '';
-                                    });
-                                  },
-                                  child: ButtonMenu(
-                                    text: 'ADD',
-                                    width: 100,
-                                    height: 35,
-                                    backColor: [
-                                      btnColorOrangeLight,
-                                      btnColorOrangeDark
-                                    ],
-                                    textColor: iconButtonTextColor,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
                               //List of station
                               Visibility(
-                                  visible: stations.isNotEmpty,
+                                  visible: listSubStation.isNotEmpty,
                                   child: ListOfStation(300)),
                               Visibility(
-                                visible: stations.isNotEmpty,
+                                visible: listSubStation.isNotEmpty,
                                 child: Column(
                                   children: [
                                     const SizedBox(
@@ -1905,15 +1941,47 @@ class _WorkStationState extends State<WorkStation> {
                                     Container(
                                       padding:
                                           const EdgeInsets.only(left: 200.0),
-                                      child: ButtonMenu(
-                                        text: 'DELETE',
-                                        width: 100,
-                                        height: 35,
-                                        backColor: [
-                                          btnColorRedLight,
-                                          btnColorRedDark
-                                        ],
-                                        textColor: iconButtonTextColor,
+                                      child: GestureDetector(
+                                        child: ButtonMenu(
+                                          text: 'DELETE',
+                                          width: 100,
+                                          height: 35,
+                                          backColor: [
+                                            btnColorRedLight,
+                                            btnColorRedDark
+                                          ],
+                                          textColor: iconButtonTextColor,
+                                          borderColor: null,
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            for (var i = 0;
+                                                i < indexListSubStation.length;
+                                                i++) {
+                                              print(indexListSubStation[i]);
+                                              listSubStation.removeWhere(
+                                                  (item) =>
+                                                      item.stationName ==
+                                                      indexListSubStation[i]);
+                                              indexListSubStation.removeWhere(
+                                                  (item) =>
+                                                      item ==
+                                                      indexListSubStation[i]
+                                                          .toString());
+                                              isSubStationSelected = false;
+                                            }
+
+                                            // for (var itemx
+                                            //     in indexListSubStation) {
+                                            //   print(itemx);
+                                            //   stations.removeWhere((item) =>
+                                            //       item == itemx.toString());
+                                            //   indexListSubStation.removeWhere(
+                                            //       (item) =>
+                                            //           item == itemx.toString());
+                                            // }
+                                          });
+                                        },
                                       ),
                                     ),
                                   ],
@@ -2017,6 +2085,7 @@ class _WorkStationState extends State<WorkStation> {
                                         textColor: isSelfCollection
                                             ? btnColorPurpleDark
                                             : iconButtonTextColor,
+                                        borderColor: null,
                                       ),
                                     ),
                                     const SizedBox(
@@ -2046,6 +2115,7 @@ class _WorkStationState extends State<WorkStation> {
                                           textColor: isOrderAndPay
                                               ? btnColorPurpleDark
                                               : iconButtonTextColor,
+                                          borderColor: null,
                                         ),
                                       ),
                                     ),
@@ -2208,6 +2278,7 @@ class _WorkStationState extends State<WorkStation> {
                                           textColor: isServeCollection
                                               ? btnColorPurpleDark
                                               : iconButtonTextColor,
+                                          borderColor: null,
                                         ),
                                       ),
                                       // GestureDetector(
@@ -2291,6 +2362,7 @@ class _WorkStationState extends State<WorkStation> {
                                                 textColor: isPayOrder
                                                     ? btnColorPurpleDark
                                                     : iconButtonTextColor,
+                                                borderColor: null,
                                               ),
                                             ),
                                             const SizedBox(
@@ -2321,6 +2393,7 @@ class _WorkStationState extends State<WorkStation> {
                                                 textColor: isOrderOnly
                                                     ? btnColorPurpleDark
                                                     : iconButtonTextColor,
+                                                borderColor: null,
                                               ),
                                             ),
                                           ],
@@ -2383,6 +2456,7 @@ class _WorkStationState extends State<WorkStation> {
                                                 btnColorGreyDark
                                               ],
                                         textColor: iconButtonTextColor,
+                                        borderColor: null,
                                       ),
                                     ),
                                   ],
@@ -2409,7 +2483,7 @@ class _WorkStationState extends State<WorkStation> {
       width: width,
       height: 250,
       child: ListView.builder(
-          itemCount: stations.length,
+          itemCount: listSubStation.length,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
               padding: const EdgeInsets.all(10.0),
@@ -2418,25 +2492,69 @@ class _WorkStationState extends State<WorkStation> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Text(stations[index]),
-                  ButtonMenu(
-                    text: stations[index],
-                    width: 200,
-                    height: 35,
-                    backColor: [btnColorOrangeLight, btnColorOrangeDark],
-                    textColor: iconButtonTextColor,
+                  GestureDetector(
+                    child: ButtonMenu(
+                      text: listSubStation[index].stationName,
+                      width: 200,
+                      height: 35,
+                      backColor: [btnColorOrangeLight, btnColorOrangeDark],
+                      textColor: iconButtonTextColor,
+                      borderColor: indexListSubStationDelete == index &&
+                              isSubStationSelected
+                          ? btnColorPurpleLight
+                          : null,
+                    ),
+                    onTap: () {
+                      setState(() {
+                        indexListSubStationDelete = index;
+
+                        isSubStationSelected = false;
+                        isSubStationSelected = true;
+                        indexListSubStation.clear();
+                        indexListSubStation
+                            .add(listSubStation[index].stationName);
+
+                        // for (var i = 0; i < indexListSubStation.length; i++) {
+                        //   print(indexListSubStation[i]);
+                        // }
+                      });
+                    },
                   ),
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        stations.removeAt(index);
+                        indexListSubStationDelete == index &&
+                                isSubStationDiactivated == false
+                            ? isSubStationSelected = true
+                            : isSubStationSelected = false;
+                        // stations.removeAt(index);
+                        isSubStationSelected = false;
+                        // indexListSubStationDelete == index &&
+                        //         isSubStationSelected
+                        //     ? isSubStationSelected = false
+                        //     : isSubStationSelected = true;
+                        indexListSubStationDelete = index;
+                        // isSubStationDiactivated = !isSubStationDiactivated;
+                        isSubStationDiactivated = false;
+                        isSubStationDiactivated = true;
                       });
                     },
                     child: ButtonMenu(
-                      text: 'ACT',
+                      text: indexListSubStationDelete == index &&
+                              isSubStationDiactivated
+                          ? 'D-ACT'
+                          : 'ACT',
                       width: 50,
                       height: 35,
-                      backColor: [btnColorPurpleLight, btnColorPurpleDark],
-                      textColor: iconButtonTextColor,
+                      backColor: indexListSubStationDelete == index &&
+                              isSubStationDiactivated
+                          ? [btnColorGreyLight, btnColorGreyDark]
+                          : [btnColorPurpleLight, btnColorPurpleDark],
+                      textColor: indexListSubStationDelete == index &&
+                              isSubStationDiactivated
+                          ? btnColorRedDark
+                          : btnColorGreyLight,
+                      borderColor: null,
                     ),
                     // child: const Icon(
                     //   Icons.close,
@@ -2494,6 +2612,7 @@ class _WorkStationState extends State<WorkStation> {
               height: 30,
               backColor: [btnColorOrangeLight, btnColorOrangeDark],
               textColor: iconButtonTextColor,
+              borderColor: null,
 
               // backColor: fileName != ''
               //     ? const sys_color_defaultorange
@@ -2521,7 +2640,7 @@ class _WorkStationState extends State<WorkStation> {
               height: 30,
               backColor: [btnColorOrangeLight, btnColorOrangeDark],
               textColor: iconButtonTextColor,
-
+              borderColor: null,
               // backColor: fileName != ''
               //     ? const sys_color_defaultorange
               //     : const button_color_grey,
@@ -2573,7 +2692,13 @@ class _WorkStationState extends State<WorkStation> {
         GestureDetector(
           onTap: () {
             setState(() {
-              stations.add(stationController.text);
+              // stations.add(stationController.text);
+              int idexno = listSubStation.length;
+              SubStationClass subStationx = SubStationClass(
+                  index: idexno,
+                  stationName: stationController.text,
+                  status: true);
+              listSubStation.add(subStationx);
               context.read<MenuProvider>().setWorkStation(stations);
               stationController.text = '';
             });
@@ -2843,7 +2968,7 @@ class _WorkStationState extends State<WorkStation> {
                     height: 30,
                     backColor: [btnColorOrangeLight, btnColorOrangeDark],
                     textColor: iconButtonTextColor,
-
+                    borderColor: null,
                     // backColor: fileName != ''
                     //     ? const sys_color_defaultorange
                     //     : const button_color_grey,
@@ -2871,7 +2996,7 @@ class _WorkStationState extends State<WorkStation> {
                               btnColorOrangeDark
                             ],
                             textColor: iconButtonTextColor,
-
+                            borderColor: null,
                             // backColor: fileName != ''
                             //     ? const sys_color_defaultorange
                             //     : const button_color_grey,
@@ -2910,7 +3035,7 @@ class _WorkStationState extends State<WorkStation> {
                               btnColorOrangeDark
                             ],
                             textColor: iconButtonTextColor,
-
+                            borderColor: null,
                             // backColor: fileName != ''
                             //     ? const sys_color_defaultorange
                             //     : const button_color_grey,
@@ -2991,7 +3116,7 @@ class _WorkStationState extends State<WorkStation> {
                         height: 30,
                         backColor: [btnColorOrangeLight, btnColorOrangeDark],
                         textColor: iconButtonTextColor,
-
+                        borderColor: null,
                         // backColor: fileName != ''
                         //     ? const sys_color_defaultorange
                         //     : const button_color_grey,
@@ -3018,7 +3143,7 @@ class _WorkStationState extends State<WorkStation> {
                         height: 30,
                         backColor: [btnColorOrangeLight, btnColorOrangeDark],
                         textColor: iconButtonTextColor,
-
+                        borderColor: null,
                         // backColor: fileName != ''
                         //     ? const sys_color_defaultorange
                         //     : const button_color_grey,
@@ -3075,7 +3200,7 @@ class _WorkStationState extends State<WorkStation> {
                               btnColorOrangeDark
                             ],
                             textColor: iconButtonTextColor,
-
+                            borderColor: null,
                             // backColor: fileName != ''
                             //     ? const sys_color_defaultorange
                             //     : const button_color_grey,
@@ -3110,7 +3235,7 @@ class _WorkStationState extends State<WorkStation> {
                               btnColorOrangeDark
                             ],
                             textColor: iconButtonTextColor,
-
+                            borderColor: null,
                             // backColor: fileName != ''
                             //     ? const sys_color_defaultorange
                             //     : const button_color_grey,

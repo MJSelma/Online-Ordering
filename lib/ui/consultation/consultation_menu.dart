@@ -402,6 +402,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                           height: 30,
                           backColor: [btnColorGreyLight, btnColorGreyDark],
                           textColor: iconButtonTextColor,
+                          borderColor: null,
                         ),
                         onTap: () async {
                           setState(() {
@@ -489,6 +490,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                         height: 30,
                         backColor: [btnColorRedLight, btnColorRedDark],
                         textColor: iconButtonTextColor,
+                        borderColor: null,
                       )),
                 ),
               )
@@ -566,7 +568,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                 height: 30,
                 backColor: [btnColorOrangeLight, btnColorOrangeDark],
                 textColor: iconButtonTextColor,
-
+                borderColor: null,
                 // backColor: fileName != ''
                 //     ? const sys_color_defaultorange
                 //     : const button_color_grey,
@@ -604,6 +606,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                     ? [btnColorGreenLight, btnColorGreenDark]
                     : [btnColorGreyLight, btnColorGreyDark],
                 textColor: iconButtonTextColor,
+                borderColor: null,
               )),
           const SizedBox(
             height: 120,
@@ -651,6 +654,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                       height: 30,
                       backColor: [btnColorOrangeLight, btnColorOrangeDark],
                       textColor: iconButtonTextColor,
+                      borderColor: null,
                     ),
                     onTap: () {
                       setState(() {
@@ -682,6 +686,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                             ? [btnColorGreenLight, btnColorGreenDark]
                             : [btnColorGreyLight, btnColorGreyDark],
                         textColor: iconButtonTextColor,
+                        borderColor: null,
                       )),
                 ],
               )),
@@ -951,6 +956,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                                 btnColorOrangeDark
                               ],
                               textColor: iconButtonTextColor,
+                              borderColor: null,
                               // backColor: isImagedLoaded == true
                               //     ? const sys_color_defaultorange
                               //     : const button_color_grey,
@@ -967,6 +973,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                                 ? [btnColorGreenLight, btnColorGreenDark]
                                 : [btnColorGreyLight, btnColorGreyDark],
                             textColor: iconButtonTextColor,
+                            borderColor: null,
                           ),
                           onTap: () async {
                             if (menuNameUpdate.text == '') {
@@ -1160,6 +1167,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                         height: 35,
                         backColor: [btnColorRedLight, btnColorRedDark],
                         textColor: iconButtonTextColor,
+                        borderColor: null,
                       )),
                 ],
               ),
@@ -1292,6 +1300,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
                               ? [btnColorGreenLight, btnColorGreenDark]
                               : [btnColorGreyLight, btnColorGreyDark],
                           textColor: iconButtonTextColor,
+                          borderColor: null,
                         )),
                   ],
                 ),

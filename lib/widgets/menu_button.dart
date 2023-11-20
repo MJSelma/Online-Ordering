@@ -93,17 +93,55 @@ class _MenuButtonState extends State<MenuButton> {
             //                       : [iconButtonTextColor, iconButtonTextColor],
             // ),
 
-            color: widget.val == 0 && outletId != ''
-                ? btnColorPurpleLight
-                : indexMenu == widget.val &&
-                        indexMenuHover == 100 &&
-                        outletId != ''
-                    ? systemDefaultColorOrange
-                    : indexMenu == widget.val && indexMenuHover == widget.val
-                        ? systemDefaultColorOrange
-                        : indexMenuHover == widget.val
-                            ? Colors.grey.shade200
-                            : iconButtonTextColor,
+            border: const Border.fromBorderSide(BorderSide(
+              strokeAlign: 1,
+              color: Colors.white,
+            )),
+            boxShadow: [
+              indexMenu == widget.val && outletId != '' ||
+                      widget.val == 0 && outletId != ''
+                  ? BoxShadow(
+                      color: btnColorGreyLight0,
+                      // blurStyle: BlurStyle.normal,
+                      offset: const Offset(
+                        1.0,
+                        3.0,
+                      ),
+                      blurRadius: 3.0,
+                      spreadRadius: 1.0,
+                    )
+                  : BoxShadow(color: iconButtonTextColor)
+            ],
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: widget.val == 0 && outletId != ''
+                  ? [btnColorPurpleLight, btnColorPurpleDark]
+                  : indexMenu == widget.val &&
+                          indexMenuHover == 100 &&
+                          outletId != ''
+                      ? [btnColorOrangeLight, btnColorOrangeDark]
+                      : indexMenu == widget.val && indexMenuHover == widget.val
+                          ? [btnColorOrangeLight, btnColorOrangeDark]
+                          : indexMenu == widget.val &&
+                                  indexMenuHover == widget.val
+                              ? [btnColorOrangeLight, btnColorOrangeDark]
+                              : indexMenuHover == widget.val
+                                  ? [Colors.grey.shade200, Colors.grey.shade200]
+                                  : [iconButtonTextColor, iconButtonTextColor],
+            ),
+
+            // color: widget.val == 0 && outletId != ''
+            //     ? btnColorPurpleLight
+            //     : indexMenu == widget.val &&
+            //             indexMenuHover == 100 &&
+            //             outletId != ''
+            //         ? systemDefaultColorOrange
+            //         : indexMenu == widget.val && indexMenuHover == widget.val
+            //             ? systemDefaultColorOrange
+            //             : indexMenuHover == widget.val
+            //                 ? Colors.grey.shade200
+            //                 : iconButtonTextColor,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,

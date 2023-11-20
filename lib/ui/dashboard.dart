@@ -266,7 +266,7 @@ class _DashBoardState extends State<DashBoard> {
                         child: RawScrollbar(
                           padding: const EdgeInsets.symmetric(vertical: 50.0),
                           // mainAxisMargin: 200.0,
-                          thumbColor: btnColorPurpleLight,
+                          thumbColor: systemDefaultColorOrange,
                           // trackVisibility: true,
                           // trackColor: sys_color_white,
                           // trackBorderColor: btn_color_purplelight,
