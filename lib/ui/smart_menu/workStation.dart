@@ -1669,6 +1669,41 @@ class _WorkStationState extends State<WorkStation> {
     return c;
   }
 
+  bool multipleStationVal() {
+    bool a = false;
+    bool b = false;
+    bool c = false;
+    if (isActiveWst == true &&
+            listSubStation.isNotEmpty &&
+            isPayOrder == true ||
+        isActiveWst == true &&
+            listSubStation.isNotEmpty &&
+            isOrderOnly == true) {
+      a = true;
+    }
+    if (isActiveWst == true &&
+        listSubStation.isNotEmpty &&
+        isOrderAndPay == true &&
+        strcollectionInstruction != '') {
+      b = true;
+    }
+    if (isSelfCollection == true) {
+      c = b;
+    }
+    if (isServeCollection == true) {
+      c = a;
+    }
+    if (isSelfCollection == true && isServeCollection == true) {
+      if (a == true && b == true) {
+        c = true;
+      } else {
+        c = false;
+      }
+    }
+
+    return c;
+  }
+
   Widget widgetMultipleStation() {
     return Padding(
       padding: const EdgeInsets.all(14.0),
@@ -1993,6 +2028,10 @@ class _WorkStationState extends State<WorkStation> {
                       ),
                     ],
                   ),
+                ),
+                Visibility(
+                  visible: stationMulMenu == 2,
+                  child: const Row(),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -2413,18 +2452,7 @@ class _WorkStationState extends State<WorkStation> {
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
-                                          if (stationMulMenu == 1 &&
-                                                  isActiveWst == true &&
-                                                  prepTime.text != '' &&
-                                                  strcollectionInstruction !=
-                                                      '' &&
-                                                  stations.isNotEmpty &&
-                                                  isOrderAndPay == true ||
-                                              stationMulMenu == 2 &&
-                                                  strcollectionInstruction !=
-                                                      '' &&
-                                                  stations.isNotEmpty &&
-                                                  isOrderAndPay == true) {
+                                          if (multipleStationVal()) {
                                             context
                                                 .read<MenuProvider>()
                                                 .updateMenuCount(1);
@@ -2435,18 +2463,7 @@ class _WorkStationState extends State<WorkStation> {
                                         text: 'SET UP WTPs',
                                         width: 200,
                                         height: 35,
-                                        backColor: stationMulMenu == 1 &&
-                                                    isActiveWst == true &&
-                                                    prepTime.text != '' &&
-                                                    strcollectionInstruction !=
-                                                        '' &&
-                                                    stations.isNotEmpty &&
-                                                    isOrderAndPay == true ||
-                                                stationMulMenu == 2 &&
-                                                    strcollectionInstruction !=
-                                                        '' &&
-                                                    stations.isNotEmpty &&
-                                                    isOrderAndPay == true
+                                        backColor: multipleStationVal()
                                             ? [
                                                 btnColorGreenLight,
                                                 btnColorGreenDark
