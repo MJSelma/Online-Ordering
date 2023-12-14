@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../provider/business_outlet_provider.dart';
 import '../../provider/menu_provider.dart';
-import '../constant/theme_color.dart';
+import '../constant/theme_data.dart';
 import '../data_class/outlet_class.dart';
 
 class OutletMenu extends StatefulWidget {
@@ -50,13 +50,13 @@ class _OutletMenuState extends State<OutletMenu> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 8.0, 8.0, 8.0),
+            padding: const EdgeInsets.fromLTRB(13.0, 8.0, 8.0, 8.0),
             child: Text(
               indexPageName.toUpperCase(),
               style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontFamily: 'SFPro',
-                  fontSize: 20,
+                  fontFamily: defaultFontFamily,
+                  fontSize: defaultMainWallFontSize,
                   color: systemDefaultColorOrange),
             ),
           ),
@@ -70,6 +70,7 @@ class _OutletMenuState extends State<OutletMenu> {
                       Text(
                         'Choose Outlet',
                         style: TextStyle(
+                            fontFamily: defaultFontFamily,
                             color: systemDefaultColorOrange,
                             fontWeight: FontWeight.bold),
                       ),

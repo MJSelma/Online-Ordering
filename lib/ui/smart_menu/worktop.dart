@@ -1,13 +1,16 @@
+import 'package:drinklinkmerchant/widgets/icon_button.dart';
+import 'package:flutter/material.dart';
 import 'package:drinklinkmerchant/%20model/operators_model.dart';
 import 'package:drinklinkmerchant/%20model/waiters_model.dart';
 import 'package:drinklinkmerchant/provider/menu_provider.dart';
-import 'package:drinklinkmerchant/ui/constant/theme_color.dart';
 import 'package:drinklinkmerchant/widgets/button.dart';
 import 'package:drinklinkmerchant/widgets/icon_button.dart';
 import 'package:drinklinkmerchant/widgets/menu_button.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../constant/theme_data.dart';
 
 class WorkTop extends StatefulWidget {
   const WorkTop({super.key});
@@ -35,14 +38,14 @@ class _WorkTopState extends State<WorkTop> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'Smart Menu > Worktop',
-            style: TextStyle(
-                fontWeight: FontWeight.w400, fontFamily: 'SFPro', fontSize: 20),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.all(8.0),
+        //   child: Text(
+        //     'Smart Menu > Worktop',
+        //     style: TextStyle(
+        //         fontWeight: FontWeight.w400, fontFamily: 'SFPro', fontSize: 20),
+        //   ),
+        // ),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -62,7 +65,7 @@ class _WorkTopState extends State<WorkTop> {
                           showOrderingMenu = true;
                         });
                       },
-                      child: Icon(Icons.arrow_forward_ios)),
+                      child: const Icon(Icons.arrow_forward_ios)),
                 )),
             Visibility(
               visible: showOrderingMenu,
@@ -72,29 +75,29 @@ class _WorkTopState extends State<WorkTop> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 24,
                       ),
                       Row(
                         children: [
-                          Spacer(),
+                          const Spacer(),
                           GestureDetector(
                               onTap: () {
                                 setState(() {
                                   showOrderingMenu = false;
                                 });
                               },
-                              child: Icon(Icons.arrow_back_ios))
+                              child: const Icon(Icons.arrow_back_ios))
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 12,
                       ),
-                      Text(
+                      const Text(
                         'Through their worktops, the worktop - operator will be able to: \n- Receive Orders \n- Accept Orders \n- Accept Payments - Reject Order\n- Notify DGuest when orders are ready \n- Send notifications to Waiter ',
                         style: TextStyle(fontSize: 10),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 12,
                       ),
                       GestureDetector(
@@ -105,13 +108,13 @@ class _WorkTopState extends State<WorkTop> {
                           },
                           child: myButton1('Worktop Operators', 1,
                               Icons.payment, 50, 12, false)),
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: const Text(
+                      const Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Text(
                             'The WTP-Operator will receive from and prepare orders to DGuests. Your DGuests will be notified of the waiting time and when their order will be ready',
                             style: TextStyle(fontSize: 10)),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 50,
                       ),
                       GestureDetector(
@@ -122,9 +125,9 @@ class _WorkTopState extends State<WorkTop> {
                           },
                           child: myButton1('Worktop Waiters', 2, Icons.payment,
                               50, 12, false)),
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: const Text(
+                      const Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Text(
                             'Create here your Waiters WTPs. \nIf HARD COUPLED \nWtp operators will be able to send specific notifications to designated waiters \nIf SOFT COUPLED\nWtp Operator will be able to send specific notifications to all waiters',
                             style: TextStyle(fontSize: 10)),
                       ),
@@ -182,7 +185,7 @@ class _WorkTopState extends State<WorkTop> {
                                   orderingMenu == 1
                                       ? 'Create New Operator'
                                       : 'Create New Waiter',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontFamily: 'SFPro',
                                     fontSize: 18,
                                     color: Colors.white,
@@ -194,7 +197,7 @@ class _WorkTopState extends State<WorkTop> {
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 200,
                         ),
                         Visibility(
@@ -213,15 +216,15 @@ class _WorkTopState extends State<WorkTop> {
                                       ? const Color(0xffef7700)
                                       : Colors.grey.withOpacity(.8),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 12,
                                 ),
-                                Text('Hard Coupled')
+                                const Text('Hard Coupled')
                               ],
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
                         Visibility(
@@ -240,17 +243,17 @@ class _WorkTopState extends State<WorkTop> {
                                       ? const Color(0xffef7700)
                                       : Colors.grey.withOpacity(.8),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 12,
                                 ),
-                                Text('Soft Coupled')
+                                const Text('Soft Coupled')
                               ],
                             ),
                           ),
                         )
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     //panel operators or waiters
@@ -271,8 +274,8 @@ class _WorkTopState extends State<WorkTop> {
     List<String> work = context.select((MenuProvider p) => p.workStation) ?? [];
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(20.0),
+        const Padding(
+          padding: EdgeInsets.all(20.0),
           child: Row(
             children: [
               Text('WTP-OPERATORS'),
@@ -326,13 +329,13 @@ class _WorkTopState extends State<WorkTop> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 100,
                     ),
                     Expanded(
                       flex: 2,
                       child: Card(
-                        child: Container(
+                        child: SizedBox(
                           width: 100,
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
@@ -400,7 +403,7 @@ class _WorkTopState extends State<WorkTop> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 100,
                     ),
                     Expanded(
@@ -415,7 +418,7 @@ class _WorkTopState extends State<WorkTop> {
                           });
                         },
                         child: Card(
-                          child: Container(
+                          child: SizedBox(
                             width: 50,
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
@@ -424,9 +427,9 @@ class _WorkTopState extends State<WorkTop> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   if (operators[index].status) ...[
-                                    Text('ACT'),
+                                    const Text('ACT'),
                                   ] else ...[
-                                    Text('D-ACT'),
+                                    const Text('D-ACT'),
                                   ]
                                 ],
                               ),
@@ -459,7 +462,7 @@ class _WorkTopState extends State<WorkTop> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
                     color: const Color(0xffef7700)),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -477,12 +480,12 @@ class _WorkTopState extends State<WorkTop> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
             GestureDetector(
-              onTap: () async{
-                 if (selectedIndex != null) {
+              onTap: () async {
+                if (selectedIndex != null) {
                   await showDialog<bool>(
                     context: context,
                     builder: (context) {
@@ -497,7 +500,7 @@ class _WorkTopState extends State<WorkTop> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
                     color: Colors.purple),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -525,8 +528,8 @@ class _WorkTopState extends State<WorkTop> {
     List<String> work = context.select((MenuProvider p) => p.workStation) ?? [];
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(20.0),
+        const Padding(
+          padding: EdgeInsets.all(20.0),
           child: Row(
             children: [
               Text('WTP-WAITERS'),
@@ -554,7 +557,7 @@ class _WorkTopState extends State<WorkTop> {
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
-                             selectedIndex = index;
+                            selectedIndex = index;
                             textName.text = waiters[index].name;
                             textEmail.text = waiters[index].email;
                             textPass.text = waiters[index].password;
@@ -580,13 +583,13 @@ class _WorkTopState extends State<WorkTop> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 100,
                     ),
                     Expanded(
                       flex: 2,
                       child: Card(
-                        child: Container(
+                        child: SizedBox(
                           width: 100,
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
@@ -653,7 +656,7 @@ class _WorkTopState extends State<WorkTop> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 100,
                     ),
                     Expanded(
@@ -668,7 +671,7 @@ class _WorkTopState extends State<WorkTop> {
                           });
                         },
                         child: Card(
-                          child: Container(
+                          child: SizedBox(
                             width: 50,
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
@@ -677,9 +680,9 @@ class _WorkTopState extends State<WorkTop> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   if (waiters[index].status) ...[
-                                    Text('ACT'),
+                                    const Text('ACT'),
                                   ] else ...[
-                                    Text('D-ACT'),
+                                    const Text('D-ACT'),
                                   ]
                                 ],
                               ),
@@ -692,7 +695,7 @@ class _WorkTopState extends State<WorkTop> {
                 );
               }),
         ),
-         Row(
+        Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GestureDetector(
@@ -712,7 +715,7 @@ class _WorkTopState extends State<WorkTop> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
                     color: const Color(0xffef7700)),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -730,11 +733,11 @@ class _WorkTopState extends State<WorkTop> {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
             GestureDetector(
-              onTap: () async{
+              onTap: () async {
                 if (selectedIndex != null) {
                   await showDialog<bool>(
                     context: context,
@@ -750,7 +753,7 @@ class _WorkTopState extends State<WorkTop> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.0),
                     color: Colors.purple),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -1569,8 +1572,10 @@ class _WorkTopState extends State<WorkTop> {
                             onTap: () {
                               setState(() {
                                 operators[selectedIndex!].name = textName.text;
-                                operators[selectedIndex!].email = textEmail.text;
-                                operators[selectedIndex!].password = textPass.text;
+                                operators[selectedIndex!].email =
+                                    textEmail.text;
+                                operators[selectedIndex!].password =
+                                    textPass.text;
                                 selectedIndex = null;
                                 clearText();
                                 Navigator.of(context).pop();
@@ -1590,7 +1595,7 @@ class _WorkTopState extends State<WorkTop> {
     );
   }
 
-   Widget updateWaiters(
+  Widget updateWaiters(
     BuildContext context,
   ) {
     return StatefulBuilder(
@@ -1813,7 +1818,8 @@ class _WorkTopState extends State<WorkTop> {
                               setState(() {
                                 waiters[selectedIndex!].name = textName.text;
                                 waiters[selectedIndex!].email = textEmail.text;
-                                waiters[selectedIndex!].password = textPass.text;
+                                waiters[selectedIndex!].password =
+                                    textPass.text;
                                 selectedIndex = null;
                                 clearText();
                                 Navigator.of(context).pop();
@@ -1833,7 +1839,7 @@ class _WorkTopState extends State<WorkTop> {
     );
   }
 
-   Widget deleteWaiter(
+  Widget deleteWaiter(
     BuildContext context,
   ) {
     return StatefulBuilder(
@@ -1880,17 +1886,17 @@ class _WorkTopState extends State<WorkTop> {
                       ],
                     ),
                     const SizedBox(height: 15),
-                      Text('Are you sure you want to delete this waiter?',
-                            style: TextStyle(
-                                color: systemDefaultColorOrange,
-                                fontWeight: FontWeight.bold)),
-                                 const SizedBox(
+                    Text('Are you sure you want to delete this waiter?',
+                        style: TextStyle(
+                            color: systemDefaultColorOrange,
+                            fontWeight: FontWeight.bold)),
+                    const SizedBox(
                       height: 14,
                     ),
-                        Text('Delete ${textName.text}',
-                            style: TextStyle(
-                                color: systemDefaultColorOrange,
-                                fontWeight: FontWeight.bold)),
+                    Text('Delete ${textName.text}',
+                        style: TextStyle(
+                            color: systemDefaultColorOrange,
+                            fontWeight: FontWeight.bold)),
                     const SizedBox(
                       height: 30,
                     ),
@@ -1951,7 +1957,7 @@ class _WorkTopState extends State<WorkTop> {
     );
   }
 
-   Widget deleteOperator(
+  Widget deleteOperator(
     BuildContext context,
   ) {
     return StatefulBuilder(
@@ -1998,17 +2004,17 @@ class _WorkTopState extends State<WorkTop> {
                       ],
                     ),
                     const SizedBox(height: 15),
-                      Text('Are you sure you want to delete this operator?',
-                            style: TextStyle(
-                                color: systemDefaultColorOrange,
-                                fontWeight: FontWeight.bold)),
-                                 const SizedBox(
+                    Text('Are you sure you want to delete this operator?',
+                        style: TextStyle(
+                            color: systemDefaultColorOrange,
+                            fontWeight: FontWeight.bold)),
+                    const SizedBox(
                       height: 14,
                     ),
-                        Text('Delete ${textName.text}',
-                            style: TextStyle(
-                                color: systemDefaultColorOrange,
-                                fontWeight: FontWeight.bold)),
+                    Text('Delete ${textName.text}',
+                        style: TextStyle(
+                            color: systemDefaultColorOrange,
+                            fontWeight: FontWeight.bold)),
                     const SizedBox(
                       height: 30,
                     ),
@@ -2068,6 +2074,4 @@ class _WorkTopState extends State<WorkTop> {
       },
     );
   }
-
-  
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../ui/constant/theme_color.dart';
+import '../ui/constant/theme_data.dart';
 
 warningDialog(BuildContext context, String title, String message) {
   showDialog(
@@ -26,6 +26,7 @@ warningDialog(BuildContext context, String title, String message) {
                   children: [
                     Text(title,
                         style: TextStyle(
+                            fontFamily: defaultFontFamily,
                             color: systemDefaultColorOrange,
                             fontWeight: FontWeight.bold)),
                     Container(
@@ -52,7 +53,10 @@ warningDialog(BuildContext context, String title, String message) {
                     padding: const EdgeInsets.all(20.0),
                     child: Text(
                       message.toUpperCase(),
-                      style: const TextStyle(fontSize: 14),
+                      style: TextStyle(
+                        fontSize: defaultShowDialogDescriptionFontSize,
+                        fontFamily: defaultFontFamily,
+                      ),
                     ),
                   ),
                 ),

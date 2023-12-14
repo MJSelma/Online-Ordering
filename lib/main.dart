@@ -7,7 +7,6 @@ import 'package:drinklinkmerchant/ui/web_main.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:get_ip_address/get_ip_address.dart';
 import 'package:provider/provider.dart';
 
 import 'provider/business_outlet_provider.dart';
@@ -67,22 +66,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> getIp() async {
-      try {
-        /// Initialize Ip Address
-        var ipAddress = IpAddress(type: RequestType.text);
-
-        /// Get the IpAddress based on requestType.
-        dynamic data = await ipAddress.getIp();
-        print(data.toString());
-      } on IpAddressException catch (exception) {
-        /// Handle the exception.
-        print(exception.message);
-      }
-    }
-
-    getIp();
-
     return MaterialApp(
       title: 'DrinkLink',
       initialRoute: Routes.splash,

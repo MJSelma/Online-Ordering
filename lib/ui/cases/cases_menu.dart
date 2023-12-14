@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../provider/menu_provider.dart';
 import '../controller/cases_controller.dart';
 import '../data_class/cases_class.dart';
 import '../data_class/cases_messages_class.dart';
@@ -48,6 +49,8 @@ class _CasesMenuState extends State<CasesMenu> {
 
   @override
   Widget build(BuildContext context) {
+    bool isMenuOpen = context.select((MenuProvider p) => p.isMenuOpen);
+
     final casesCollection = FirebaseFirestore.instance.collection('cases');
 
     List<CasesClass> casesClass = [];
@@ -147,7 +150,11 @@ class _CasesMenuState extends State<CasesMenu> {
 
     _getProvider(context);
 
-    return Expanded(
+    return SizedBox(
+      width: isMenuOpen == true
+          ? MediaQuery.sizeOf(context).width - 300
+          : MediaQuery.sizeOf(context).width - 200,
+      height: MediaQuery.sizeOf(context).height,
       child: Column(
         children: [
           Visibility(
@@ -846,350 +853,339 @@ class _CasesMenuState extends State<CasesMenu> {
               ],
             ))
           else
-            Row(
-              children: [
-                (Expanded(
-                  child: SizedBox(
-                    height: MediaQuery.sizeOf(context).height / 1.5,
-                    // width: MediaQuery.sizeOf(context).width / 1.2,
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              color: const Color(0xffef7700),
-                              borderRadius: BorderRadius.circular(20)),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                  child: Center(
-                                child: Text('Image',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      height: 3.0,
-                                      fontSize: 15.2,
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text('Merchants',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      height: 3.0,
-                                      fontSize: 15.2,
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text('Description',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      height: 3.0,
-                                      fontSize: 15.2,
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                              )),
-                              Expanded(
-                                  child: Center(
-                                child: Text('Country',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      height: 3.0,
-                                      fontSize: 15.2,
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                              )),
-                              // Expanded(
-                              //     child: Center(
-                              //   child: Text('Case number',
-                              //       style: TextStyle(
-                              //         color: Colors.white,
-                              //         height: 3.0,
-                              //         fontSize: 15.2,
-                              //         fontWeight: FontWeight.bold,
-                              //       )),
-                              // )),
-                              // Expanded(
-                              //     child: Center(
-                              //   child: Text('Date start',
-                              //       style: TextStyle(
-                              //         color: Colors.white,
-                              //         height: 3.0,
-                              //         fontSize: 15.2,
-                              //         fontWeight: FontWeight.bold,
-                              //       )),
-                              // )),
-                              // Expanded(
-                              //     child: Center(
-                              //   child: Text('Type',
-                              //       style: TextStyle(
-                              //         color: Colors.white,
-                              //         height: 3.0,
-                              //         fontSize: 15.2,
-                              //         fontWeight: FontWeight.bold,
-                              //       )),
-                              // )),
-                              // Expanded(
-                              //     child: Center(
-                              //   child: Text('Objective',
-                              //       style: TextStyle(
-                              //         color: Colors.white,
-                              //         height: 3.0,
-                              //         fontSize: 15.2,
-                              //         fontWeight: FontWeight.bold,
-                              //       )),
-                              // )),
-                              // Expanded(
-                              //     child: Center(
-                              //   child: Text('Status',
-                              //       style: TextStyle(
-                              //         color: Colors.white,
-                              //         height: 3.0,
-                              //         fontSize: 15.2,
-                              //         fontWeight: FontWeight.bold,
-                              //       )),
-                              // )),
-                              // Expanded(
-                              //     child: Center(
-                              //   child: Text('Agent number',
-                              //       style: TextStyle(
-                              //         color: Colors.white,
-                              //         height: 3.0,
-                              //         fontSize: 15.2,
-                              //         fontWeight: FontWeight.bold,
-                              //       )),
-                              // )),
-                              Expanded(
-                                  child: Center(
-                                child: Text('',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      height: 3.0,
-                                      fontSize: 15.2,
-                                      fontWeight: FontWeight.bold,
-                                    )),
-                              )),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: ListView.builder(
-                            // itemCount: casesClass.length,
-                            itemCount: 1,
-                            itemBuilder: (BuildContext context, int index) {
-                              final startDateConverted = DateFormat('yMMMMd')
-                                  .format(casesClass[index].deteStart);
-                              final endDateConverted = DateFormat('yMMMMd')
-                                  .format(casesClass[index].dateEnd);
-                              return Container(
-                                // color: colorrow == 0 ? Colors.grey : Colors.white,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 10),
-                                  child: GestureDetector(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Expanded(
-                                            child: Center(
-                                          child: Image.asset(
-                                            'assets/images/bluemoon.png',
-                                            height: 54,
-                                          ),
-                                        )),
-                                        const Expanded(
-                                          child: Center(
-                                            child: Text(
-                                              'GOODFUN HOSPITALITY',
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                        ),
-                                        const Expanded(
-                                          child: Center(
-                                            child: Text(
-                                              '',
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                        ),
-                                        const Expanded(
-                                          child: Center(
-                                            child: Text(
-                                              'Philippines',
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                        ),
-                                        // Expanded(
-                                        //     child: Center(
-                                        //         child: Text(
-                                        //   casesClass[index].caseId,
-                                        //   style: const TextStyle(fontSize: 12),
-                                        // ))),
-                                        // Expanded(
-                                        //   child: Center(
-                                        //     child: Text(
-                                        //       startDateConverted.toString(),
-                                        //       style:
-                                        //           const TextStyle(fontSize: 12),
-                                        //     ),
-                                        //   ),
-                                        // ),
-
-                                        // Expanded(
-                                        //     child: Center(
-                                        //         child: Text(
-                                        //   casesClass[index].caseType,
-                                        //   style: const TextStyle(fontSize: 12),
-                                        // ))),
-                                        // Expanded(
-                                        //     child: Center(
-                                        //         child: Text(
-                                        //   casesClass[index].caseObjective,
-                                        //   style: const TextStyle(fontSize: 12),
-                                        // ))),
-
-                                        // Expanded(
-                                        //     child: Center(
-                                        //         child: Text(
-                                        //   casesClass[index].status,
-                                        //   style: const TextStyle(fontSize: 12),
-                                        // ))),
-                                        // Expanded(
-                                        //     child: Center(
-                                        //         child: Text(
-                                        //   casesClass[index].agentId,
-                                        //   style: const TextStyle(fontSize: 12),
-                                        // ))),
-                                        Expanded(
-                                          child: SizedBox(
-                                            height: 30,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                          color:
-                                                              Color(0xffef7700),
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          20))),
-                                                  child: TextButton(
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          pageIndex = 1;
-                                                          pageName =
-                                                              'GOODFUN HOSPITALITY';
-                                                        });
-                                                      },
-                                                      child: const Text(
-                                                        'Open',
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white),
-                                                      )),
-                                                )
-
-                                                // FloatingActionButton.small(
-                                                //   backgroundColor:
-                                                //       const Color(0xffef7700),
-                                                //   tooltip: 'Open',
-                                                //   onPressed: () async {
-                                                //     casesMessagesClass.clear();
-                                                //     String id =
-                                                //         casesClass[index].id;
-                                                //     String cid =
-                                                //         casesClass[index]
-                                                //             .caseId;
-                                                //     String objective =
-                                                //         casesClass[index]
-                                                //             .caseObjective;
-
-                                                //     setState(() {});
-                                                //     // Navigator.pushReplacement(
-                                                //     //     context,
-                                                //     //     MaterialPageRoute(
-                                                //     //       builder: (context) =>
-                                                //     //           const CasesMessages(),
-                                                //     //     ));
-                                                //   },
-                                                //   child: const Icon(
-                                                //     Icons.open_with,
-                                                //     color: Colors.white,
-                                                //     size: 14,
-                                                //   ),
-                                                // ),
-                                              ],
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }, //itemBuilder
-                          ),
-                        ),
-                        // Expanded(
-                        //   child: ListView.builder(
-                        //     itemCount: casesMessagesClass.length,
-                        //     itemBuilder: (context, index) {
-                        //       print('cases MEssages Listt');
-                        //       print(casesMessagesClass.length);
-                        //       return Expanded(
-                        //         child: Column(
-                        //           crossAxisAlignment:
-                        //               casesMessagesClass[index].from == 'user'
-                        //                   ? CrossAxisAlignment.start
-                        //                   : CrossAxisAlignment.end,
-                        //           children: [
-                        //             Row(
-                        //               children: [
-                        //                 Expanded(
-                        //                     child:
-                        //                         Text(casesMessagesClass[index].messages)),
-                        //               ],
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       );
-                        //     },
-                        //   ),
-                        // ),
-                        // Expanded(
-                        //     child: Container(
-                        //   // color: Colors.amberAccent,
-                        //   alignment: Alignment.topRight,
-                        //   child: const Padding(
-                        //       padding: EdgeInsets.only(right: 40),
-                        //       child: Expanded(
-                        //         child: FloatingActionButton.small(
-                        //           backgroundColor: Color(0xffef7700),
-                        //           tooltip: 'create new case',
-                        //           onPressed: null,
-                        //           child: Icon(
-                        //             Icons.add,
-                        //             color: Colors.white,
-                        //             size: 14,
-                        //           ),
-                        //         ),
-                        //       )),
-                        // ))
-                      ],
+            (Expanded(
+              child: SizedBox(
+                height: MediaQuery.sizeOf(context).height / 1.5,
+                // width: MediaQuery.sizeOf(context).width / 1.2,
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          color: const Color(0xffef7700),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              child: Center(
+                            child: Text('Image',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  height: 3.0,
+                                  fontSize: 15.2,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          )),
+                          Expanded(
+                              child: Center(
+                            child: Text('Merchants',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  height: 3.0,
+                                  fontSize: 15.2,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          )),
+                          Expanded(
+                              child: Center(
+                            child: Text('Description',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  height: 3.0,
+                                  fontSize: 15.2,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          )),
+                          Expanded(
+                              child: Center(
+                            child: Text('Country',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  height: 3.0,
+                                  fontSize: 15.2,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          )),
+                          // Expanded(
+                          //     child: Center(
+                          //   child: Text('Case number',
+                          //       style: TextStyle(
+                          //         color: Colors.white,
+                          //         height: 3.0,
+                          //         fontSize: 15.2,
+                          //         fontWeight: FontWeight.bold,
+                          //       )),
+                          // )),
+                          // Expanded(
+                          //     child: Center(
+                          //   child: Text('Date start',
+                          //       style: TextStyle(
+                          //         color: Colors.white,
+                          //         height: 3.0,
+                          //         fontSize: 15.2,
+                          //         fontWeight: FontWeight.bold,
+                          //       )),
+                          // )),
+                          // Expanded(
+                          //     child: Center(
+                          //   child: Text('Type',
+                          //       style: TextStyle(
+                          //         color: Colors.white,
+                          //         height: 3.0,
+                          //         fontSize: 15.2,
+                          //         fontWeight: FontWeight.bold,
+                          //       )),
+                          // )),
+                          // Expanded(
+                          //     child: Center(
+                          //   child: Text('Objective',
+                          //       style: TextStyle(
+                          //         color: Colors.white,
+                          //         height: 3.0,
+                          //         fontSize: 15.2,
+                          //         fontWeight: FontWeight.bold,
+                          //       )),
+                          // )),
+                          // Expanded(
+                          //     child: Center(
+                          //   child: Text('Status',
+                          //       style: TextStyle(
+                          //         color: Colors.white,
+                          //         height: 3.0,
+                          //         fontSize: 15.2,
+                          //         fontWeight: FontWeight.bold,
+                          //       )),
+                          // )),
+                          // Expanded(
+                          //     child: Center(
+                          //   child: Text('Agent number',
+                          //       style: TextStyle(
+                          //         color: Colors.white,
+                          //         height: 3.0,
+                          //         fontSize: 15.2,
+                          //         fontWeight: FontWeight.bold,
+                          //       )),
+                          // )),
+                          Expanded(
+                              child: Center(
+                            child: Text('',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  height: 3.0,
+                                  fontSize: 15.2,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          )),
+                        ],
+                      ),
                     ),
-                  ),
-                )),
-              ],
-            )
+                    Expanded(
+                      child: ListView.builder(
+                        // itemCount: casesClass.length,
+                        itemCount: 1,
+                        itemBuilder: (BuildContext context, int index) {
+                          final startDateConverted = DateFormat('yMMMMd')
+                              .format(casesClass[index].deteStart);
+                          final endDateConverted = DateFormat('yMMMMd')
+                              .format(casesClass[index].dateEnd);
+                          return Container(
+                            // color: colorrow == 0 ? Colors.grey : Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: GestureDetector(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                        child: Center(
+                                      child: Image.asset(
+                                        'assets/images/bluemoon.png',
+                                        height: 54,
+                                      ),
+                                    )),
+                                    const Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'GOODFUN HOSPITALITY',
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      ),
+                                    ),
+                                    const Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          '',
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      ),
+                                    ),
+                                    const Expanded(
+                                      child: Center(
+                                        child: Text(
+                                          'Philippines',
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      ),
+                                    ),
+                                    // Expanded(
+                                    //     child: Center(
+                                    //         child: Text(
+                                    //   casesClass[index].caseId,
+                                    //   style: const TextStyle(fontSize: 12),
+                                    // ))),
+                                    // Expanded(
+                                    //   child: Center(
+                                    //     child: Text(
+                                    //       startDateConverted.toString(),
+                                    //       style:
+                                    //           const TextStyle(fontSize: 12),
+                                    //     ),
+                                    //   ),
+                                    // ),
+
+                                    // Expanded(
+                                    //     child: Center(
+                                    //         child: Text(
+                                    //   casesClass[index].caseType,
+                                    //   style: const TextStyle(fontSize: 12),
+                                    // ))),
+                                    // Expanded(
+                                    //     child: Center(
+                                    //         child: Text(
+                                    //   casesClass[index].caseObjective,
+                                    //   style: const TextStyle(fontSize: 12),
+                                    // ))),
+
+                                    // Expanded(
+                                    //     child: Center(
+                                    //         child: Text(
+                                    //   casesClass[index].status,
+                                    //   style: const TextStyle(fontSize: 12),
+                                    // ))),
+                                    // Expanded(
+                                    //     child: Center(
+                                    //         child: Text(
+                                    //   casesClass[index].agentId,
+                                    //   style: const TextStyle(fontSize: 12),
+                                    // ))),
+                                    Expanded(
+                                      child: SizedBox(
+                                        height: 30,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              decoration: const BoxDecoration(
+                                                  color: Color(0xffef7700),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(20))),
+                                              child: TextButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      pageIndex = 1;
+                                                      pageName =
+                                                          'GOODFUN HOSPITALITY';
+                                                    });
+                                                  },
+                                                  child: const Text(
+                                                    'Open',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  )),
+                                            )
+
+                                            // FloatingActionButton.small(
+                                            //   backgroundColor:
+                                            //       const Color(0xffef7700),
+                                            //   tooltip: 'Open',
+                                            //   onPressed: () async {
+                                            //     casesMessagesClass.clear();
+                                            //     String id =
+                                            //         casesClass[index].id;
+                                            //     String cid =
+                                            //         casesClass[index]
+                                            //             .caseId;
+                                            //     String objective =
+                                            //         casesClass[index]
+                                            //             .caseObjective;
+
+                                            //     setState(() {});
+                                            //     // Navigator.pushReplacement(
+                                            //     //     context,
+                                            //     //     MaterialPageRoute(
+                                            //     //       builder: (context) =>
+                                            //     //           const CasesMessages(),
+                                            //     //     ));
+                                            //   },
+                                            //   child: const Icon(
+                                            //     Icons.open_with,
+                                            //     color: Colors.white,
+                                            //     size: 14,
+                                            //   ),
+                                            // ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }, //itemBuilder
+                      ),
+                    ),
+                    // Expanded(
+                    //   child: ListView.builder(
+                    //     itemCount: casesMessagesClass.length,
+                    //     itemBuilder: (context, index) {
+                    //       print('cases MEssages Listt');
+                    //       print(casesMessagesClass.length);
+                    //       return Expanded(
+                    //         child: Column(
+                    //           crossAxisAlignment:
+                    //               casesMessagesClass[index].from == 'user'
+                    //                   ? CrossAxisAlignment.start
+                    //                   : CrossAxisAlignment.end,
+                    //           children: [
+                    //             Row(
+                    //               children: [
+                    //                 Expanded(
+                    //                     child:
+                    //                         Text(casesMessagesClass[index].messages)),
+                    //               ],
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       );
+                    //     },
+                    //   ),
+                    // ),
+                    // Expanded(
+                    //     child: Container(
+                    //   // color: Colors.amberAccent,
+                    //   alignment: Alignment.topRight,
+                    //   child: const Padding(
+                    //       padding: EdgeInsets.only(right: 40),
+                    //       child: Expanded(
+                    //         child: FloatingActionButton.small(
+                    //           backgroundColor: Color(0xffef7700),
+                    //           tooltip: 'create new case',
+                    //           onPressed: null,
+                    //           child: Icon(
+                    //             Icons.add,
+                    //             color: Colors.white,
+                    //             size: 14,
+                    //           ),
+                    //         ),
+                    //       )),
+                    // ))
+                  ],
+                ),
+              ),
+            ))
         ],
       ),
     );

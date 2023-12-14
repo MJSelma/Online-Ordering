@@ -2,6 +2,9 @@ import 'package:drinklinkmerchant/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/business_outlet_provider.dart';
 
 class WebMainPage extends StatefulWidget {
   const WebMainPage({Key? key}) : super(key: key);
@@ -15,6 +18,10 @@ class _WebMainPageState extends State<WebMainPage> {
   TextEditingController passController = TextEditingController(text: 'pass');
   @override
   Widget build(BuildContext context) {
+    setIndexMenuNameProvider(String name) {
+      context.read<BusinessOutletProvider>().setIndexPageName(name);
+    }
+
     return Scaffold(
       body: Column(children: [
         Padding(
@@ -316,6 +323,7 @@ class _WebMainPageState extends State<WebMainPage> {
                     ),
                     GestureDetector(
                       onTap: () {
+                        setIndexMenuNameProvider('');
                         if (userController.text == 'john' &&
                             passController.text == 'pass') {
                           Navigator.of(context)

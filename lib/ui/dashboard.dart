@@ -19,7 +19,8 @@ import '../widgets/menu_button.dart';
 import 'cases/cases.dart';
 import 'cases/cases_messages.dart';
 import 'cases/cases_menu.dart';
-import 'constant/theme_color.dart';
+
+import 'constant/theme_data.dart';
 import 'data_class/businesses_class.dart';
 import 'merchant/ouletMenu.dart';
 import 'merchant/outlets.dart';
@@ -260,7 +261,7 @@ class _DashBoardState extends State<DashBoard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        height: MediaQuery.sizeOf(context).height - 100,
+                        height: MediaQuery.sizeOf(context).height - 120,
                         child: RawScrollbar(
                           padding: const EdgeInsets.symmetric(vertical: 50.0),
                           // mainAxisMargin: 200.0,
@@ -372,7 +373,7 @@ class _DashBoardState extends State<DashBoard> {
                                             setState(() {
                                               indexMenu = 3;
                                               setIndexMenuNameProvider(
-                                                  'SMART MENU');
+                                                  'SMART  > WORKING STATION (WST)');
                                             });
                                           },
                                           child: MenuButton(
@@ -410,13 +411,13 @@ class _DashBoardState extends State<DashBoard> {
                                                   GestureDetector(
                                                     onTap: () {
                                                       setState(() {
-                                                             context
-                                                          .read<MenuProvider>()
-                                                          .updateMenuCount(0);
+                                                        context
+                                                            .read<
+                                                                MenuProvider>()
+                                                            .updateMenuCount(0);
                                                         smartMenuIndex = 0;
                                                         indexMenu = 13;
                                                       });
-                                                 
                                                     },
                                                     child: Text(
                                                       'WORKING STATIONS',
@@ -431,14 +432,13 @@ class _DashBoardState extends State<DashBoard> {
                                                   GestureDetector(
                                                     onTap: () {
                                                       setState(() {
-                                                         context
-                                                          .read<MenuProvider>()
-                                                          .updateMenuCount(1);
+                                                        context
+                                                            .read<
+                                                                MenuProvider>()
+                                                            .updateMenuCount(1);
                                                         smartMenuIndex = 1;
                                                         indexMenu = 14;
-                                                          
                                                       });
-                                                   
                                                     },
                                                     child: Text(
                                                       'WORKTOPS',
@@ -454,13 +454,12 @@ class _DashBoardState extends State<DashBoard> {
                                                     onTap: () {
                                                       setState(() {
                                                         context
-                                                          .read<MenuProvider>()
-                                                          .updateMenuCount(2);
+                                                            .read<
+                                                                MenuProvider>()
+                                                            .updateMenuCount(2);
                                                         smartMenuIndex = 2;
                                                         indexMenu = 15;
-                                                        
                                                       });
-                                                      
                                                     },
                                                     child: Text(
                                                       'SMART MENU',

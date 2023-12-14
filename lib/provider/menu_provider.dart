@@ -1,4 +1,5 @@
 import 'package:drinklinkmerchant/%20model/smart_menu_model.dart';
+import 'package:drinklinkmerchant/%20model/smart_menu_section_model.dart';
 import 'package:flutter/material.dart';
 
 class MenuProvider with ChangeNotifier {
@@ -22,9 +23,12 @@ class MenuProvider with ChangeNotifier {
   int _chooseOutletIndex = -1;
   int _chooseOutletIndexSelected = -1;
   String _searchMenuName = '';
+  int _smartMenuSelected = 0;
   List<String> _workStation = [];
   List<MenuModel> _smartMenu = [];
+  List<MenuSectionModel> _smartMenuSection = [];
 
+  List<MenuSectionModel> get smartMenuSection => _smartMenuSection;
   List<MenuModel> get smartMenu => _smartMenu;
   List<String> get workStation => _workStation;
   bool get isImageLoaded => _isImageLoaded;
@@ -44,8 +48,7 @@ class MenuProvider with ChangeNotifier {
   String get searchMenuName => _searchMenuName;
   bool get isMenuOpen => _isMenuOpen;
   int get indexMenu => _indexMenu;
-
-  
+  int get smartMenuSelected => _smartMenuSelected;
 
   void selectedMenu(String id, name, image, type, pdfData) {
     _menuID = id;
@@ -53,6 +56,11 @@ class MenuProvider with ChangeNotifier {
     _imageUrl = image;
     _type = type;
     _pdfData = pdfData;
+    notifyListeners();
+  }
+
+  void updateSmartMenuIndex(int menuNum) {
+    _smartMenuSelected = menuNum;
     notifyListeners();
   }
 
@@ -112,7 +120,7 @@ class MenuProvider with ChangeNotifier {
     notifyListeners();
   }
 
-    void setWorkStation(List<String> value) {
+  void setWorkStation(List<String> value) {
     _workStation = value;
 
     notifyListeners();
@@ -120,6 +128,12 @@ class MenuProvider with ChangeNotifier {
 
   void addSmartMainMenu(MenuModel value) {
     _smartMenu.add(value);
+
+    notifyListeners();
+  }
+
+  void addSmartMainMenuSection(MenuSectionModel value) {
+    _smartMenuSection.add(value);
 
     notifyListeners();
   }
