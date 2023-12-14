@@ -1,3 +1,4 @@
 {
-    "cmake.sourceDirectory": "D:/Mobile/drinklinkv2/web/drinklinkmerchant/linux"
+    "cmake.sourceDirectory": "D:/Mobile/drinklinkv2/web/drinklinkmerchant/linux",
+    "dart.flutterSdkPath": "D:\\Flutter\\src\\flutter"
 }

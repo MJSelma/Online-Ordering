@@ -1421,10 +1421,10 @@ class _WorkStationState extends State<WorkStation> {
                                         setState(() {
                                           isServeCollection =
                                               !isServeCollection;
-                                          if (isServeCollection == false) {
-                                            isPayOrder = false;
-                                            isOrderOnly = false;
-                                          }
+                                          // if (isServeCollection == false) {
+                                          //   isPayOrder = false;
+                                          //   isOrderOnly = false;
+                                          // }
 
                                           // if (isSelfCollection == true &&
                                           //     isOrderAndPay == false) {
@@ -1524,10 +1524,11 @@ class _WorkStationState extends State<WorkStation> {
                                           GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                if (isPayOrder == false) {
-                                                  isPayOrder = true;
-                                                  isOrderOnly = false;
-                                                }
+                                                // if (isPayOrder == false) {
+                                                //   isPayOrder = true;
+                                                //   isOrderOnly = false;
+                                                // }
+                                                isPayOrder = !isPayOrder;
                                               });
                                             },
                                             child: ButtonMenu(
@@ -1549,37 +1550,37 @@ class _WorkStationState extends State<WorkStation> {
                                               borderColor: null,
                                             ),
                                           ),
-                                          const SizedBox(
-                                            height: 20,
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                if (isOrderOnly == false) {
-                                                  isOrderOnly = true;
-                                                  isPayOrder = false;
-                                                }
-                                              });
-                                            },
-                                            child: ButtonMenu(
-                                              text: 'ORDER ONLY',
-                                              width: 200,
-                                              height: 35,
-                                              backColor: isOrderOnly
-                                                  ? [
-                                                      btnColorOrangeLight,
-                                                      btnColorOrangeDark
-                                                    ]
-                                                  : [
-                                                      btnColorBlueLight,
-                                                      btnColorBlueDark
-                                                    ],
-                                              textColor: isOrderOnly
-                                                  ? btnColorPurpleDark
-                                                  : iconButtonTextColor,
-                                              borderColor: null,
-                                            ),
-                                          ),
+                                          // const SizedBox(
+                                          //   height: 20,
+                                          // ),
+                                          // GestureDetector(
+                                          //   onTap: () {
+                                          //     setState(() {
+                                          //       if (isOrderOnly == false) {
+                                          //         isOrderOnly = true;
+                                          //         isPayOrder = false;
+                                          //       }
+                                          //     });
+                                          //   },
+                                          //   child: ButtonMenu(
+                                          //     text: 'ORDER ONLY',
+                                          //     width: 200,
+                                          //     height: 35,
+                                          //     backColor: isOrderOnly
+                                          //         ? [
+                                          //             btnColorOrangeLight,
+                                          //             btnColorOrangeDark
+                                          //           ]
+                                          //         : [
+                                          //             btnColorBlueLight,
+                                          //             btnColorBlueDark
+                                          //           ],
+                                          //     textColor: isOrderOnly
+                                          //         ? btnColorPurpleDark
+                                          //         : iconButtonTextColor,
+                                          //     borderColor: null,
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                     ),
@@ -2295,10 +2296,11 @@ class _WorkStationState extends State<WorkStation> {
                                           setState(() {
                                             isServeCollection =
                                                 !isServeCollection;
-                                            if (isServeCollection == false) {
-                                              isPayOrder = false;
-                                              isOrderOnly = false;
-                                            }
+                                            // isPayOrder = !isPayOrder;
+                                            // if (isServeCollection == false) {
+                                            //   isPayOrder = false;
+                                            //   isOrderOnly = false;
+                                            // }
                                           });
                                         },
                                         child: ButtonMenu(
@@ -2379,10 +2381,11 @@ class _WorkStationState extends State<WorkStation> {
                                             GestureDetector(
                                               onTap: () {
                                                 setState(() {
-                                                  if (isPayOrder == false) {
-                                                    isPayOrder = true;
-                                                    isOrderOnly = false;
-                                                  }
+                                                  isPayOrder = !isPayOrder;
+                                                  // if (isPayOrder == false) {
+                                                  //   isPayOrder = true;
+                                                  //   isOrderOnly = false;
+                                                  // }
                                                 });
                                               },
                                               child: ButtonMenu(
@@ -2404,37 +2407,37 @@ class _WorkStationState extends State<WorkStation> {
                                                 borderColor: null,
                                               ),
                                             ),
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  if (isOrderOnly == false) {
-                                                    isOrderOnly = true;
-                                                    isPayOrder = false;
-                                                  }
-                                                });
-                                              },
-                                              child: ButtonMenu(
-                                                text: 'ORDER ONLY',
-                                                width: 200,
-                                                height: 35,
-                                                backColor: isOrderOnly
-                                                    ? [
-                                                        btnColorOrangeLight,
-                                                        btnColorOrangeDark
-                                                      ]
-                                                    : [
-                                                        btnColorBlueLight,
-                                                        btnColorBlueDark
-                                                      ],
-                                                textColor: isOrderOnly
-                                                    ? btnColorPurpleDark
-                                                    : iconButtonTextColor,
-                                                borderColor: null,
-                                              ),
-                                            ),
+                                            // const SizedBox(
+                                            //   height: 20,
+                                            // ),
+                                            // GestureDetector(
+                                            //   onTap: () {
+                                            //     setState(() {
+                                            //       if (isOrderOnly == false) {
+                                            //         isOrderOnly = true;
+                                            //         isPayOrder = false;
+                                            //       }
+                                            //     });
+                                            //   },
+                                            //   child: ButtonMenu(
+                                            //     text: 'ORDER ONLY',
+                                            //     width: 200,
+                                            //     height: 35,
+                                            //     backColor: isOrderOnly
+                                            //         ? [
+                                            //             btnColorOrangeLight,
+                                            //             btnColorOrangeDark
+                                            //           ]
+                                            //         : [
+                                            //             btnColorBlueLight,
+                                            //             btnColorBlueDark
+                                            //           ],
+                                            //     textColor: isOrderOnly
+                                            //         ? btnColorPurpleDark
+                                            //         : iconButtonTextColor,
+                                            //     borderColor: null,
+                                            //   ),
+                                            // ),
                                           ],
                                         ),
                                       ),
