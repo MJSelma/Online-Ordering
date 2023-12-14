@@ -1700,249 +1700,255 @@ class _MenuSectionItemsState extends State<MenuSectionItems> {
                                     SizedBox(
                                       width: 20,
                                     ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      10, 10, 10, 10),
-                                              child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  // ignore: prefer_const_literals_to_create_immutables
-                                                  children: [
-                                                    DecoratedBox(
-                                                      decoration: BoxDecoration(
-                                                        color: Colors
-                                                            .grey.shade100,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .fromLTRB(
-                                                                10, 10, 10, 10),
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          // ignore: prefer_const_literals_to_create_immutables
-                                                          children: [
-                                                            SizedBox(
-                                                              width: 150,
-                                                              height: 50,
-                                                              child: Row(
+                                    Visibility(
+                                      visible: isAddons,
+                                      child: Expanded(
+                                        flex: 1,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 10, 10, 10),
+                                                child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    // ignore: prefer_const_literals_to_create_immutables
+                                                    children: [
+                                                      DecoratedBox(
+                                                        decoration: BoxDecoration(
+                                                          color: Colors
+                                                              .grey.shade100,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                        ),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .fromLTRB(
+                                                                  10, 10, 10, 10),
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            // ignore: prefer_const_literals_to_create_immutables
+                                                            children: [
+                                                              SizedBox(
+                                                                width: 150,
+                                                                height: 50,
+                                                                child: Row(
+                                                                  children: [
+                                                                    const Text(
+                                                                      'ENTER PRICE',
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              12),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 5,
+                                                              ),
+                                                              Container(
+                                                                  width: 150,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade100,
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                                20),
+                                                                  ),
+                                                                  child: Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            8.0),
+                                                                    child: TextField(
+                                                                        controller:
+                                                                            adonsPrice,
+                                                                        ),
+                                                                  )),
+                                                              Row(
                                                                 children: [
-                                                                  const Text(
-                                                                    'ENTER PRICE',
+                                                                  Checkbox(
+                                                                      value:
+                                                                          adonsNoPrice,
+                                                                      onChanged:
+                                                                          (value) {
+                                                                        setStateDialog(
+                                                                            () {
+                                                                          adonsNoPrice =
+                                                                              value!;
+                                                                         
+                                                                        });
+                                                                      }),
+                                                                  SizedBox(
+                                                                    width: 8,
+                                                                  ),
+                                                                  Text(
+                                                                    'NO PRICE REQUIRED',
                                                                     style: TextStyle(
                                                                         fontSize:
                                                                             12),
                                                                   ),
                                                                 ],
                                                               ),
-                                                            ),
-                                                            const SizedBox(
-                                                              height: 5,
-                                                            ),
-                                                            Container(
-                                                                width: 150,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: Colors
-                                                                      .grey
-                                                                      .shade100,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              20),
-                                                                ),
-                                                                child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          8.0),
-                                                                  child: TextField(
-                                                                      controller:
-                                                                          adonsPrice,
-                                                                      ),
-                                                                )),
-                                                            Row(
+                                                              Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment.end,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () async {
+                                                            setStateDialog(() {
+                                                              String id = (adList.length + 1).toString();
+                                                              String inf = '';
+                                                              if(adonsDes){
+                                                                inf = inf + 'D';
+                                                              }
+                                                               if(adonsInd){
+                                                                inf = inf + ',I';
+                                                              }
+                                                               if(adonsAler){
+                                                                inf = inf + ',A';
+                                                              }
+                                                              AddOns tmp = AddOns(id, adOnsName.text, adonsPrice.text, inf, false);
+                                                              adList.add(tmp);
+                                                            });
+                                                          },
+                                                          child: Container(
+                                                            width: 100,
+                                                            height: 35,
+                                                            decoration: BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10.0),
+                                                                color: const Color(
+                                                                    0xffef7700)),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
                                                               children: [
-                                                                Checkbox(
-                                                                    value:
-                                                                        adonsNoPrice,
-                                                                    onChanged:
-                                                                        (value) {
-                                                                      setStateDialog(
-                                                                          () {
-                                                                        adonsNoPrice =
-                                                                            value!;
-                                                                       
-                                                                      });
-                                                                    }),
-                                                                SizedBox(
-                                                                  width: 8,
-                                                                ),
                                                                 Text(
-                                                                  'NO PRICE REQUIRED',
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          12),
+                                                                  'SAVE',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'SFPro',
+                                                                    fontSize: 14,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                  ),
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
                                                                 ),
                                                               ],
                                                             ),
-                                                            Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.end,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      GestureDetector(
-                                                        onTap: () async {
-                                                          setStateDialog(() {
-                                                            String id = (adList.length + 1).toString();
-                                                            String inf = '';
-                                                            if(adonsDes){
-                                                              inf = inf + 'D';
-                                                            }
-                                                             if(adonsInd){
-                                                              inf = inf + ',I';
-                                                            }
-                                                             if(adonsAler){
-                                                              inf = inf + ',A';
-                                                            }
-                                                            AddOns tmp = AddOns(id, adOnsName.text, adonsPrice.text, inf, false);
-                                                            adList.add(tmp);
-                                                          });
-                                                        },
-                                                        child: Container(
-                                                          width: 100,
-                                                          height: 35,
-                                                          decoration: BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10.0),
-                                                              color: const Color(
-                                                                  0xffef7700)),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            children: [
-                                                              Text(
-                                                                'SAVE',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontFamily:
-                                                                      'SFPro',
-                                                                  fontSize: 14,
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                ),
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                              ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                             ],
                                                           ),
                                                         ),
                                                       ),
-                                                    ],
-                                                  ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ]))
-                                        ],
+                                                    ]))
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                     Expanded(
-                                      flex: 1,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          //LIST of adons
-                                          SizedBox(
-                                            height: 200,
-                                            width: 200,
-                                            child: ListView.builder(
-                                                itemCount: adList.length,
-                                                itemBuilder:
-                                                    (BuildContext context,
-                                                        int index) {
-                                                  return Row(
-                                                    children: [
-                                                      GestureDetector(
-                                                        onTap: () {},
-                                                        child: SizedBox(
-                                                          width: 200,
-                                                          child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                Text(
-                                                                  adList[index]
-                                                                      .name,
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          12),
-                                                                ),
-                                                                Text(
-                                                                  adList[index]
-                                                                      .price,
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          12),
-                                                                ),
+                                     Visibility(
+                                      visible: isAddons,
+                                       child: Expanded(
+                                        flex: 1,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            //LIST of adons
+                                            SizedBox(
+                                              height: 200,
+                                              width: 200,
+                                              child: ListView.builder(
+                                                  itemCount: adList.length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    return Row(
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () {},
+                                                          child: SizedBox(
+                                                            width: 200,
+                                                            child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
                                                                   Text(
-                                                                  adList[index]
-                                                                      .info,
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          12),
-                                                                ),
-                                                                Checkbox(
-                                                                    value: adList[
-                                                                            index]
-                                                                        .status,
-                                                                    onChanged:
-                                                                        null)
-                                                              ]),
+                                                                    adList[index]
+                                                                        .name,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            12),
+                                                                  ),
+                                                                  Text(
+                                                                    adList[index]
+                                                                        .price,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            12),
+                                                                  ),
+                                                                    Text(
+                                                                    adList[index]
+                                                                        .info,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            12),
+                                                                  ),
+                                                                  Checkbox(
+                                                                      value: adList[
+                                                                              index]
+                                                                          .status,
+                                                                      onChanged:
+                                                                          null)
+                                                                ]),
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                }),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                                      ],
+                                                    );
+                                                  }),
+                                            ),
+                                          ],
+                                        ),
+                                                                           ),
+                                     ),
                                   ],
                                 ),
                               ),
