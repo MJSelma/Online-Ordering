@@ -502,6 +502,7 @@ class _WorkStationState extends State<WorkStation> {
                                                       stationMulMenu = 1;
                                                       graphSrc = 'graph2.jpeg';
                                                       init();
+                                                      listSubStation.clear();
                                                     });
                                                   },
                                                   child: ButtonMenu(
@@ -575,6 +576,7 @@ class _WorkStationState extends State<WorkStation> {
                                               GestureDetector(
                                                   onTap: () {
                                                     setState(() {
+                                                      listSubStation.clear();
                                                       stationMulMenu = 2;
                                                       graphSrc = 'graph3.jpeg';
                                                       init();
@@ -1720,6 +1722,41 @@ class _WorkStationState extends State<WorkStation> {
     return c;
   }
 
+  bool multipleStationIndividualVal() {
+    bool a = false;
+    bool b = false;
+    bool c = false;
+    if (listSubStation.isNotEmpty &&
+            strprepTime.isNotEmpty &&
+            isPayOrder == true ||
+        isActiveWst == true &&
+            listSubStation.isNotEmpty &&
+            isOrderOnly == true) {
+      a = true;
+    }
+    if (listSubStation.isNotEmpty &&
+        strprepTime.isNotEmpty &&
+        isOrderAndPay == true &&
+        strcollectionInstruction != '') {
+      b = true;
+    }
+    if (isSelfCollection == true) {
+      c = b;
+    }
+    if (isServeCollection == true) {
+      c = a;
+    }
+    if (isSelfCollection == true && isServeCollection == true) {
+      if (a == true && b == true) {
+        c = true;
+      } else {
+        c = false;
+      }
+    }
+
+    return c;
+  }
+
   Widget widgetMultipleStation() {
     return Padding(
       padding: const EdgeInsets.all(14.0),
@@ -2175,7 +2212,8 @@ class _WorkStationState extends State<WorkStation> {
                                     height: 20,
                                   ),
                                   Container(
-                                    padding: const EdgeInsets.only(left: 200.0),
+                                    padding: const EdgeInsets.fromLTRB(
+                                        200.0, 0.0, 0.0, 20.0),
                                     child: GestureDetector(
                                       child: ButtonMenu(
                                         text: 'DELETE',
@@ -2222,9 +2260,6 @@ class _WorkStationState extends State<WorkStation> {
                               ),
                             ),
                           ],
-                        ),
-                        const SizedBox(
-                          width: 15,
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -2304,6 +2339,9 @@ class _WorkStationState extends State<WorkStation> {
                               ],
                             ),
                           ],
+                        ),
+                        const SizedBox(
+                          width: 15,
                         ),
                       ],
                     ),
@@ -2739,32 +2777,57 @@ class _WorkStationState extends State<WorkStation> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          if (multipleStationVal()) {
-                                            context
-                                                .read<MenuProvider>()
-                                                .updateMenuCount(1);
-                                          }
-                                        });
-                                      },
-                                      child: ButtonMenu(
-                                        text: 'SET UP WTPs',
-                                        width: 200,
-                                        height: 35,
-                                        backColor: multipleStationVal()
-                                            ? [
-                                                btnColorGreenLight,
-                                                btnColorGreenDark
-                                              ]
-                                            : [
-                                                btnColorGreyLight,
-                                                btnColorGreyDark
-                                              ],
-                                        textColor: iconButtonTextColor,
-                                        borderColor: null,
-                                      ),
-                                    ),
+                                        onTap: () {
+                                          setState(() {
+                                            if (stationMulMenu == 1) {
+                                              if (multipleStationVal()) {
+                                                context
+                                                    .read<MenuProvider>()
+                                                    .updateMenuCount(1);
+                                              }
+                                            } else {
+                                              if (multipleStationIndividualVal()) {
+                                                context
+                                                    .read<MenuProvider>()
+                                                    .updateMenuCount(2);
+                                              }
+                                            }
+                                          });
+                                        },
+                                        child: stationMulMenu == 1
+                                            ? ButtonMenu(
+                                                text: 'SET UP WTPs',
+                                                width: 200,
+                                                height: 35,
+                                                backColor: multipleStationVal()
+                                                    ? [
+                                                        btnColorGreenLight,
+                                                        btnColorGreenDark
+                                                      ]
+                                                    : [
+                                                        btnColorGreyLight,
+                                                        btnColorGreyDark
+                                                      ],
+                                                textColor: iconButtonTextColor,
+                                                borderColor: null,
+                                              )
+                                            : ButtonMenu(
+                                                text: 'SET UP WTPs',
+                                                width: 200,
+                                                height: 35,
+                                                backColor:
+                                                    multipleStationIndividualVal()
+                                                        ? [
+                                                            btnColorGreenLight,
+                                                            btnColorGreenDark
+                                                          ]
+                                                        : [
+                                                            btnColorGreyLight,
+                                                            btnColorGreyDark
+                                                          ],
+                                                textColor: iconButtonTextColor,
+                                                borderColor: null,
+                                              )),
                                   ],
                                 ),
                               ),
