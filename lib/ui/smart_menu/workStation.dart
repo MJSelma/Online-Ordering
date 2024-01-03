@@ -6,6 +6,7 @@ import 'package:drinklinkmerchant/provider/menu_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../provider/business_outlet_provider.dart';
 import '../../widgets/button.dart';
 import '../../widgets/show_dialog.dart';
 import '../constant/theme_data.dart';
@@ -22,7 +23,9 @@ class WorkStation extends StatefulWidget {
 class _WorkStationState extends State<WorkStation> {
   bool isPaid = true;
   int orderingMenu = 0;
+  int servedOrderingMenu = 0;
   int stationMenu = 0;
+  bool showSetupMenu = true;
   bool showOrderingMenu = true;
   bool showStationMenu = true;
   bool isActiveWst = false;
@@ -37,6 +40,7 @@ class _WorkStationState extends State<WorkStation> {
   String strcollectionInstruction = '';
   String strprepTime = '';
   String graphSrc = '';
+  String selectedOutletId = '';
   //Serve
   PlatformFile? uploadimage; //variable for choosed file
   String fileName = '';
@@ -74,6 +78,10 @@ class _WorkStationState extends State<WorkStation> {
 
   @override
   Widget build(BuildContext context) {
+    final outletId =
+        context.select((BusinessOutletProvider p) => p.selectedOutletId);
+    selectedOutletId = outletId;
+
     return Stack(
       children: [
         Column(
@@ -168,6 +176,7 @@ class _WorkStationState extends State<WorkStation> {
                                     onTap: () {
                                       setState(() {
                                         orderingMenu = 1;
+                                        servedOrderingMenu = 0;
                                       });
                                     },
                                     child: ButtonMenu(
@@ -302,6 +311,67 @@ class _WorkStationState extends State<WorkStation> {
                               textAlign: TextAlign.start,
                             ),
                           ),
+                          Visibility(
+                            visible: orderingMenu == 2,
+                            child: Column(
+                              children: [
+                                GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        // orderingMenu = 2;
+                                        servedOrderingMenu = 1;
+                                        showSetupMenu = false;
+                                      });
+                                    },
+                                    child: ButtonMenu(
+                                      text: 'MENU SET UP',
+                                      width: 200,
+                                      height: 30,
+                                      backColor: servedOrderingMenu == 1
+                                          ? [
+                                              btnColorOrangeLight,
+                                              btnColorOrangeDark
+                                            ]
+                                          : [
+                                              btnColorBlueLight,
+                                              btnColorBlueDark
+                                            ],
+                                      textColor: servedOrderingMenu == 1
+                                          ? btnColorPurpleDark
+                                          : iconButtonTextColor,
+                                      borderColor: null,
+                                    )),
+                                const SizedBox(
+                                  height: 15,
+                                ),
+                                GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        // orderingMenu = 2;
+                                        servedOrderingMenu = 2;
+                                      });
+                                    },
+                                    child: ButtonMenu(
+                                      text: 'WST SET UP',
+                                      width: 200,
+                                      height: 30,
+                                      backColor: servedOrderingMenu == 2
+                                          ? [
+                                              btnColorOrangeLight,
+                                              btnColorOrangeDark
+                                            ]
+                                          : [
+                                              btnColorBlueLight,
+                                              btnColorBlueDark
+                                            ],
+                                      textColor: servedOrderingMenu == 2
+                                          ? btnColorPurpleDark
+                                          : iconButtonTextColor,
+                                      borderColor: null,
+                                    )),
+                              ],
+                            ),
+                          )
                         ]),
                   ),
                 ),
@@ -636,13 +706,30 @@ class _WorkStationState extends State<WorkStation> {
                     ),
                   ),
                 ),
+                // Visibility(
+                //   visible: !showSetupMenu,
+                //   child: Padding(
+                //       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                //       child: GestureDetector(
+                //           onTap: () {
+                //             setState(() {
+                //               showSetupMenu = false;
+                //             });
+                //           },
+                //           child: Image.asset(
+                //               'assets/images/single-right-arrow.png',
+                //               height: 20,
+                //               color: Colors.grey.shade500))),
+                // ),
                 Visibility(
-                    visible: orderingMenu == 2,
-                    child: Container(
-                      child: serveWidget(),
-                    )),
+                    visible: servedOrderingMenu == 1 ||
+                        servedOrderingMenu == 2 ||
+                        !showSetupMenu,
+                    child: serveWidget()),
                 Visibility(
-                  visible: orderingMenu == 1 || orderingMenu == 2,
+                  visible: orderingMenu == 1 ||
+                      servedOrderingMenu == 1 ||
+                      servedOrderingMenu == 2,
                   child: Container(
                     width: 2,
                     color: Colors.grey.shade500,
@@ -658,8 +745,22 @@ class _WorkStationState extends State<WorkStation> {
                     ]
                   ]
                 ] else ...[
-                  Visibility(visible: orderingMenu == 2, child: itemServeMenu())
-                ]
+                  Visibility(
+                      visible:
+                          servedOrderingMenu == 1 || servedOrderingMenu == 2,
+                      child: getOutletMenu())
+                ],
+                Visibility(
+                  visible: servedOrderingMenu == 1,
+                  child: Container(
+                    width: 2,
+                    color: Colors.grey.shade500,
+                    height: MediaQuery.of(context).size.height - 150,
+                  ),
+                ),
+                Visibility(
+                    visible: servedOrderingMenu == 1 || servedOrderingMenu == 2,
+                    child: getMenuView())
               ],
             ),
           ],
@@ -2938,170 +3039,224 @@ class _WorkStationState extends State<WorkStation> {
   }
 
   serveWidget() {
-    return SizedBox(
-      width: 200,
-      child: Column(children: [
-        Container(
-          width: 200,
-          height: 45,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
-            color: const Color(0xffffffff),
-            border: Border.all(width: 1.0, color: const Color(0xff707070)),
-          ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: menuName,
-                decoration:
-                    const InputDecoration.collapsed(hintText: 'Menu name'),
-              ),
-            ),
-          ),
-        ),
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text(
-            'Ex: Lunch, Dinner, Korian, Itallian',
-            style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
-          ),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        GestureDetector(
-            onTap: () {
-              chooseImage();
-            },
-            child: ButtonMenu(
-              text: 'Upload Menu',
-
-              width: 200,
-              height: 30,
-              backColor: [btnColorOrangeLight, btnColorOrangeDark],
-              textColor: iconButtonTextColor,
-              borderColor: null,
-
-              // backColor: fileName != ''
-              //     ? const sys_color_defaultorange
-              //     : const button_color_grey,
-            )),
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text(
-            'Format available: pdf, png, jpg',
-            style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
-          ),
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        GestureDetector(
-            onTap: () {
-              //need to change the count
-              uploadImage(10);
-            },
-            child: ButtonMenu(
-              text: 'SAVE',
-
-              width: 200,
-              height: 30,
-              backColor: [btnColorOrangeLight, btnColorOrangeDark],
-              textColor: iconButtonTextColor,
-              borderColor: null,
-              // backColor: fileName != ''
-              //     ? const sys_color_defaultorange
-              //     : const button_color_grey,
-            )),
-        const SizedBox(
-          height: 50,
-        ),
-        Column(
-          children: [
-            Container(
-              width: 200,
-              height: 45,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                color: const Color(0xffffffff),
-                border: Border.all(width: 1.0, color: systemDefaultColorOrange),
-              ),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: stationController,
-                    decoration: InputDecoration.collapsed(
-                        hintStyle: TextStyle(
-                            fontSize: 11,
-                            fontFamily: defaultFontFamily,
-                            fontStyle: FontStyle.italic),
-                        border: InputBorder.none,
-                        hintText: 'Station Name'),
+    final int menuCount = context.select((MenuProvider p) => p.menuCount);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: 200,
+        child: Column(children: [
+          Visibility(
+            visible: servedOrderingMenu == 1,
+            child: Visibility(
+              visible: !showSetupMenu,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Text(
+                        'Enter Menu Name',
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      const Spacer(),
+                      GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              showSetupMenu = true;
+                            });
+                          },
+                          child: Image.asset(
+                              'assets/images/single-left-arrow.png',
+                              height: 20,
+                              color: Colors.grey.shade500)),
+                    ],
                   ),
-                ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: 200,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: const Color(0xffffffff),
+                      border: Border.all(
+                          width: 1.0, color: systemDefaultColorOrange),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          controller: menuName,
+                          decoration: null,
+                          style: const TextStyle(fontSize: 12.0),
+                          // const InputDecoration.collapsed(hintText: 'Menu name'),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Ex: Lunch, Dinner, Korian, Itallian',
+                      style:
+                          TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                      onTap: () {
+                        chooseImage();
+                      },
+                      child: ButtonMenu(
+                        text: 'CHOOSE FILE',
+
+                        width: 200,
+                        height: 30,
+                        backColor: [btnColorOrangeLight, btnColorOrangeDark],
+                        textColor: fileName.isNotEmpty
+                            ? btnColorPurpleDark
+                            : iconButtonTextColor,
+                        borderColor: null,
+
+                        // backColor: fileName != ''
+                        //     ? const sys_color_defaultorange
+                        //     : const button_color_grey,
+                      )),
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      'Format available: pdf, png, jpg',
+                      style:
+                          TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  GestureDetector(
+                      onTap: () {
+                        //need to change the count
+                        uploadImage(menuCount);
+                        // uploadImage(1);
+                      },
+                      child: ButtonMenu(
+                        text: 'UPLOAD FILE',
+
+                        width: 200,
+                        height: 30,
+                        backColor: fileName != '' && menuName.text != ''
+                            ? [btnColorGreenLight, btnColorGreenDark]
+                            : [btnColorGreyLight, btnColorGreyDark],
+                        textColor: iconButtonTextColor,
+                        borderColor: null,
+                        // backColor: fileName != ''
+                        //     ? const sys_color_defaultorange
+                        //     : const button_color_grey,
+                      )),
+                ],
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(
-              'EX. Kitchen, Bar, Lounge',
-              style: TextStyle(
-                  fontSize: 11,
-                  fontFamily: defaultFontFamily,
-                  fontStyle: FontStyle.italic),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        GestureDetector(
-          onTap: () {
-            setState(() {
-              // stations.add(stationController.text);
-              int idexno = listSubStation.length;
-              SubStationClass subStationx = SubStationClass(
-                  index: idexno,
-                  stationName: stationController.text,
-                  status: true);
-              listSubStation.add(subStationx);
-              context.read<MenuProvider>().setWorkStation(stations);
-              stationController.text = '';
-            });
-          },
-          child: Container(
-            width: 200,
-            height: 35,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: const Color(0xffef7700),
-            ),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+          ),
+          // const SizedBox(
+          //   height: 50,
+          // ),
+          Visibility(
+            visible: servedOrderingMenu == 2,
+            child: Column(
               children: [
-                Text(
-                  'ADD',
-                  style: TextStyle(
-                    fontFamily: 'SFPro',
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
+                Container(
+                  width: 200,
+                  height: 45,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: const Color(0xffffffff),
+                    border:
+                        Border.all(width: 1.0, color: systemDefaultColorOrange),
                   ),
-                  textAlign: TextAlign.center,
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: stationController,
+                        decoration: InputDecoration.collapsed(
+                            hintStyle: TextStyle(
+                                fontSize: 11,
+                                fontFamily: defaultFontFamily,
+                                fontStyle: FontStyle.italic),
+                            border: InputBorder.none,
+                            hintText: 'Station Name'),
+                      ),
+                    ),
+                  ),
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  'EX. Kitchen, Bar, Lounge',
+                  style: TextStyle(
+                      fontSize: 11,
+                      fontFamily: defaultFontFamily,
+                      fontStyle: FontStyle.italic),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      // stations.add(stationController.text);
+                      int idexno = listSubStation.length;
+                      SubStationClass subStationx = SubStationClass(
+                          index: idexno,
+                          stationName: stationController.text,
+                          status: true);
+                      listSubStation.add(subStationx);
+                      context.read<MenuProvider>().setWorkStation(stations);
+                      stationController.text = '';
+                    });
+                  },
+                  child: Container(
+                    width: 200,
+                    height: 35,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: const Color(0xffef7700),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'ADD',
+                          style: TextStyle(
+                            fontFamily: 'SFPro',
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                ListOfStation(200),
               ],
             ),
           ),
-        ),
-        const SizedBox(
-          height: 30,
-        ),
-        ListOfStation(200),
-      ]),
+        ]),
+      ),
     );
   }
 
@@ -3147,6 +3302,7 @@ class _WorkStationState extends State<WorkStation> {
       }
     } catch (e) {
       print(e.toString());
+
       //there is error during converting file image to base64 encoding.
     }
 
@@ -3197,10 +3353,116 @@ class _WorkStationState extends State<WorkStation> {
         'name': menuName.text,
         'status': true,
         'type': fileType,
+        'outletId': selectedOutletId
       }).then((value) async {
         context.read<MenuProvider>().menuRefresh();
       });
     }
+  }
+
+  getOutletMenu() {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        // final choosenOutletId =
+        //     context.select((MenuProvider p) => p.ChoosenOutletMenId);
+
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+          child: ScrollConfiguration(
+            behavior:
+                ScrollConfiguration.of(context).copyWith(scrollbars: false),
+            child: Column(children: [
+              SizedBox(
+                width: 250,
+                height: MediaQuery.sizeOf(context).height - 200,
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('merchant')
+                      .doc('X6odvQ5gqesAzwtJLaFl')
+                      .collection('consultationMenu')
+                      .where('outletId', isEqualTo: selectedOutletId)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                // maxCrossAxisExtent: 300,
+                                // childAspectRatio: 1,
+                                crossAxisSpacing: 5,
+                                mainAxisSpacing: 5),
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          DocumentSnapshot doc = snapshot.data!.docs[index];
+                          return Column(
+                            children: [
+                              GestureDetector(
+                                child: Container(
+                                  height: 80,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Image.network(
+                                    doc['image'],
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    // outletImageUrl = doc['image'];
+                                    // print(outletImageUrl);
+                                    context.read<MenuProvider>().setImportImage(
+                                        doc['fileName'],
+                                        doc['image'],
+                                        doc['type'],
+                                        doc['name']);
+                                  });
+                                },
+                              ),
+                              Text(doc['name'])
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
+              )
+            ]),
+          ),
+        );
+      },
+    );
+  }
+
+  getMenuView() {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        final url = context.select((MenuProvider p) => p.importImage);
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+          child: Visibility(
+            visible: url != '',
+            child: Center(
+              child: Container(
+                height: 500,
+                width: 500,
+                alignment: Alignment.center,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                child: Image.network(
+                  url,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   itemServeMenu() {
@@ -3259,7 +3521,7 @@ class _WorkStationState extends State<WorkStation> {
               // ),
             ],
           ),
-          menuViewer()
+          // menuViewer()
         ],
       ),
     );
