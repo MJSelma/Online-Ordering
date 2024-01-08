@@ -34,6 +34,12 @@ class _WorkStationState extends State<WorkStation> {
   bool isSelfCollection = false;
   bool isOrderAndPay = false;
   bool isServeCollection = false;
+  bool isAverageTimeOopen1 = false;
+  bool isAverageTimeOopen2 = false;
+  bool isServiceOptionOpen1 = false;
+  bool isServiceOptionOpen2 = false;
+  bool isServiceOptionOpen3 = false;
+  bool isListSubstationOopen = false;
   TextEditingController prepTime = TextEditingController(text: '');
   TextEditingController stationController = TextEditingController(text: '');
   TextEditingController collectionInstruction = TextEditingController(text: '');
@@ -313,63 +319,66 @@ class _WorkStationState extends State<WorkStation> {
                           ),
                           Visibility(
                             visible: orderingMenu == 2,
-                            child: Column(
-                              children: [
-                                GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        // orderingMenu = 2;
-                                        servedOrderingMenu = 1;
-                                        showSetupMenu = false;
-                                      });
-                                    },
-                                    child: ButtonMenu(
-                                      text: 'MENU SET UP',
-                                      width: 200,
-                                      height: 30,
-                                      backColor: servedOrderingMenu == 1
-                                          ? [
-                                              btnColorOrangeLight,
-                                              btnColorOrangeDark
-                                            ]
-                                          : [
-                                              btnColorBlueLight,
-                                              btnColorBlueDark
-                                            ],
-                                      textColor: servedOrderingMenu == 1
-                                          ? btnColorPurpleDark
-                                          : iconButtonTextColor,
-                                      borderColor: null,
-                                    )),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        // orderingMenu = 2;
-                                        servedOrderingMenu = 2;
-                                      });
-                                    },
-                                    child: ButtonMenu(
-                                      text: 'WST SET UP',
-                                      width: 200,
-                                      height: 30,
-                                      backColor: servedOrderingMenu == 2
-                                          ? [
-                                              btnColorOrangeLight,
-                                              btnColorOrangeDark
-                                            ]
-                                          : [
-                                              btnColorBlueLight,
-                                              btnColorBlueDark
-                                            ],
-                                      textColor: servedOrderingMenu == 2
-                                          ? btnColorPurpleDark
-                                          : iconButtonTextColor,
-                                      borderColor: null,
-                                    )),
-                              ],
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 30.0),
+                              child: Column(
+                                children: [
+                                  GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          // orderingMenu = 2;
+                                          servedOrderingMenu = 1;
+                                          showSetupMenu = false;
+                                        });
+                                      },
+                                      child: ButtonMenu(
+                                        text: 'MENU SET UP',
+                                        width: 150,
+                                        height: 30,
+                                        backColor: servedOrderingMenu == 1
+                                            ? [
+                                                btnColorOrangeLight,
+                                                btnColorOrangeDark
+                                              ]
+                                            : [
+                                                btnColorBlueLight,
+                                                btnColorBlueDark
+                                              ],
+                                        textColor: servedOrderingMenu == 1
+                                            ? btnColorPurpleDark
+                                            : iconButtonTextColor,
+                                        borderColor: null,
+                                      )),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          // orderingMenu = 2;
+                                          servedOrderingMenu = 2;
+                                        });
+                                      },
+                                      child: ButtonMenu(
+                                        text: 'WST SET UP',
+                                        width: 150,
+                                        height: 30,
+                                        backColor: servedOrderingMenu == 2
+                                            ? [
+                                                btnColorOrangeLight,
+                                                btnColorOrangeDark
+                                              ]
+                                            : [
+                                                btnColorBlueLight,
+                                                btnColorBlueDark
+                                              ],
+                                        textColor: servedOrderingMenu == 2
+                                            ? btnColorPurpleDark
+                                            : iconButtonTextColor,
+                                        borderColor: null,
+                                      )),
+                                ],
+                              ),
                             ),
                           )
                         ]),
@@ -451,6 +460,9 @@ class _WorkStationState extends State<WorkStation> {
                                           stationMenu = 1;
                                           graphSrc = 'graph1.jpeg';
                                           init();
+                                          strprepTime = '';
+                                          isAverageTimeOopen1 = false;
+                                          isServiceOptionOpen1 = false;
                                         });
                                       },
                                       child: ButtonMenu(
@@ -493,6 +505,11 @@ class _WorkStationState extends State<WorkStation> {
                                           stationMenu = 2;
 
                                           init();
+                                          isListSubstationOopen = false;
+                                          isServiceOptionOpen2 = false;
+                                          isServiceOptionOpen3 = false;
+                                          listSubStation.clear();
+                                          strprepTime = '';
                                         });
                                       },
                                       child: ButtonMenu(
@@ -572,6 +589,13 @@ class _WorkStationState extends State<WorkStation> {
                                                       stationMulMenu = 1;
                                                       graphSrc = 'graph2.jpeg';
                                                       init();
+
+                                                      isListSubstationOopen =
+                                                          false;
+                                                      isServiceOptionOpen2 =
+                                                          false;
+                                                      isServiceOptionOpen3 =
+                                                          false;
                                                       listSubStation.clear();
                                                     });
                                                   },
@@ -650,6 +674,13 @@ class _WorkStationState extends State<WorkStation> {
                                                       stationMulMenu = 2;
                                                       graphSrc = 'graph3.jpeg';
                                                       init();
+                                                      isAverageTimeOopen2 =
+                                                          false;
+                                                      isListSubstationOopen =
+                                                          false;
+                                                      isServiceOptionOpen3 =
+                                                          false;
+                                                      listSubStation.clear();
                                                     });
                                                   },
                                                   child: ButtonMenu(
@@ -1138,6 +1169,8 @@ class _WorkStationState extends State<WorkStation> {
                         onTap: () {
                           setState(() {
                             isActiveWst = !isActiveWst;
+                            isAverageTimeOopen1 = !isAverageTimeOopen1;
+                            isServiceOptionOpen1 = !isServiceOptionOpen1;
                           });
                         },
                         child: Container(
@@ -1199,312 +1232,130 @@ class _WorkStationState extends State<WorkStation> {
                   const SizedBox(
                     width: 150,
                   ),
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Row(
+                  Visibility(
+                    visible: isAverageTimeOopen1,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                'assets/images/step2.png',
+                                height: 25,
+                                color: Colors.grey.shade500,
+                              ),
+                              const SizedBox(
+                                width: 15,
+                              ),
+                              Text(
+                                'ENTER AVERAGE PREPARATION TIME',
+                                style: TextStyle(
+                                  fontSize: defaulDescriptiontFontSize,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Row(
                           children: [
-                            Image.asset(
-                              'assets/images/step2.png',
-                              height: 25,
-                              color: Colors.grey.shade500,
+                            Container(
+                              width: 80,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15.0),
+                                color: const Color(0xffffffff),
+                                border: Border.all(
+                                    width: 1.0,
+                                    // color: const Color(0xff707070)
+                                    color: systemDefaultColorOrange),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color(0x29000000),
+                                    offset: Offset(0, 3),
+                                    blurRadius: 6,
+                                  ),
+                                ],
+                              ),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextField(
+                                    controller: prepTime,
+                                    decoration: const InputDecoration.collapsed(
+                                        hintText: '5'),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        strprepTime = prepTime.text;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
                             ),
                             const SizedBox(
-                              width: 15,
+                              width: 15.0,
                             ),
                             Text(
-                              'ENTER AVERAGE PREPARATION TIME',
+                              'MINUTES',
                               style: TextStyle(
-                                fontSize: defaulDescriptiontFontSize,
-                                fontWeight: FontWeight.bold,
-                              ),
+                                  color: Colors.grey.shade600,
+                                  fontSize: defaulDescriptiontFontSize,
+                                  fontFamily: defaultFontFamily,
+                                  fontStyle: FontStyle.italic),
                             ),
                           ],
                         ),
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            width: 80,
-                            height: 45,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15.0),
-                              color: const Color(0xffffffff),
-                              border: Border.all(
-                                  width: 1.0,
-                                  // color: const Color(0xff707070)
-                                  color: systemDefaultColorOrange),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0x29000000),
-                                  offset: Offset(0, 3),
-                                  blurRadius: 6,
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                  controller: prepTime,
-                                  decoration: const InputDecoration.collapsed(
-                                      hintText: '5'),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      strprepTime = prepTime.text;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 15.0,
-                          ),
-                          Text(
-                            'MINUTES',
-                            style: TextStyle(
-                                color: Colors.grey.shade600,
-                                fontSize: defaulDescriptiontFontSize,
-                                fontFamily: defaultFontFamily,
-                                fontStyle: FontStyle.italic),
-                          ),
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
               const SizedBox(
                 height: 20,
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'SERVICE OPTIONS (CHOOSE ONE OR MORE)',
-                  style: TextStyle(
-                      fontSize: defaulDescriptiontFontSize,
-                      fontWeight: FontWeight.bold,
-                      fontStyle: FontStyle.italic),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                    width: showStationMenu == false &&
-                                showOrderingMenu == true ||
-                            showStationMenu == true && showOrderingMenu == false
-                        ? 850
-                        : showOrderingMenu == false && showStationMenu == false
-                            ? 1000
-                            : 650,
-                    color: Colors.grey.shade500,
-                    height: 1),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Image.asset(
-                        'assets/images/step3.png',
-                        height: 25,
-                        color: Colors.grey.shade500,
+              Visibility(
+                visible: isServiceOptionOpen1 && strprepTime.isNotEmpty,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'SERVICE OPTIONS (CHOOSE ONE OR MORE)',
+                        style: TextStyle(
+                            fontSize: defaulDescriptiontFontSize,
+                            fontWeight: FontWeight.bold,
+                            fontStyle: FontStyle.italic),
                       ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                            border: Border.all(color: Colors.grey)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'Your Dguests will collect the order from \n dedicated collection points',
-                                      style: TextStyle(
-                                          fontSize: 11,
-                                          fontFamily: defaultFontFamily,
-                                          fontStyle: FontStyle.italic),
-                                      textAlign: TextAlign.start,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        isSelfCollection = !isSelfCollection;
-                                        collectionInstruction.text = '';
-                                        strcollectionInstruction = '';
-                                        if (isOrderAndPay == true) {
-                                          isOrderAndPay = false;
-                                        }
-                                      });
-                                    },
-                                    child: ButtonMenu(
-                                      text: 'SELF SERVICE',
-                                      width: 200,
-                                      height: 35,
-                                      backColor: isSelfCollection
-                                          ? [
-                                              btnColorOrangeLight,
-                                              btnColorOrangeDark
-                                            ]
-                                          : [
-                                              btnColorBlueLight,
-                                              btnColorBlueDark
-                                            ],
-                                      textColor: isSelfCollection
-                                          ? btnColorPurpleDark
-                                          : iconButtonTextColor,
-                                      borderColor: null,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  Visibility(
-                                    visible: isSelfCollection,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          isOrderAndPay = !isOrderAndPay;
-                                        });
-                                      },
-                                      child: ButtonMenu(
-                                        text: 'ORDER AND PAY',
-                                        width: 200,
-                                        height: 35,
-                                        backColor: isOrderAndPay
-                                            ? [
-                                                btnColorOrangeLight,
-                                                btnColorOrangeDark
-                                              ]
-                                            : [
-                                                btnColorBlueLight,
-                                                btnColorBlueDark
-                                              ],
-                                        textColor: isOrderAndPay
-                                            ? btnColorPurpleDark
-                                            : iconButtonTextColor,
-                                        borderColor: null,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              //ADD here
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: isSelfCollection ? 10 : 150,
-                  ),
-                  Visibility(
-                    visible: isSelfCollection,
-                    child: Row(
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          width: showStationMenu == false &&
+                                      showOrderingMenu == true ||
+                                  showStationMenu == true &&
+                                      showOrderingMenu == false
+                              ? 850
+                              : showOrderingMenu == false &&
+                                      showStationMenu == false
+                                  ? 1000
+                                  : 650,
+                          color: Colors.grey.shade500,
+                          height: 1),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Column(
-                          children: [
-                            Text(
-                              'COLLECTION INSTRUCTION',
-                              style: TextStyle(
-                                  fontSize: defaulDescriptiontFontSize,
-                                  fontWeight: FontWeight.bold,
-                                  fontStyle: FontStyle.italic),
-                            ),
-                            const SizedBox(
-                              height: 8,
-                            ),
-                            Container(
-                              height: 200,
-                              width: showStationMenu == false &&
-                                          showOrderingMenu == true ||
-                                      showStationMenu == true &&
-                                          showOrderingMenu == false
-                                  ? 400
-                                  : showOrderingMenu == false &&
-                                          showStationMenu == false
-                                      ? 600
-                                      : 200,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.white,
-                                  border: Border.all(
-                                      color: const Color(0xffef7700))),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: TextField(
-                                  controller: collectionInstruction,
-                                  expands: true,
-                                  maxLines: null,
-                                  decoration: InputDecoration(
-                                      hintStyle: TextStyle(
-                                          fontSize: 11,
-                                          fontFamily: defaultFontFamily,
-                                          fontStyle: FontStyle.italic),
-                                      border: InputBorder.none,
-                                      hintText:
-                                          'Example: Please proceed to Drinklink Cube situated next to the cashier'),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      strcollectionInstruction =
-                                          collectionInstruction.text;
-                                    });
-                                  },
-                                ),
-                                // child: Text(
-                                //   'Example: Please proceed to Drinklink Cube situated next to the cashier',
-                                //   style: TextStyle(fontSize: 12),
-                                // ),
-                              ),
-                            )
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                              width: 1,
-                              color: Colors.grey.shade500,
-                              // height: MediaQuery.sizeOf(context).height),
-                              height: 250),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: Container(
-                  //       width: 1,
-                  //       color: Colors.grey.shade500,
-                  //       height: MediaQuery.sizeOf(context).height),
-                  // ),
-                  Column(
-                    children: [
-                      Visibility(
-                        // visible: isSelfCollection,
-                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Image.asset(
-                              'assets/images/step4.png',
+                              'assets/images/step3.png',
                               height: 25,
                               color: Colors.grey.shade500,
                             ),
@@ -1512,148 +1363,80 @@ class _WorkStationState extends State<WorkStation> {
                               height: 15,
                             ),
                             Container(
-                              width: 200,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: Colors.white,
                                   border: Border.all(color: Colors.grey)),
                               child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Column(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'Your Dguests will served by your waiters to their tables',
-                                        style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: defaultFontFamily,
-                                            fontStyle: FontStyle.italic),
-                                        textAlign: TextAlign.start,
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          isServeCollection =
-                                              !isServeCollection;
-                                          // if (isServeCollection == false) {
-                                          //   isPayOrder = false;
-                                          //   isOrderOnly = false;
-                                          // }
-
-                                          // if (isSelfCollection == true &&
-                                          //     isOrderAndPay == false) {
-                                          //   warningDialog(
-                                          //       context,
-                                          //       'SELF SERVICE',
-                                          //       'Please select Service Option');
-                                          //   isServeCollection = false;
-                                          //   return;
-                                          // }
-
-                                          // if (isSelfCollection == true &&
-                                          //     strcollectionInstruction == '') {
-                                          //   warningDialog(
-                                          //       context,
-                                          //       'SELF SERVICE',
-                                          //       'Please enter Collection Instruction');
-                                          //   isServeCollection = false;
-                                          //   return;
-                                          // }
-                                        });
-                                      },
-                                      child: ButtonMenu(
-                                        text: 'SERVED SERVICE',
-                                        width: 200,
-                                        height: 35,
-                                        backColor: isServeCollection
-                                            ? [
-                                                btnColorOrangeLight,
-                                                btnColorOrangeDark
-                                              ]
-                                            : [
-                                                btnColorBlueLight,
-                                                btnColorBlueDark
-                                              ],
-                                        textColor: isServeCollection
-                                            ? btnColorPurpleDark
-                                            : iconButtonTextColor,
-                                        borderColor: null,
-                                      ),
-                                    ),
-                                    // GestureDetector(
-                                    //   onTap: () {
-                                    //     setState(() {
-                                    //       isServeCollection = !isServeCollection;
-                                    //     });
-                                    //   },
-                                    //   child: Container(
-                                    //     width: 200,
-                                    //     height: 50,
-                                    //     decoration: BoxDecoration(
-                                    //       borderRadius: BorderRadius.circular(10.0),
-                                    //       color: isServeCollection
-                                    //           ? const Color(0xffef7700)
-                                    //           : Colors.grey.shade500,
-                                    //     ),
-                                    //     child: const Row(
-                                    //       mainAxisAlignment:
-                                    //           MainAxisAlignment.center,
-                                    //       crossAxisAlignment:
-                                    //           CrossAxisAlignment.center,
-                                    //       children: [
-                                    //         Text(
-                                    //           'Serve',
-                                    //           style: TextStyle(
-                                    //             fontFamily: 'SFPro',
-                                    //             fontSize: 18,
-                                    //             color: Colors.white,
-                                    //             fontWeight: FontWeight.w500,
-                                    //           ),
-                                    //           textAlign: TextAlign.center,
-                                    //         ),
-                                    //       ],
-                                    //     ),
-                                    //   ),
-                                    // ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    Visibility(
-                                      visible: isServeCollection,
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(
-                                              'CHOOSE ONE',
-                                              style: TextStyle(
-                                                  fontSize: 10,
-                                                  fontStyle: FontStyle.italic,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontFamily:
-                                                      defaultFontFamily),
-                                              textAlign: TextAlign.center,
-                                            ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'Your Dguests will collect the order from \n dedicated collection points',
+                                            style: TextStyle(
+                                                fontSize: 11,
+                                                fontFamily: defaultFontFamily,
+                                                fontStyle: FontStyle.italic),
+                                            textAlign: TextAlign.start,
                                           ),
-                                          GestureDetector(
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              isSelfCollection =
+                                                  !isSelfCollection;
+                                              collectionInstruction.text = '';
+                                              strcollectionInstruction = '';
+                                              if (isOrderAndPay == true) {
+                                                isOrderAndPay = false;
+                                              }
+                                            });
+                                          },
+                                          child: ButtonMenu(
+                                            text: 'SELF SERVICE',
+                                            width: 200,
+                                            height: 35,
+                                            backColor: isSelfCollection
+                                                ? [
+                                                    btnColorOrangeLight,
+                                                    btnColorOrangeDark
+                                                  ]
+                                                : [
+                                                    btnColorBlueLight,
+                                                    btnColorBlueDark
+                                                  ],
+                                            textColor: isSelfCollection
+                                                ? btnColorPurpleDark
+                                                : iconButtonTextColor,
+                                            borderColor: null,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        Visibility(
+                                          visible: isSelfCollection,
+                                          child: GestureDetector(
                                             onTap: () {
                                               setState(() {
-                                                // if (isPayOrder == false) {
-                                                //   isPayOrder = true;
-                                                //   isOrderOnly = false;
-                                                // }
-                                                isPayOrder = !isPayOrder;
+                                                isOrderAndPay = !isOrderAndPay;
                                               });
                                             },
                                             child: ButtonMenu(
                                               text: 'ORDER AND PAY',
                                               width: 200,
                                               height: 35,
-                                              backColor: isPayOrder
+                                              backColor: isOrderAndPay
                                                   ? [
                                                       btnColorOrangeLight,
                                                       btnColorOrangeDark
@@ -1662,82 +1445,355 @@ class _WorkStationState extends State<WorkStation> {
                                                       btnColorBlueLight,
                                                       btnColorBlueDark
                                                     ],
-                                              textColor: isPayOrder
+                                              textColor: isOrderAndPay
                                                   ? btnColorPurpleDark
                                                   : iconButtonTextColor,
                                               borderColor: null,
                                             ),
                                           ),
-                                          // const SizedBox(
-                                          //   height: 20,
-                                          // ),
-                                          // GestureDetector(
-                                          //   onTap: () {
-                                          //     setState(() {
-                                          //       if (isOrderOnly == false) {
-                                          //         isOrderOnly = true;
-                                          //         isPayOrder = false;
-                                          //       }
-                                          //     });
-                                          //   },
-                                          //   child: ButtonMenu(
-                                          //     text: 'ORDER ONLY',
-                                          //     width: 200,
-                                          //     height: 35,
-                                          //     backColor: isOrderOnly
-                                          //         ? [
-                                          //             btnColorOrangeLight,
-                                          //             btnColorOrangeDark
-                                          //           ]
-                                          //         : [
-                                          //             btnColorBlueLight,
-                                          //             btnColorBlueDark
-                                          //           ],
-                                          //     textColor: isOrderOnly
-                                          //         ? btnColorPurpleDark
-                                          //         : iconButtonTextColor,
-                                          //     borderColor: null,
-                                          //   ),
-                                          // ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
+
+                                    //ADD here
                                   ],
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 50),
-                            Container(
-                              alignment: Alignment.bottomRight,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                mainAxisAlignment: MainAxisAlignment.end,
+                          ],
+                        ),
+                        SizedBox(
+                          width: isSelfCollection ? 10 : 150,
+                        ),
+                        Visibility(
+                          visible: isSelfCollection,
+                          child: Row(
+                            children: [
+                              Column(
                                 children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        if (singleStationVal()) {
-                                          context
-                                              .read<MenuProvider>()
-                                              .updateMenuCount(1);
-                                        }
-                                      });
-                                    },
-                                    child: ButtonMenu(
-                                      text: 'SET UP WTPs',
-                                      width: 200,
-                                      height: 35,
-                                      backColor: singleStationVal()
-                                          ? [
-                                              btnColorGreenLight,
-                                              btnColorGreenDark
-                                            ]
-                                          : [
-                                              btnColorGreyLight,
-                                              btnColorGreyDark
-                                            ],
-                                      textColor: iconButtonTextColor,
-                                      borderColor: null,
+                                  Text(
+                                    'COLLECTION INSTRUCTION',
+                                    style: TextStyle(
+                                        fontSize: defaulDescriptiontFontSize,
+                                        fontWeight: FontWeight.bold,
+                                        fontStyle: FontStyle.italic),
+                                  ),
+                                  const SizedBox(
+                                    height: 8,
+                                  ),
+                                  Container(
+                                    height: 200,
+                                    width: showStationMenu == false &&
+                                                showOrderingMenu == true ||
+                                            showStationMenu == true &&
+                                                showOrderingMenu == false
+                                        ? 400
+                                        : showOrderingMenu == false &&
+                                                showStationMenu == false
+                                            ? 600
+                                            : 200,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color: const Color(0xffef7700))),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextField(
+                                        controller: collectionInstruction,
+                                        expands: true,
+                                        maxLines: null,
+                                        decoration: InputDecoration(
+                                            hintStyle: TextStyle(
+                                                fontSize: 11,
+                                                fontFamily: defaultFontFamily,
+                                                fontStyle: FontStyle.italic),
+                                            border: InputBorder.none,
+                                            hintText:
+                                                'Example: Please proceed to Drinklink Cube situated next to the cashier'),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            strcollectionInstruction =
+                                                collectionInstruction.text;
+                                          });
+                                        },
+                                      ),
+                                      // child: Text(
+                                      //   'Example: Please proceed to Drinklink Cube situated next to the cashier',
+                                      //   style: TextStyle(fontSize: 12),
+                                      // ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                    width: 1,
+                                    color: Colors.grey.shade500,
+                                    // height: MediaQuery.sizeOf(context).height),
+                                    height: 250),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(8.0),
+                        //   child: Container(
+                        //       width: 1,
+                        //       color: Colors.grey.shade500,
+                        //       height: MediaQuery.sizeOf(context).height),
+                        // ),
+                        Column(
+                          children: [
+                            Visibility(
+                              // visible: isSelfCollection,
+                              child: Column(
+                                children: [
+                                  Image.asset(
+                                    'assets/images/step4.png',
+                                    height: 25,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  Container(
+                                    width: 200,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white,
+                                        border: Border.all(color: Colors.grey)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              'Your Dguests will served by your waiters to their tables',
+                                              style: TextStyle(
+                                                  fontSize: 11,
+                                                  fontFamily: defaultFontFamily,
+                                                  fontStyle: FontStyle.italic),
+                                              textAlign: TextAlign.start,
+                                            ),
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                isServeCollection =
+                                                    !isServeCollection;
+                                                // if (isServeCollection == false) {
+                                                //   isPayOrder = false;
+                                                //   isOrderOnly = false;
+                                                // }
+
+                                                // if (isSelfCollection == true &&
+                                                //     isOrderAndPay == false) {
+                                                //   warningDialog(
+                                                //       context,
+                                                //       'SELF SERVICE',
+                                                //       'Please select Service Option');
+                                                //   isServeCollection = false;
+                                                //   return;
+                                                // }
+
+                                                // if (isSelfCollection == true &&
+                                                //     strcollectionInstruction == '') {
+                                                //   warningDialog(
+                                                //       context,
+                                                //       'SELF SERVICE',
+                                                //       'Please enter Collection Instruction');
+                                                //   isServeCollection = false;
+                                                //   return;
+                                                // }
+                                              });
+                                            },
+                                            child: ButtonMenu(
+                                              text: 'SERVED SERVICE',
+                                              width: 200,
+                                              height: 35,
+                                              backColor: isServeCollection
+                                                  ? [
+                                                      btnColorOrangeLight,
+                                                      btnColorOrangeDark
+                                                    ]
+                                                  : [
+                                                      btnColorBlueLight,
+                                                      btnColorBlueDark
+                                                    ],
+                                              textColor: isServeCollection
+                                                  ? btnColorPurpleDark
+                                                  : iconButtonTextColor,
+                                              borderColor: null,
+                                            ),
+                                          ),
+                                          // GestureDetector(
+                                          //   onTap: () {
+                                          //     setState(() {
+                                          //       isServeCollection = !isServeCollection;
+                                          //     });
+                                          //   },
+                                          //   child: Container(
+                                          //     width: 200,
+                                          //     height: 50,
+                                          //     decoration: BoxDecoration(
+                                          //       borderRadius: BorderRadius.circular(10.0),
+                                          //       color: isServeCollection
+                                          //           ? const Color(0xffef7700)
+                                          //           : Colors.grey.shade500,
+                                          //     ),
+                                          //     child: const Row(
+                                          //       mainAxisAlignment:
+                                          //           MainAxisAlignment.center,
+                                          //       crossAxisAlignment:
+                                          //           CrossAxisAlignment.center,
+                                          //       children: [
+                                          //         Text(
+                                          //           'Serve',
+                                          //           style: TextStyle(
+                                          //             fontFamily: 'SFPro',
+                                          //             fontSize: 18,
+                                          //             color: Colors.white,
+                                          //             fontWeight: FontWeight.w500,
+                                          //           ),
+                                          //           textAlign: TextAlign.center,
+                                          //         ),
+                                          //       ],
+                                          //     ),
+                                          //   ),
+                                          // ),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          Visibility(
+                                            visible: isServeCollection,
+                                            child: Column(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    'CHOOSE ONE',
+                                                    style: TextStyle(
+                                                        fontSize: 10,
+                                                        fontStyle:
+                                                            FontStyle.italic,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontFamily:
+                                                            defaultFontFamily),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      // if (isPayOrder == false) {
+                                                      //   isPayOrder = true;
+                                                      //   isOrderOnly = false;
+                                                      // }
+                                                      isPayOrder = !isPayOrder;
+                                                    });
+                                                  },
+                                                  child: ButtonMenu(
+                                                    text: 'ORDER AND PAY',
+                                                    width: 200,
+                                                    height: 35,
+                                                    backColor: isPayOrder
+                                                        ? [
+                                                            btnColorOrangeLight,
+                                                            btnColorOrangeDark
+                                                          ]
+                                                        : [
+                                                            btnColorBlueLight,
+                                                            btnColorBlueDark
+                                                          ],
+                                                    textColor: isPayOrder
+                                                        ? btnColorPurpleDark
+                                                        : iconButtonTextColor,
+                                                    borderColor: null,
+                                                  ),
+                                                ),
+                                                // const SizedBox(
+                                                //   height: 20,
+                                                // ),
+                                                // GestureDetector(
+                                                //   onTap: () {
+                                                //     setState(() {
+                                                //       if (isOrderOnly == false) {
+                                                //         isOrderOnly = true;
+                                                //         isPayOrder = false;
+                                                //       }
+                                                //     });
+                                                //   },
+                                                //   child: ButtonMenu(
+                                                //     text: 'ORDER ONLY',
+                                                //     width: 200,
+                                                //     height: 35,
+                                                //     backColor: isOrderOnly
+                                                //         ? [
+                                                //             btnColorOrangeLight,
+                                                //             btnColorOrangeDark
+                                                //           ]
+                                                //         : [
+                                                //             btnColorBlueLight,
+                                                //             btnColorBlueDark
+                                                //           ],
+                                                //     textColor: isOrderOnly
+                                                //         ? btnColorPurpleDark
+                                                //         : iconButtonTextColor,
+                                                //     borderColor: null,
+                                                //   ),
+                                                // ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 50),
+                                  Container(
+                                    alignment: Alignment.bottomRight,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              if (singleStationVal()) {
+                                                context
+                                                    .read<MenuProvider>()
+                                                    .updateMenuCount(1);
+                                              }
+                                            });
+                                          },
+                                          child: ButtonMenu(
+                                            text: 'SET UP WTPs',
+                                            width: 200,
+                                            height: 35,
+                                            backColor: singleStationVal()
+                                                ? [
+                                                    btnColorGreenLight,
+                                                    btnColorGreenDark
+                                                  ]
+                                                : [
+                                                    btnColorGreyLight,
+                                                    btnColorGreyDark
+                                                  ],
+                                            textColor: iconButtonTextColor,
+                                            borderColor: null,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -1745,10 +1801,10 @@ class _WorkStationState extends State<WorkStation> {
                             ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -1928,6 +1984,9 @@ class _WorkStationState extends State<WorkStation> {
                             onTap: () {
                               setState(() {
                                 isActiveWst = !isActiveWst;
+                                isListSubstationOopen = !isListSubstationOopen;
+                                listSubStation.clear();
+                                isServiceOptionOpen2 = !isServiceOptionOpen2;
                               });
                             },
                             child: Container(
@@ -1995,188 +2054,199 @@ class _WorkStationState extends State<WorkStation> {
                       const SizedBox(
                         width: 100,
                       ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Image.asset(
-                            stationMulMenu == 1
-                                ? 'assets/images/step2.png'
-                                : 'assets/images/step1.png',
-                            height: 25,
-                            color: Colors.grey.shade500,
-                          ),
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          Column(
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Text(
-                                      'CREATE STATION',
-                                      style: TextStyle(
-                                        fontSize: defaulDescriptiontFontSize,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 300,
-                                    height: 45,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      color: const Color(0xffffffff),
-                                      border: Border.all(
-                                          width: 1.0,
-                                          color: systemDefaultColorOrange),
-                                    ),
-                                    child: Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: TextField(
-                                          controller: stationController,
-                                          decoration: InputDecoration.collapsed(
-                                              hintStyle: TextStyle(
-                                                  fontSize: 11,
-                                                  fontFamily: defaultFontFamily,
-                                                  fontStyle: FontStyle.italic),
-                                              border: InputBorder.none,
-                                              hintText: 'Station Name'),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'EX. Kitchen, Bar, Lounge',
-                                          style: TextStyle(
-                                              fontSize: 11,
-                                              fontFamily: defaultFontFamily,
-                                              fontStyle: FontStyle.italic),
-                                        ),
-                                        const SizedBox(width: 50),
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              if (stationController.text ==
-                                                  '') {
-                                                warningDialog(
-                                                    context,
-                                                    'CREATE SUB STATION',
-                                                    'Please enter station name');
-                                                return;
-                                              }
-
-                                              // stations
-                                              //     .add(stationController.text);
-
-                                              int idexno =
-                                                  listSubStation.length;
-                                              SubStationClass subStationx =
-                                                  SubStationClass(
-                                                      index: idexno,
-                                                      stationName:
-                                                          stationController
-                                                              .text,
-                                                      status: true);
-                                              listSubStation.add(subStationx);
-                                              context
-                                                  .read<MenuProvider>()
-                                                  .setWorkStation(stations);
-                                              stationController.text = '';
-                                            });
-                                          },
-                                          child: ButtonMenu(
-                                            text: 'ADD',
-                                            width: 100,
-                                            height: 35,
-                                            backColor: [
-                                              btnColorPurpleLight,
-                                              btnColorPurpleDark
-                                            ],
-                                            textColor: btnColorGreyLight,
-                                            borderColor: null,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              //List of station
-                              Visibility(
-                                  visible: listSubStation.isNotEmpty,
-                                  child: ListOfStation(300)),
-                              Visibility(
-                                visible: listSubStation.isNotEmpty,
-                                child: Column(
+                      Visibility(
+                        visible: isListSubstationOopen,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Image.asset(
+                              stationMulMenu == 1
+                                  ? 'assets/images/step2.png'
+                                  : 'assets/images/step1.png',
+                              height: 25,
+                              color: Colors.grey.shade500,
+                            ),
+                            const SizedBox(
+                              width: 15,
+                            ),
+                            Column(
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    const SizedBox(
-                                      height: 20,
+                                    Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Text(
+                                        'CREATE STATION',
+                                        style: TextStyle(
+                                          fontSize: defaulDescriptiontFontSize,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
                                     ),
                                     Container(
-                                      padding:
-                                          const EdgeInsets.only(left: 200.0),
-                                      child: GestureDetector(
-                                        child: ButtonMenu(
-                                          text: 'DELETE',
-                                          width: 100,
-                                          height: 35,
-                                          backColor: [
-                                            btnColorRedLight,
-                                            btnColorRedDark
-                                          ],
-                                          textColor: iconButtonTextColor,
-                                          borderColor: null,
+                                      width: 300,
+                                      height: 45,
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        color: const Color(0xffffffff),
+                                        border: Border.all(
+                                            width: 1.0,
+                                            color: systemDefaultColorOrange),
+                                      ),
+                                      child: Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TextField(
+                                            controller: stationController,
+                                            decoration:
+                                                InputDecoration.collapsed(
+                                                    hintStyle: TextStyle(
+                                                        fontSize: 11,
+                                                        fontFamily:
+                                                            defaultFontFamily,
+                                                        fontStyle:
+                                                            FontStyle.italic),
+                                                    border: InputBorder.none,
+                                                    hintText: 'Station Name'),
+                                          ),
                                         ),
-                                        onTap: () {
-                                          setState(() {
-                                            for (var i = 0;
-                                                i < indexListSubStation.length;
-                                                i++) {
-                                              print(indexListSubStation[i]);
-                                              listSubStation.removeWhere(
-                                                  (item) =>
-                                                      item.stationName ==
-                                                      indexListSubStation[i]);
-                                              indexListSubStation.removeWhere(
-                                                  (item) =>
-                                                      item ==
-                                                      indexListSubStation[i]
-                                                          .toString());
-                                              isSubStationSelected = false;
-                                            }
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'EX. Kitchen, Bar, Lounge',
+                                            style: TextStyle(
+                                                fontSize: 11,
+                                                fontFamily: defaultFontFamily,
+                                                fontStyle: FontStyle.italic),
+                                          ),
+                                          const SizedBox(width: 50),
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                if (stationController.text ==
+                                                    '') {
+                                                  warningDialog(
+                                                      context,
+                                                      'CREATE SUB STATION',
+                                                      'Please enter station name');
+                                                  return;
+                                                }
 
-                                            // for (var itemx
-                                            //     in indexListSubStation) {
-                                            //   print(itemx);
-                                            //   stations.removeWhere((item) =>
-                                            //       item == itemx.toString());
-                                            //   indexListSubStation.removeWhere(
-                                            //       (item) =>
-                                            //           item == itemx.toString());
-                                            // }
-                                          });
-                                        },
+                                                // stations
+                                                //     .add(stationController.text);
+
+                                                int idexno =
+                                                    listSubStation.length;
+                                                SubStationClass subStationx =
+                                                    SubStationClass(
+                                                        index: idexno,
+                                                        stationName:
+                                                            stationController
+                                                                .text,
+                                                        status: true);
+                                                listSubStation.add(subStationx);
+                                                context
+                                                    .read<MenuProvider>()
+                                                    .setWorkStation(stations);
+                                                stationController.text = '';
+                                                isServiceOptionOpen2 =
+                                                    !isServiceOptionOpen2;
+                                              });
+                                            },
+                                            child: ButtonMenu(
+                                              text: 'ADD',
+                                              width: 100,
+                                              height: 35,
+                                              backColor: [
+                                                btnColorPurpleLight,
+                                                btnColorPurpleDark
+                                              ],
+                                              textColor: iconButtonTextColor,
+                                              borderColor: null,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+
+                                //List of station
+                                Visibility(
+                                    visible: listSubStation.isNotEmpty,
+                                    child: ListOfStation(300)),
+                                Visibility(
+                                  visible: listSubStation.isNotEmpty,
+                                  child: Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      Container(
+                                        padding:
+                                            const EdgeInsets.only(left: 200.0),
+                                        child: GestureDetector(
+                                          child: ButtonMenu(
+                                            text: 'DELETE',
+                                            width: 100,
+                                            height: 35,
+                                            backColor: [
+                                              btnColorRedLight,
+                                              btnColorRedDark
+                                            ],
+                                            textColor: iconButtonTextColor,
+                                            borderColor: null,
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              for (var i = 0;
+                                                  i <
+                                                      indexListSubStation
+                                                          .length;
+                                                  i++) {
+                                                print(indexListSubStation[i]);
+                                                listSubStation.removeWhere(
+                                                    (item) =>
+                                                        item.stationName ==
+                                                        indexListSubStation[i]);
+                                                indexListSubStation.removeWhere(
+                                                    (item) =>
+                                                        item ==
+                                                        indexListSubStation[i]
+                                                            .toString());
+                                                isSubStationSelected = false;
+                                              }
+
+                                              // for (var itemx
+                                              //     in indexListSubStation) {
+                                              //   print(itemx);
+                                              //   stations.removeWhere((item) =>
+                                              //       item == itemx.toString());
+                                              //   indexListSubStation.removeWhere(
+                                              //       (item) =>
+                                              //           item == itemx.toString());
+                                              // }
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -2291,7 +2361,7 @@ class _WorkStationState extends State<WorkStation> {
                                             btnColorPurpleLight,
                                             btnColorPurpleDark
                                           ],
-                                          textColor: btnColorGreyLight,
+                                          textColor: iconButtonTextColor,
                                           borderColor: null,
                                         ),
                                       ),
@@ -2362,84 +2432,87 @@ class _WorkStationState extends State<WorkStation> {
                             ),
                           ],
                         ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Image.asset(
-                              'assets/images/step2.png',
-                              height: 25,
-                              color: Colors.grey.shade500,
-                            ),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Text(
-                                    'ENTER AVERAGE PREPARATION TIME',
-                                    style: TextStyle(
-                                      fontSize: defaulDescriptiontFontSize,
-                                      fontWeight: FontWeight.bold,
+                        Visibility(
+                          visible: listSubStation.isNotEmpty,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Image.asset(
+                                'assets/images/step2.png',
+                                height: 25,
+                                color: Colors.grey.shade500,
+                              ),
+                              const SizedBox(
+                                width: 15,
+                              ),
+                              Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Text(
+                                      'ENTER AVERAGE PREPARATION TIME',
+                                      style: TextStyle(
+                                        fontSize: defaulDescriptiontFontSize,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Row(
-                                  children: [
-                                    Container(
-                                      width: 80,
-                                      height: 45,
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(15.0),
-                                        color: const Color(0xffffffff),
-                                        border: Border.all(
-                                            width: 1.0,
-                                            // color: const Color(0xff707070)
-                                            color: systemDefaultColorOrange),
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            color: Color(0x29000000),
-                                            offset: Offset(0, 3),
-                                            blurRadius: 6,
-                                          ),
-                                        ],
-                                      ),
-                                      child: Center(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: TextField(
-                                            controller: prepTime,
-                                            decoration:
-                                                const InputDecoration.collapsed(
-                                                    hintText: '5'),
-                                            onChanged: (value) {
-                                              setState(() {
-                                                strprepTime = prepTime.text;
-                                              });
-                                            },
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 80,
+                                        height: 45,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15.0),
+                                          color: const Color(0xffffffff),
+                                          border: Border.all(
+                                              width: 1.0,
+                                              // color: const Color(0xff707070)
+                                              color: systemDefaultColorOrange),
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: Color(0x29000000),
+                                              offset: Offset(0, 3),
+                                              blurRadius: 6,
+                                            ),
+                                          ],
+                                        ),
+                                        child: Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: TextField(
+                                              controller: prepTime,
+                                              decoration: const InputDecoration
+                                                  .collapsed(hintText: '5'),
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  strprepTime = prepTime.text;
+                                                });
+                                              },
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 15.0,
-                                    ),
-                                    Text(
-                                      'MINUTES',
-                                      style: TextStyle(
-                                          color: Colors.grey.shade600,
-                                          fontSize: defaulDescriptiontFontSize,
-                                          fontFamily: defaultFontFamily,
-                                          fontStyle: FontStyle.italic),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
+                                      const SizedBox(
+                                        width: 15.0,
+                                      ),
+                                      Text(
+                                        'MINUTES',
+                                        style: TextStyle(
+                                            color: Colors.grey.shade600,
+                                            fontSize:
+                                                defaulDescriptiontFontSize,
+                                            fontFamily: defaultFontFamily,
+                                            fontStyle: FontStyle.italic),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(
                           width: 15,
@@ -2448,233 +2521,51 @@ class _WorkStationState extends State<WorkStation> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'SERVICE OPTIONS (CHOOSE ONE OR MORE)',
-                    style: TextStyle(
-                        fontSize: defaulDescriptiontFontSize,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      width: showStationMenu == false &&
-                                  showOrderingMenu == true ||
-                              showStationMenu == true &&
-                                  showOrderingMenu == false
-                          ? 850
-                          : showOrderingMenu == false &&
-                                  showStationMenu == false
-                              ? 1000
-                              : 650,
-                      color: Colors.grey.shade500,
-                      height: 1),
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Image.asset(
-                          stationMulMenu == 2
-                              ? 'assets/images/step3.png'
-                              : 'assets/images/step3.png',
-                          height: 25,
-                          color: Colors.grey.shade500,
+                Visibility(
+                  visible: stationMulMenu == 2
+                      ? listSubStation.isNotEmpty && strprepTime.isNotEmpty
+                      : listSubStation.isNotEmpty,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'SERVICE OPTIONS (CHOOSE ONE OR MORE)',
+                          style: TextStyle(
+                              fontSize: defaulDescriptiontFontSize,
+                              fontWeight: FontWeight.bold,
+                              fontStyle: FontStyle.italic),
                         ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                              border: Border.all(color: Colors.grey)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'Your Dguests will collect the order from \n dedicated collection points',
-                                        style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: defaultFontFamily,
-                                            fontStyle: FontStyle.italic),
-                                        textAlign: TextAlign.start,
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          isSelfCollection = !isSelfCollection;
-                                        });
-                                      },
-                                      child: ButtonMenu(
-                                        text: 'SELF SERVICE',
-                                        width: 200,
-                                        height: 35,
-                                        backColor: isSelfCollection
-                                            ? [
-                                                btnColorOrangeLight,
-                                                btnColorOrangeDark
-                                              ]
-                                            : [
-                                                btnColorBlueLight,
-                                                btnColorBlueDark
-                                              ],
-                                        textColor: isSelfCollection
-                                            ? btnColorPurpleDark
-                                            : iconButtonTextColor,
-                                        borderColor: null,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    Visibility(
-                                      visible: isSelfCollection,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            isOrderAndPay = !isOrderAndPay;
-                                          });
-                                        },
-                                        child: ButtonMenu(
-                                          text: 'ORDER AND PAY',
-                                          width: 200,
-                                          height: 35,
-                                          backColor: isOrderAndPay
-                                              ? [
-                                                  btnColorOrangeLight,
-                                                  btnColorOrangeDark
-                                                ]
-                                              : [
-                                                  btnColorBlueLight,
-                                                  btnColorBlueDark
-                                                ],
-                                          textColor: isOrderAndPay
-                                              ? btnColorPurpleDark
-                                              : iconButtonTextColor,
-                                          borderColor: null,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-                                //ADD here
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      width: isSelfCollection || isServeCollection ? 10 : 150,
-                    ),
-                    Visibility(
-                      visible: isSelfCollection || isServeCollection,
-                      child: Row(
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                            width: showStationMenu == false &&
+                                        showOrderingMenu == true ||
+                                    showStationMenu == true &&
+                                        showOrderingMenu == false
+                                ? 850
+                                : showOrderingMenu == false &&
+                                        showStationMenu == false
+                                    ? 1000
+                                    : 650,
+                            color: Colors.grey.shade500,
+                            height: 1),
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Column(
-                            children: [
-                              Text(
-                                'COLLECTION INSTRUCTION',
-                                style: TextStyle(
-                                    fontSize: defaulDescriptiontFontSize,
-                                    fontWeight: FontWeight.bold,
-                                    fontStyle: FontStyle.italic),
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Container(
-                                height: 200,
-                                width: showStationMenu == false &&
-                                            showOrderingMenu == true ||
-                                        showStationMenu == true &&
-                                            showOrderingMenu == false
-                                    ? 400
-                                    : showOrderingMenu == false &&
-                                            showStationMenu == false
-                                        ? 600
-                                        : 200,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white,
-                                    border: Border.all(
-                                        color: const Color(0xffef7700))),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: TextField(
-                                    controller: collectionInstruction,
-                                    expands: true,
-                                    maxLines: null,
-                                    decoration: InputDecoration(
-                                        hintStyle: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: defaultFontFamily,
-                                            fontStyle: FontStyle.italic),
-                                        border: InputBorder.none,
-                                        hintText:
-                                            'Example: Please proceed to Drinklink Cube situated next to the cashier'),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        strcollectionInstruction =
-                                            collectionInstruction.text;
-                                      });
-                                    },
-                                  ),
-                                  // child: Text(
-                                  //   'Example: Please proceed to Drinklink Cube situated next to the cashier',
-                                  //   style: TextStyle(fontSize: 12),
-                                  // ),
-                                ),
-                              )
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                                width: 1,
-                                color: Colors.grey.shade500,
-                                // height: MediaQuery.sizeOf(context).height),
-                                height: 250),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Padding(
-                    //   padding: const EdgeInsets.all(8.0),
-                    //   child: Container(
-                    //       width: 1,
-                    //       color: Colors.grey.shade500,
-                    //       height: MediaQuery.sizeOf(context).height),
-                    // ),
-                    Column(
-                      children: [
-                        Visibility(
-                          // visible: isSelfCollection,
-                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Image.asset(
                                 stationMulMenu == 2
-                                    ? 'assets/images/step4.png'
-                                    : 'assets/images/step4.png',
+                                    ? 'assets/images/step3.png'
+                                    : 'assets/images/step3.png',
                                 height: 25,
                                 color: Colors.grey.shade500,
                               ),
@@ -2682,139 +2573,77 @@ class _WorkStationState extends State<WorkStation> {
                                 height: 15,
                               ),
                               Container(
-                                width: 200,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.white,
                                     border: Border.all(color: Colors.grey)),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Column(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          'Your Dguests will served by your waiters to their tables',
-                                          style: TextStyle(
-                                              fontSize: 11,
-                                              fontFamily: defaultFontFamily,
-                                              fontStyle: FontStyle.italic),
-                                          textAlign: TextAlign.start,
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            isServeCollection =
-                                                !isServeCollection;
-                                            if (stationMulMenu == 1) {
-                                              isPayOrder = false;
-                                              isOrderOnly = false;
-                                            }
-
-                                            // isPayOrder = !isPayOrder;
-                                            // if (isServeCollection == false) {
-                                            //   isPayOrder = false;
-                                            //   isOrderOnly = false;
-                                            // }
-                                          });
-                                        },
-                                        child: ButtonMenu(
-                                          text: 'SERVED SERVICE',
-                                          width: 200,
-                                          height: 35,
-                                          backColor: isServeCollection
-                                              ? [
-                                                  btnColorOrangeLight,
-                                                  btnColorOrangeDark
-                                                ]
-                                              : [
-                                                  btnColorBlueLight,
-                                                  btnColorBlueDark
-                                                ],
-                                          textColor: isServeCollection
-                                              ? btnColorPurpleDark
-                                              : iconButtonTextColor,
-                                          borderColor: null,
-                                        ),
-                                      ),
-                                      // GestureDetector(
-                                      //   onTap: () {
-                                      //     setState(() {
-                                      //       isServeCollection = !isServeCollection;
-                                      //     });
-                                      //   },
-                                      //   child: Container(
-                                      //     width: 200,
-                                      //     height: 50,
-                                      //     decoration: BoxDecoration(
-                                      //       borderRadius: BorderRadius.circular(10.0),
-                                      //       color: isServeCollection
-                                      //           ? const Color(0xffef7700)
-                                      //           : Colors.grey.shade500,
-                                      //     ),
-                                      //     child: const Row(
-                                      //       mainAxisAlignment:
-                                      //           MainAxisAlignment.center,
-                                      //       crossAxisAlignment:
-                                      //           CrossAxisAlignment.center,
-                                      //       children: [
-                                      //         Text(
-                                      //           'Serve',
-                                      //           style: TextStyle(
-                                      //             fontFamily: 'SFPro',
-                                      //             fontSize: 18,
-                                      //             color: Colors.white,
-                                      //             fontWeight: FontWeight.w500,
-                                      //           ),
-                                      //           textAlign: TextAlign.center,
-                                      //         ),
-                                      //       ],
-                                      //     ),
-                                      //   ),
-                                      // ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      Visibility(
-                                        visible: isServeCollection,
-                                        child: Column(
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text(
-                                                'CHOOSE ONE',
-                                                style: TextStyle(
-                                                    fontSize: 10,
-                                                    fontStyle: FontStyle.italic,
-                                                    fontWeight: FontWeight.bold,
-                                                    fontFamily:
-                                                        defaultFontFamily),
-                                                textAlign: TextAlign.center,
-                                              ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              'Your Dguests will collect the order from \n dedicated collection points',
+                                              style: TextStyle(
+                                                  fontSize: 11,
+                                                  fontFamily: defaultFontFamily,
+                                                  fontStyle: FontStyle.italic),
+                                              textAlign: TextAlign.start,
                                             ),
-                                            GestureDetector(
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                isSelfCollection =
+                                                    !isSelfCollection;
+                                              });
+                                            },
+                                            child: ButtonMenu(
+                                              text: 'SELF SERVICE',
+                                              width: 200,
+                                              height: 35,
+                                              backColor: isSelfCollection
+                                                  ? [
+                                                      btnColorOrangeLight,
+                                                      btnColorOrangeDark
+                                                    ]
+                                                  : [
+                                                      btnColorBlueLight,
+                                                      btnColorBlueDark
+                                                    ],
+                                              textColor: isSelfCollection
+                                                  ? btnColorPurpleDark
+                                                  : iconButtonTextColor,
+                                              borderColor: null,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          Visibility(
+                                            visible: isSelfCollection,
+                                            child: GestureDetector(
                                               onTap: () {
                                                 setState(() {
-                                                  if (stationMulMenu == 1) {
-                                                    if (isPayOrder == false) {
-                                                      isPayOrder = true;
-                                                      isOrderOnly = false;
-                                                    }
-                                                  } else {
-                                                    isPayOrder = !isPayOrder;
-                                                  }
+                                                  isOrderAndPay =
+                                                      !isOrderAndPay;
                                                 });
                                               },
                                               child: ButtonMenu(
                                                 text: 'ORDER AND PAY',
                                                 width: 200,
                                                 height: 35,
-                                                backColor: isPayOrder
+                                                backColor: isOrderAndPay
                                                     ? [
                                                         btnColorOrangeLight,
                                                         btnColorOrangeDark
@@ -2823,122 +2652,405 @@ class _WorkStationState extends State<WorkStation> {
                                                         btnColorBlueLight,
                                                         btnColorBlueDark
                                                       ],
-                                                textColor: isPayOrder
+                                                textColor: isOrderAndPay
                                                     ? btnColorPurpleDark
                                                     : iconButtonTextColor,
                                                 borderColor: null,
                                               ),
                                             ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      //ADD here
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            width: isSelfCollection || isServeCollection
+                                ? 10
+                                : 150,
+                          ),
+                          Visibility(
+                            visible: isSelfCollection || isServeCollection,
+                            child: Row(
+                              children: [
+                                Column(
+                                  children: [
+                                    Text(
+                                      'COLLECTION INSTRUCTION',
+                                      style: TextStyle(
+                                          fontSize: defaulDescriptiontFontSize,
+                                          fontWeight: FontWeight.bold,
+                                          fontStyle: FontStyle.italic),
+                                    ),
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                    Container(
+                                      height: 200,
+                                      width: showStationMenu == false &&
+                                                  showOrderingMenu == true ||
+                                              showStationMenu == true &&
+                                                  showOrderingMenu == false
+                                          ? 400
+                                          : showOrderingMenu == false &&
+                                                  showStationMenu == false
+                                              ? 600
+                                              : 200,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Colors.white,
+                                          border: Border.all(
+                                              color: const Color(0xffef7700))),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextField(
+                                          controller: collectionInstruction,
+                                          expands: true,
+                                          maxLines: null,
+                                          decoration: InputDecoration(
+                                              hintStyle: TextStyle(
+                                                  fontSize: 11,
+                                                  fontFamily: defaultFontFamily,
+                                                  fontStyle: FontStyle.italic),
+                                              border: InputBorder.none,
+                                              hintText:
+                                                  'Example: Please proceed to Drinklink Cube situated next to the cashier'),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              strcollectionInstruction =
+                                                  collectionInstruction.text;
+                                            });
+                                          },
+                                        ),
+                                        // child: Text(
+                                        //   'Example: Please proceed to Drinklink Cube situated next to the cashier',
+                                        //   style: TextStyle(fontSize: 12),
+                                        // ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                      width: 1,
+                                      color: Colors.grey.shade500,
+                                      // height: MediaQuery.sizeOf(context).height),
+                                      height: 250),
+                                ),
+                              ],
+                            ),
+                          ),
+                          // Padding(
+                          //   padding: const EdgeInsets.all(8.0),
+                          //   child: Container(
+                          //       width: 1,
+                          //       color: Colors.grey.shade500,
+                          //       height: MediaQuery.sizeOf(context).height),
+                          // ),
+                          Column(
+                            children: [
+                              Visibility(
+                                // visible: isSelfCollection,
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      stationMulMenu == 2
+                                          ? 'assets/images/step4.png'
+                                          : 'assets/images/step4.png',
+                                      height: 25,
+                                      color: Colors.grey.shade500,
+                                    ),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    Container(
+                                      width: 200,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Colors.white,
+                                          border:
+                                              Border.all(color: Colors.grey)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                'Your Dguests will served by your waiters to their tables',
+                                                style: TextStyle(
+                                                    fontSize: 11,
+                                                    fontFamily:
+                                                        defaultFontFamily,
+                                                    fontStyle:
+                                                        FontStyle.italic),
+                                                textAlign: TextAlign.start,
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  isServeCollection =
+                                                      !isServeCollection;
+                                                  if (stationMulMenu == 1) {
+                                                    isPayOrder = false;
+                                                    isOrderOnly = false;
+                                                  }
+
+                                                  // isPayOrder = !isPayOrder;
+                                                  // if (isServeCollection == false) {
+                                                  //   isPayOrder = false;
+                                                  //   isOrderOnly = false;
+                                                  // }
+                                                });
+                                              },
+                                              child: ButtonMenu(
+                                                text: 'SERVED SERVICE',
+                                                width: 200,
+                                                height: 35,
+                                                backColor: isServeCollection
+                                                    ? [
+                                                        btnColorOrangeLight,
+                                                        btnColorOrangeDark
+                                                      ]
+                                                    : [
+                                                        btnColorBlueLight,
+                                                        btnColorBlueDark
+                                                      ],
+                                                textColor: isServeCollection
+                                                    ? btnColorPurpleDark
+                                                    : iconButtonTextColor,
+                                                borderColor: null,
+                                              ),
+                                            ),
+                                            // GestureDetector(
+                                            //   onTap: () {
+                                            //     setState(() {
+                                            //       isServeCollection = !isServeCollection;
+                                            //     });
+                                            //   },
+                                            //   child: Container(
+                                            //     width: 200,
+                                            //     height: 50,
+                                            //     decoration: BoxDecoration(
+                                            //       borderRadius: BorderRadius.circular(10.0),
+                                            //       color: isServeCollection
+                                            //           ? const Color(0xffef7700)
+                                            //           : Colors.grey.shade500,
+                                            //     ),
+                                            //     child: const Row(
+                                            //       mainAxisAlignment:
+                                            //           MainAxisAlignment.center,
+                                            //       crossAxisAlignment:
+                                            //           CrossAxisAlignment.center,
+                                            //       children: [
+                                            //         Text(
+                                            //           'Serve',
+                                            //           style: TextStyle(
+                                            //             fontFamily: 'SFPro',
+                                            //             fontSize: 18,
+                                            //             color: Colors.white,
+                                            //             fontWeight: FontWeight.w500,
+                                            //           ),
+                                            //           textAlign: TextAlign.center,
+                                            //         ),
+                                            //       ],
+                                            //     ),
+                                            //   ),
+                                            // ),
                                             const SizedBox(
                                               height: 20,
                                             ),
                                             Visibility(
-                                              visible: stationMulMenu == 1,
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    if (isOrderOnly == false) {
-                                                      isOrderOnly = true;
-                                                      isPayOrder = false;
-                                                    }
-                                                  });
-                                                },
-                                                child: ButtonMenu(
-                                                  text: 'ORDER ONLY',
-                                                  width: 200,
-                                                  height: 35,
-                                                  backColor: isOrderOnly
-                                                      ? [
-                                                          btnColorOrangeLight,
-                                                          btnColorOrangeDark
-                                                        ]
-                                                      : [
-                                                          btnColorBlueLight,
-                                                          btnColorBlueDark
-                                                        ],
-                                                  textColor: isOrderOnly
-                                                      ? btnColorPurpleDark
-                                                      : iconButtonTextColor,
-                                                  borderColor: null,
-                                                ),
+                                              visible: isServeCollection,
+                                              child: Column(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(
+                                                      'CHOOSE ONE',
+                                                      style: TextStyle(
+                                                          fontSize: 10,
+                                                          fontStyle:
+                                                              FontStyle.italic,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontFamily:
+                                                              defaultFontFamily),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        if (stationMulMenu ==
+                                                            1) {
+                                                          if (isPayOrder ==
+                                                              false) {
+                                                            isPayOrder = true;
+                                                            isOrderOnly = false;
+                                                          }
+                                                        } else {
+                                                          isPayOrder =
+                                                              !isPayOrder;
+                                                        }
+                                                      });
+                                                    },
+                                                    child: ButtonMenu(
+                                                      text: 'ORDER AND PAY',
+                                                      width: 200,
+                                                      height: 35,
+                                                      backColor: isPayOrder
+                                                          ? [
+                                                              btnColorOrangeLight,
+                                                              btnColorOrangeDark
+                                                            ]
+                                                          : [
+                                                              btnColorBlueLight,
+                                                              btnColorBlueDark
+                                                            ],
+                                                      textColor: isPayOrder
+                                                          ? btnColorPurpleDark
+                                                          : iconButtonTextColor,
+                                                      borderColor: null,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Visibility(
+                                                    visible:
+                                                        stationMulMenu == 1,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          if (isOrderOnly ==
+                                                              false) {
+                                                            isOrderOnly = true;
+                                                            isPayOrder = false;
+                                                          }
+                                                        });
+                                                      },
+                                                      child: ButtonMenu(
+                                                        text: 'ORDER ONLY',
+                                                        width: 200,
+                                                        height: 35,
+                                                        backColor: isOrderOnly
+                                                            ? [
+                                                                btnColorOrangeLight,
+                                                                btnColorOrangeDark
+                                                              ]
+                                                            : [
+                                                                btnColorBlueLight,
+                                                                btnColorBlueDark
+                                                              ],
+                                                        textColor: isOrderOnly
+                                                            ? btnColorPurpleDark
+                                                            : iconButtonTextColor,
+                                                        borderColor: null,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 50),
-                              Container(
-                                alignment: Alignment.bottomRight,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            if (stationMulMenu == 1) {
-                                              if (multipleStationVal()) {
-                                                context
-                                                    .read<MenuProvider>()
-                                                    .updateMenuCount(1);
-                                              }
-                                            } else {
-                                              if (multipleStationIndividualVal()) {
-                                                context
-                                                    .read<MenuProvider>()
-                                                    .updateMenuCount(2);
-                                              }
-                                            }
-                                          });
-                                        },
-                                        child: stationMulMenu == 1
-                                            ? ButtonMenu(
-                                                text: 'SET UP WTPs',
-                                                width: 200,
-                                                height: 35,
-                                                backColor: multipleStationVal()
-                                                    ? [
-                                                        btnColorGreenLight,
-                                                        btnColorGreenDark
-                                                      ]
-                                                    : [
-                                                        btnColorGreyLight,
-                                                        btnColorGreyDark
-                                                      ],
-                                                textColor: iconButtonTextColor,
-                                                borderColor: null,
-                                              )
-                                            : ButtonMenu(
-                                                text: 'SET UP WTPs',
-                                                width: 200,
-                                                height: 35,
-                                                backColor:
-                                                    multipleStationIndividualVal()
-                                                        ? [
-                                                            btnColorGreenLight,
-                                                            btnColorGreenDark
-                                                          ]
-                                                        : [
-                                                            btnColorGreyLight,
-                                                            btnColorGreyDark
-                                                          ],
-                                                textColor: iconButtonTextColor,
-                                                borderColor: null,
-                                              )),
+                                    ),
+                                    const SizedBox(height: 50),
+                                    Container(
+                                      alignment: Alignment.bottomRight,
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  if (stationMulMenu == 1) {
+                                                    if (multipleStationVal()) {
+                                                      context
+                                                          .read<MenuProvider>()
+                                                          .updateMenuCount(1);
+                                                    }
+                                                  } else {
+                                                    if (multipleStationIndividualVal()) {
+                                                      context
+                                                          .read<MenuProvider>()
+                                                          .updateMenuCount(2);
+                                                    }
+                                                  }
+                                                });
+                                              },
+                                              child: stationMulMenu == 1
+                                                  ? ButtonMenu(
+                                                      text: 'SET UP WTPs',
+                                                      width: 200,
+                                                      height: 35,
+                                                      backColor:
+                                                          multipleStationVal()
+                                                              ? [
+                                                                  btnColorGreenLight,
+                                                                  btnColorGreenDark
+                                                                ]
+                                                              : [
+                                                                  btnColorGreyLight,
+                                                                  btnColorGreyDark
+                                                                ],
+                                                      textColor:
+                                                          iconButtonTextColor,
+                                                      borderColor: null,
+                                                    )
+                                                  : ButtonMenu(
+                                                      text: 'SET UP WTPs',
+                                                      width: 200,
+                                                      height: 35,
+                                                      backColor:
+                                                          multipleStationIndividualVal()
+                                                              ? [
+                                                                  btnColorGreenLight,
+                                                                  btnColorGreenDark
+                                                                ]
+                                                              : [
+                                                                  btnColorGreyLight,
+                                                                  btnColorGreyDark
+                                                                ],
+                                                      textColor:
+                                                          iconButtonTextColor,
+                                                      borderColor: null,
+                                                    )),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 20),
                                   ],
                                 ),
                               ),
-                              const SizedBox(height: 20),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -3023,7 +3135,7 @@ class _WorkStationState extends State<WorkStation> {
                       textColor: indexListSubStationDelete == index &&
                               isSubStationDiactivated
                           ? btnColorRedDark
-                          : btnColorGreyLight,
+                          : iconButtonTextColor,
                       borderColor: null,
                     ),
                     // child: const Icon(
@@ -3159,6 +3271,90 @@ class _WorkStationState extends State<WorkStation> {
                         // backColor: fileName != ''
                         //     ? const sys_color_defaultorange
                         //     : const button_color_grey,
+                      )),
+                  const SizedBox(
+                    height: 100,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FittedBox(
+                      fit: BoxFit.fitWidth,
+                      child: Row(
+                        children: [
+                          Checkbox(
+                            shape: const CircleBorder(eccentricity: 1.0),
+                            checkColor: Colors.white,
+                            fillColor:
+                                MaterialStateProperty.resolveWith(getColor),
+                            value: true,
+                            onChanged: (bool? value) {
+                              setState(() {});
+                            },
+                          ),
+                          Text(
+                            'Import menu from existing outlets'.toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: systemDefaultColorOrange,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // const SizedBox(
+                  //   height: 10,
+                  // ),
+                  Visibility(
+                      visible: true,
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            child: ButtonMenu(
+                              text: 'Choose OUTLET'.toUpperCase(),
+                              width: 200,
+                              height: 30,
+                              backColor: [
+                                btnColorOrangeLight,
+                                btnColorOrangeDark
+                              ],
+                              textColor: iconButtonTextColor,
+                              borderColor: null,
+                            ),
+                            onTap: () {
+                              setState(() {
+                                context
+                                    .read<MenuProvider>()
+                                    .setChoosenOutletMenId('');
+                                context
+                                    .read<MenuProvider>()
+                                    .setChooseOutletIndex(-1);
+                                context
+                                    .read<MenuProvider>()
+                                    .setChooseOutletIndexSelected(-1);
+                                context
+                                    .read<MenuProvider>()
+                                    .setImportImage('', '', '', '');
+                              });
+                            },
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          GestureDetector(
+                              onTap: () async {},
+                              child: ButtonMenu(
+                                text: 'UPLOAD MENU',
+                                width: 200,
+                                height: 30,
+                                backColor: true
+                                    ? [btnColorGreenLight, btnColorGreenDark]
+                                    : [btnColorGreyLight, btnColorGreyDark],
+                                textColor: iconButtonTextColor,
+                                borderColor: null,
+                              )),
+                        ],
                       )),
                 ],
               ),
