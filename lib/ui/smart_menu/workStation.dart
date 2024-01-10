@@ -42,6 +42,7 @@ class _WorkStationState extends State<WorkStation> {
   bool isServiceOptionOpen2 = false;
   bool isServiceOptionOpen3 = false;
   bool isListSubstationOpen = false;
+  bool isUploaded = false;
   TextEditingController prepTime = TextEditingController(text: '');
   TextEditingController stationController = TextEditingController(text: '');
   TextEditingController collectionInstruction = TextEditingController(text: '');
@@ -108,7 +109,7 @@ class _WorkStationState extends State<WorkStation> {
             item.country.toLowerCase() == country.toLowerCase() &&
             item.id.toLowerCase() != selectedOutletId.toLowerCase())
         .toList();
-
+    final urlxx = context.select((MenuProvider p) => p.importImage);
     return Stack(
       children: [
         Column(
@@ -294,6 +295,7 @@ class _WorkStationState extends State<WorkStation> {
                                     onTap: () {
                                       setState(() {
                                         orderingMenu = 2;
+                                        isUploaded = false;
                                       });
                                     },
                                     child: ButtonMenu(
@@ -350,6 +352,7 @@ class _WorkStationState extends State<WorkStation> {
                                           // orderingMenu = 2;
                                           servedOrderingMenu = 1;
                                           showSetupMenu = false;
+                                          isUploaded = false;
                                         });
                                       },
                                       child: ButtonMenu(
@@ -825,6 +828,12 @@ class _WorkStationState extends State<WorkStation> {
                   ),
                 ),
                 Visibility(
+                  visible: urlxx.isEmpty,
+                  child: const SizedBox(
+                    width: 300,
+                  ),
+                ),
+                Visibility(
                   visible: true,
                   // visible: servedOrderingMenu == 1 || servedOrderingMenu == 2,
                   child: Column(
@@ -862,9 +871,9 @@ class _WorkStationState extends State<WorkStation> {
                                     },
                                     child: ButtonMenu(
                                       text: 'SET UP WTPs',
-                                      width: 200,
+                                      width: 150,
                                       height: 35,
-                                      backColor: singleStationVal()
+                                      backColor: isUploaded
                                           ? [
                                               btnColorGreenLight,
                                               btnColorGreenDark
@@ -3778,6 +3787,7 @@ class _WorkStationState extends State<WorkStation> {
     setState(() {
       fileName = '';
       menuName.text = '';
+      isUploaded = true;
     });
   }
 
@@ -3802,6 +3812,7 @@ class _WorkStationState extends State<WorkStation> {
         setState(() {
           importImagex = '';
           isImportMenu = false;
+          isUploaded = true;
         });
       });
     } else {
@@ -4033,9 +4044,93 @@ class _WorkStationState extends State<WorkStation> {
                     alignment: Alignment.center,
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(15)),
-                    child: Image.network(
-                      url,
-                      fit: BoxFit.cover,
+                    child: Stack(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 60.0),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: SizedBox(
+                              child: Image.network(
+                                url,
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ),
+                          ),
+                        ),
+                        if (url.isNotEmpty)
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  GestureDetector(
+                                    child: ButtonMenu(
+                                      text: 'Edit',
+                                      width: 100,
+                                      height: 30,
+                                      backColor: [
+                                        btnColorGreyLight,
+                                        btnColorGreyDark
+                                      ],
+                                      textColor: iconButtonTextColor,
+                                      borderColor: null,
+                                    ),
+                                    onTap: () async {
+                                      setState(() {
+                                        // menuNameUpdate.text = menuName;
+                                        // menuUpdateUrl = imageUrl;
+                                        // menuUpdateUrlOld = imageUrl;
+                                        // menuNameOld = menuName;
+                                      });
+
+                                      // await showDialog<bool>(
+                                      //   context: context,
+                                      //   builder: (context) {
+                                      //     context
+                                      //         .read<MenuProvider>()
+                                      //         .setImageLoaded(false);
+                                      //     return updateMenuDialog(
+                                      //         context, menuID);
+                                      //   },
+                                      // );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        Visibility(
+                          visible: url.isNotEmpty,
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: GestureDetector(
+                                  onTap: () async {
+                                    // await showDialog<bool>(
+                                    //   context: context,
+                                    //   builder: (context) => deleteMenuDialog(
+                                    //       context, menuID, menuName),
+                                    // );
+                                  },
+                                  child: ButtonMenu(
+                                    text: 'Delete',
+                                    width: 100,
+                                    height: 30,
+                                    backColor: [
+                                      btnColorRedLight,
+                                      btnColorRedDark
+                                    ],
+                                    textColor: iconButtonTextColor,
+                                    borderColor: null,
+                                  )),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                 ),
