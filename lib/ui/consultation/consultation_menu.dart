@@ -1202,7 +1202,7 @@ class _ConsultationMenuState extends State<ConsultationMenu> {
               borderRadius: BorderRadius.circular(20.0)),
           title: DecoratedBox(
             decoration: BoxDecoration(
-              color: Colors.white,
+              // color: Colors.white,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(children: [

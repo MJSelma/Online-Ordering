@@ -12,6 +12,7 @@ import '../../widgets/button.dart';
 import '../../widgets/show_dialog.dart';
 import '../constant/theme_data.dart';
 import '../consultation/ipaddress.dart';
+import '../data_class/outlet_class.dart';
 import '../data_class/subStation_class.dart';
 
 class WorkStation extends StatefulWidget {
@@ -50,6 +51,13 @@ class _WorkStationState extends State<WorkStation> {
   String selectedOutletId = '';
   String docId = '';
   String stationId = '';
+  bool isImportMenu = false;
+  String importFilenamex = '';
+  String importImagex = '';
+  String importTypex = '';
+  String importMenuNamex = '';
+  List<OutletClass> outletClasss = [];
+
   //Serve
   PlatformFile? uploadimage; //variable for choosed file
   String fileName = '';
@@ -90,6 +98,16 @@ class _WorkStationState extends State<WorkStation> {
     final outletId =
         context.select((BusinessOutletProvider p) => p.selectedOutletId);
     selectedOutletId = outletId;
+    final outletClassx =
+        context.select((BusinessOutletProvider p) => p.outletClass);
+    outletClasss = outletClassx;
+
+    final country = context.select((BusinessOutletProvider p) => p.country);
+    outletClasss = outletClasss
+        .where((item) =>
+            item.country.toLowerCase() == country.toLowerCase() &&
+            item.id.toLowerCase() != selectedOutletId.toLowerCase())
+        .toList();
 
     return Stack(
       children: [
@@ -807,8 +825,67 @@ class _WorkStationState extends State<WorkStation> {
                   ),
                 ),
                 Visibility(
-                    visible: servedOrderingMenu == 1 || servedOrderingMenu == 2,
-                    child: getMenuView())
+                  visible: true,
+                  // visible: servedOrderingMenu == 1 || servedOrderingMenu == 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Visibility(
+                          visible: servedOrderingMenu == 1 ||
+                              servedOrderingMenu == 2,
+                          child: getMenuView()),
+                      Visibility(
+                        visible:
+                            servedOrderingMenu == 1 || servedOrderingMenu == 2,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.fromLTRB(
+                                  0.0, 50.0, 20.0, 0.0),
+                              alignment: Alignment.bottomRight,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        if (singleStationVal()) {
+                                          context
+                                              .read<MenuProvider>()
+                                              .updateMenuCount(1);
+                                        }
+                                      });
+                                    },
+                                    child: ButtonMenu(
+                                      text: 'SET UP WTPs',
+                                      width: 200,
+                                      height: 35,
+                                      backColor: singleStationVal()
+                                          ? [
+                                              btnColorGreenLight,
+                                              btnColorGreenDark
+                                            ]
+                                          : [
+                                              btnColorGreyLight,
+                                              btnColorGreyDark
+                                            ],
+                                      textColor: iconButtonTextColor,
+                                      borderColor: null,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ],
@@ -928,7 +1005,7 @@ class _WorkStationState extends State<WorkStation> {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -3376,6 +3453,9 @@ class _WorkStationState extends State<WorkStation> {
                           controller: menuName,
                           decoration: null,
                           style: const TextStyle(fontSize: 12.0),
+                          onChanged: (value) {
+                            setState(() {});
+                          },
                           // const InputDecoration.collapsed(hintText: 'Menu name'),
                         ),
                       ),
@@ -3423,9 +3503,22 @@ class _WorkStationState extends State<WorkStation> {
                     height: 30,
                   ),
                   GestureDetector(
-                      onTap: () {
+                      onTap: () async {
+                        if (menuName.text == '') {
+                          warningDialog(
+                              context, 'MENU NAME', 'Please enter menu name.');
+                          return;
+                        }
+
+                        if (fileName == '') {
+                          warningDialog(
+                              context, 'CHOOSE FILE', 'Please select file.');
+                          return;
+                        }
+
                         //need to change the count
                         uploadImage(menuCount);
+
                         // uploadImage(1);
                       },
                       child: ButtonMenu(
@@ -3456,9 +3549,14 @@ class _WorkStationState extends State<WorkStation> {
                             checkColor: Colors.white,
                             fillColor:
                                 MaterialStateProperty.resolveWith(getColor),
-                            value: true,
+                            value: isImportMenu,
                             onChanged: (bool? value) {
-                              setState(() {});
+                              setState(() {
+                                isImportMenu == true
+                                    ? isImportMenu = false
+                                    : isImportMenu = true;
+                                importImagex = '';
+                              });
                             },
                           ),
                           Text(
@@ -3477,7 +3575,7 @@ class _WorkStationState extends State<WorkStation> {
                   //   height: 10,
                   // ),
                   Visibility(
-                      visible: true,
+                      visible: isImportMenu,
                       child: Column(
                         children: [
                           GestureDetector(
@@ -3507,18 +3605,22 @@ class _WorkStationState extends State<WorkStation> {
                                     .read<MenuProvider>()
                                     .setImportImage('', '', '', '');
                               });
+
+                              chooseOutlet();
                             },
                           ),
                           const SizedBox(
                             height: 30,
                           ),
                           GestureDetector(
-                              onTap: () async {},
+                              onTap: () async {
+                                createMenuImport(menuCount);
+                              },
                               child: ButtonMenu(
                                 text: 'UPLOAD MENU',
                                 width: 200,
                                 height: 30,
-                                backColor: true
+                                backColor: importImagex != ''
                                     ? [btnColorGreenLight, btnColorGreenDark]
                                     : [btnColorGreyLight, btnColorGreyDark],
                                 textColor: iconButtonTextColor,
@@ -3673,6 +3775,38 @@ class _WorkStationState extends State<WorkStation> {
     }
 
     createMenu(menuCount);
+    setState(() {
+      fileName = '';
+      menuName.text = '';
+    });
+  }
+
+  Future<void> createMenuImport(int menuCount) async {
+    if (importImagex != '') {
+      await FirebaseFirestore.instance
+          .collection('merchant')
+          .doc('X6odvQ5gqesAzwtJLaFl')
+          .collection('smartMenu')
+          .add({
+        'order': menuCount,
+        'date': DateTime.now(),
+        'fileName': importFilenamex,
+        'image': '$ipAddress/uploads/uploads/$importFilenamex',
+        'name': importMenuNamex,
+        'status': true,
+        'type': importTypex,
+        // 'outletId': 'dlo015'
+        'outletId': selectedOutletId
+      }).then((value) async {
+        context.read<MenuProvider>().menuRefresh();
+        setState(() {
+          importImagex = '';
+          isImportMenu = false;
+        });
+      });
+    } else {
+      warningDialog(context, 'CHOOSE OUTLET', 'Please choose outlet.');
+    }
   }
 
   Future<void> uploadImageUpdate() async {
@@ -3710,7 +3844,7 @@ class _WorkStationState extends State<WorkStation> {
       FirebaseFirestore.instance
           .collection('merchant')
           .doc('X6odvQ5gqesAzwtJLaFl')
-          .collection('consultationMenu')
+          .collection('smartMenu')
           .add({
         'order': menuCount,
         'date': DateTime.now(),
@@ -3729,23 +3863,24 @@ class _WorkStationState extends State<WorkStation> {
   getOutletMenu() {
     return StatefulBuilder(
       builder: (context, setState) {
-        // final choosenOutletId =
-        //     context.select((MenuProvider p) => p.ChoosenOutletMenId);
+        String outletIdxx = '';
+        final choosenOutletId =
+            context.select((MenuProvider p) => p.ChoosenOutletMenId);
 
         return Padding(
-          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+          padding: const EdgeInsets.fromLTRB(15, 10, 0, 0),
           child: ScrollConfiguration(
             behavior:
                 ScrollConfiguration.of(context).copyWith(scrollbars: false),
             child: Column(children: [
               SizedBox(
-                width: 250,
+                width: 240,
                 height: MediaQuery.sizeOf(context).height - 200,
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
                       .collection('merchant')
                       .doc('X6odvQ5gqesAzwtJLaFl')
-                      .collection('consultationMenu')
+                      .collection('smartMenu')
                       .where('outletId', isEqualTo: selectedOutletId)
                       .snapshots(),
                   builder: (context, snapshot) {
@@ -3804,7 +3939,112 @@ class _WorkStationState extends State<WorkStation> {
     );
   }
 
+  getOutletMenu2() {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        String outletIdxx = '';
+        final choosenOutletId =
+            context.select((MenuProvider p) => p.ChoosenOutletMenId);
+
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(15, 10, 0, 0),
+          child: ScrollConfiguration(
+            behavior:
+                ScrollConfiguration.of(context).copyWith(scrollbars: false),
+            child: Column(children: [
+              SizedBox(
+                width: 240,
+                height: MediaQuery.sizeOf(context).height - 200,
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('merchant')
+                      .doc('X6odvQ5gqesAzwtJLaFl')
+                      .collection('smartMenu')
+                      .where('outletId', isEqualTo: choosenOutletId)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                // maxCrossAxisExtent: 300,
+                                // childAspectRatio: 1,
+                                crossAxisSpacing: 5,
+                                mainAxisSpacing: 5),
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          DocumentSnapshot doc = snapshot.data!.docs[index];
+                          return Column(
+                            children: [
+                              GestureDetector(
+                                child: Container(
+                                  height: 80,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  child: Image.network(
+                                    doc['image'],
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    // outletImageUrl = doc['image'];
+                                    // print(outletImageUrl);
+                                    context.read<MenuProvider>().setImportImage(
+                                        doc['fileName'],
+                                        doc['image'],
+                                        doc['type'],
+                                        doc['name']);
+                                  });
+                                },
+                              ),
+                              Text(doc['name'])
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
+              )
+            ]),
+          ),
+        );
+      },
+    );
+  }
+
   getMenuView() {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        final url = context.select((MenuProvider p) => p.importImage);
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+          child: url.isEmpty
+              ? const SizedBox(height: 500)
+              : Center(
+                  child: Container(
+                    height: 500,
+                    width: 500,
+                    alignment: Alignment.center,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(15)),
+                    child: Image.network(
+                      url,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+        );
+      },
+    );
+  }
+
+  getMenuView2() {
     return StatefulBuilder(
       builder: (context, setState) {
         final url = context.select((MenuProvider p) => p.importImage);
@@ -4010,7 +4250,7 @@ class _WorkStationState extends State<WorkStation> {
                             FirebaseFirestore.instance
                                 .collection('merchant')
                                 .doc('X6odvQ5gqesAzwtJLaFl')
-                                .collection('consultationMenu')
+                                .collection('smartMenu')
                                 .doc(mID)
                                 .update({
                               'name': menuNameUpdate.text,
@@ -4214,7 +4454,7 @@ class _WorkStationState extends State<WorkStation> {
                             FirebaseFirestore.instance
                                 .collection('merchant')
                                 .doc('X6odvQ5gqesAzwtJLaFl')
-                                .collection('consultationMenu')
+                                .collection('smartMenu')
                                 .doc(mID)
                                 .delete()
                                 .then((value) async {
@@ -4245,6 +4485,239 @@ class _WorkStationState extends State<WorkStation> {
           ),
         ),
       ),
+    );
+  }
+
+  chooseOutlet() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final String importFileName =
+            context.select((MenuProvider p) => p.importFileName);
+        final String importImage =
+            context.select((MenuProvider p) => p.importImage);
+        final String importType =
+            context.select((MenuProvider p) => p.importType);
+        final String importMenuName =
+            context.select((MenuProvider p) => p.importMenuName);
+
+        importFilenamex = importFileName;
+        importImagex = importImage;
+        importTypex = importType;
+        importMenuNamex = importMenuName;
+
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              side: const BorderSide(width: 3, color: Color(0xffef7700)),
+              borderRadius: BorderRadius.circular(20.0)),
+          title: DecoratedBox(
+            decoration: BoxDecoration(
+              // color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('CHOOSE OUTLET',
+                      style: TextStyle(
+                          color: Color(0xffef7700),
+                          fontWeight: FontWeight.bold)),
+                  Container(
+                    alignment: Alignment.topRight,
+                    child: InkWell(
+                      child: const Icon(
+                        Icons.close,
+                        size: 14,
+                      ),
+                      onTap: () {
+                        setState(() {
+                          context
+                              .read<MenuProvider>()
+                              .setChoosenOutletMenId('');
+                          context
+                              .read<MenuProvider>()
+                              .setImportImage('', '', '', '');
+                          context.read<MenuProvider>().setChooseOutletIndex(-1);
+                          context
+                              .read<MenuProvider>()
+                              .setChooseOutletIndexSelected(-1);
+                        });
+
+                        Navigator.pop(context);
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ]),
+          ),
+          content: SizedBox(
+            width: MediaQuery.sizeOf(context).width - 300,
+            height: MediaQuery.sizeOf(context).height,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    getOutletList(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: 2,
+                        color: Colors.grey.shade500,
+                        height: MediaQuery.of(context).size.height - 200,
+                      ),
+                    ),
+                    getOutletMenu2(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                          width: 2,
+                          color: Colors.grey.shade500,
+                          height: MediaQuery.of(context).size.height - 200),
+                    ),
+                    getMenuView2()
+                  ],
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                        onTap: () async {
+                          setState(() {
+                            context.read<MenuProvider>().setImportImage(
+                                importFileName,
+                                importImage,
+                                importType,
+                                importMenuName);
+                            Navigator.pop(context);
+                          });
+                        },
+                        child: ButtonMenu(
+                          text: 'IMPORT',
+
+                          width: 150,
+                          height: 35,
+                          // backColor: const Color.fromARGB(255, 210, 69, 69),
+                          backColor: importFilenamex != ''
+                              ? [btnColorGreenLight, btnColorGreenDark]
+                              : [btnColorGreyLight, btnColorGreyDark],
+                          textColor: iconButtonTextColor,
+                          borderColor: null,
+                        )),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  getOutletList() {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        final int indexOutletMenu =
+            context.select((MenuProvider p) => p.chooseOutletIndex);
+        final int indexOutletMenuSelected =
+            context.select((MenuProvider p) => p.chooseOutletIndexSelected);
+
+        int ind = 100;
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+          child: Column(children: [
+            SizedBox(
+              width: 300,
+              height: MediaQuery.sizeOf(context).height - 200,
+              child: ListView.builder(
+                itemCount: outletClasss.length,
+                itemBuilder: (context, index) {
+                  print(index);
+                  return MouseRegion(
+                    onHover: (event) {
+                      setState(() {
+                        context
+                            .read<MenuProvider>()
+                            .setChooseOutletIndex(index);
+                      });
+                    },
+                    onExit: (event) {
+                      setState(() {
+                        context.read<MenuProvider>().setChooseOutletIndex(-1);
+                      });
+                    },
+                    child: GestureDetector(
+                      child: Container(
+                        // margin: const EdgeInsets.all(10.0),
+                        alignment: Alignment.center,
+                        height: 70,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: indexOutletMenuSelected == index
+                                  ? [btnColorPurpleLight, btnColorPurpleDark]
+                                  : indexOutletMenu == index
+                                      ? [
+                                          btnColorPurpleLight,
+                                          btnColorPurpleDark
+                                        ]
+                                      : [btnColorGreyLight, btnColorGreyDark]),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              Text(
+                                outletClasss[index].name,
+                                textAlign: TextAlign.left,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Text(
+                                  textAlign: TextAlign.left,
+                                  outletClasss[index].location,
+                                  style: const TextStyle(
+                                      fontSize: 10, color: Colors.white),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      onTap: () {
+                        setState(() {
+                          print(outletClasss[index].id);
+                          context
+                              .read<MenuProvider>()
+                              .setChooseOutletIndexSelected(index);
+                          context
+                              .read<MenuProvider>()
+                              .setChoosenOutletMenId(outletClasss[index].id);
+
+                          context
+                              .read<MenuProvider>()
+                              .setImportImage('', '', '', '');
+                        });
+                      },
+                    ),
+                  );
+                },
+              ),
+            )
+          ]),
+        );
+      },
     );
   }
 }
