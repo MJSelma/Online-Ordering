@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -34,12 +35,12 @@ class _WorkStationState extends State<WorkStation> {
   bool isSelfCollection = false;
   bool isOrderAndPay = false;
   bool isServeCollection = false;
-  bool isAverageTimeOopen1 = false;
-  bool isAverageTimeOopen2 = false;
+  bool isAverageTimeOpen1 = false;
+  bool isAverageTimeOpen2 = false;
   bool isServiceOptionOpen1 = false;
   bool isServiceOptionOpen2 = false;
   bool isServiceOptionOpen3 = false;
-  bool isListSubstationOopen = false;
+  bool isListSubstationOpen = false;
   TextEditingController prepTime = TextEditingController(text: '');
   TextEditingController stationController = TextEditingController(text: '');
   TextEditingController collectionInstruction = TextEditingController(text: '');
@@ -47,6 +48,8 @@ class _WorkStationState extends State<WorkStation> {
   String strprepTime = '';
   String graphSrc = '';
   String selectedOutletId = '';
+  String docId = '';
+  String stationId = '';
   //Serve
   PlatformFile? uploadimage; //variable for choosed file
   String fileName = '';
@@ -461,7 +464,7 @@ class _WorkStationState extends State<WorkStation> {
                                           graphSrc = 'graph1.jpeg';
                                           init();
                                           strprepTime = '';
-                                          isAverageTimeOopen1 = false;
+                                          isAverageTimeOpen1 = false;
                                           isServiceOptionOpen1 = false;
                                         });
                                       },
@@ -505,7 +508,7 @@ class _WorkStationState extends State<WorkStation> {
                                           stationMenu = 2;
 
                                           init();
-                                          isListSubstationOopen = false;
+                                          isListSubstationOpen = false;
                                           isServiceOptionOpen2 = false;
                                           isServiceOptionOpen3 = false;
                                           listSubStation.clear();
@@ -587,10 +590,11 @@ class _WorkStationState extends State<WorkStation> {
                                                   onTap: () {
                                                     setState(() {
                                                       stationMulMenu = 1;
+                                                      stationId = '1';
                                                       graphSrc = 'graph2.jpeg';
                                                       init();
 
-                                                      isListSubstationOopen =
+                                                      isListSubstationOpen =
                                                           false;
                                                       isServiceOptionOpen2 =
                                                           false;
@@ -672,15 +676,28 @@ class _WorkStationState extends State<WorkStation> {
                                                     setState(() {
                                                       listSubStation.clear();
                                                       stationMulMenu = 2;
+                                                      stationId = '2';
                                                       graphSrc = 'graph3.jpeg';
                                                       init();
-                                                      isAverageTimeOopen2 =
+                                                      isAverageTimeOpen2 =
                                                           false;
-                                                      isListSubstationOopen =
+                                                      isListSubstationOpen =
                                                           false;
                                                       isServiceOptionOpen3 =
                                                           false;
                                                       listSubStation.clear();
+                                                      int idexno =
+                                                          listSubStation.length;
+                                                      SubStationClass
+                                                          subStationx =
+                                                          SubStationClass(
+                                                              index: idexno,
+                                                              stationName:
+                                                                  stationController
+                                                                      .text,
+                                                              status: true);
+                                                      listSubStation
+                                                          .add(subStationx);
                                                     });
                                                   },
                                                   child: ButtonMenu(
@@ -1169,7 +1186,7 @@ class _WorkStationState extends State<WorkStation> {
                         onTap: () {
                           setState(() {
                             isActiveWst = !isActiveWst;
-                            isAverageTimeOopen1 = !isAverageTimeOopen1;
+                            isAverageTimeOpen1 = !isAverageTimeOpen1;
                             isServiceOptionOpen1 = !isServiceOptionOpen1;
                           });
                         },
@@ -1233,7 +1250,7 @@ class _WorkStationState extends State<WorkStation> {
                     width: 150,
                   ),
                   Visibility(
-                    visible: isAverageTimeOopen1,
+                    visible: isAverageTimeOpen1,
                     child: Column(
                       children: [
                         Padding(
@@ -1984,9 +2001,15 @@ class _WorkStationState extends State<WorkStation> {
                             onTap: () {
                               setState(() {
                                 isActiveWst = !isActiveWst;
-                                isListSubstationOopen = !isListSubstationOopen;
+                                isListSubstationOpen = !isListSubstationOpen;
                                 listSubStation.clear();
                                 isServiceOptionOpen2 = !isServiceOptionOpen2;
+                                int idexno = listSubStation.length;
+                                SubStationClass subStationx = SubStationClass(
+                                    index: idexno,
+                                    stationName: stationController.text,
+                                    status: true);
+                                listSubStation.add(subStationx);
                               });
                             },
                             child: Container(
@@ -2055,7 +2078,7 @@ class _WorkStationState extends State<WorkStation> {
                         width: 100,
                       ),
                       Visibility(
-                        visible: isListSubstationOopen,
+                        visible: isListSubstationOpen,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -2142,6 +2165,14 @@ class _WorkStationState extends State<WorkStation> {
                                                   return;
                                                 }
 
+                                                FirebaseFirestore.instance
+                                                    .collection('subStation')
+                                                    .add({
+                                                  'stationId': '1',
+                                                  'stationName':
+                                                      stationController.text,
+                                                  'status': true,
+                                                });
                                                 // stations
                                                 //     .add(stationController.text);
 
@@ -2226,6 +2257,21 @@ class _WorkStationState extends State<WorkStation> {
                                                             .toString());
                                                 isSubStationSelected = false;
                                               }
+
+                                              FirebaseFirestore.instance
+                                                  .collection('subStation')
+                                                  .doc(docId)
+                                                  .delete();
+                                              //     .then((value) async {
+                                              //   context
+                                              //       .read<MenuProvider>()
+                                              //       .menuRefresh();
+                                              //   Navigator.of(context).pop();
+                                              //   context
+                                              //       .read<MenuProvider>()
+                                              //       .selectedMenu(
+                                              //           '', '', '', '', '');
+                                              // });
 
                                               // for (var itemx
                                               //     in indexListSubStation) {
@@ -2335,7 +2381,14 @@ class _WorkStationState extends State<WorkStation> {
                                                   'Please enter station name');
                                               return;
                                             }
-
+                                            FirebaseFirestore.instance
+                                                .collection('subStation')
+                                                .add({
+                                              'stationId': '2',
+                                              'stationName':
+                                                  stationController.text,
+                                              'status': true,
+                                            });
                                             // stations
                                             //     .add(stationController.text);
 
@@ -2413,6 +2466,11 @@ class _WorkStationState extends State<WorkStation> {
                                                         .toString());
                                             isSubStationSelected = false;
                                           }
+
+                                          FirebaseFirestore.instance
+                                              .collection('subStation')
+                                              .doc(docId)
+                                              .delete();
 
                                           // for (var itemx
                                           //     in indexListSubStation) {
@@ -3064,89 +3122,201 @@ class _WorkStationState extends State<WorkStation> {
     return SizedBox(
       width: width,
       height: 250,
-      child: ListView.builder(
-          itemCount: listSubStation.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Text(stations[index]),
-                  GestureDetector(
-                    child: ButtonMenu(
-                      text: listSubStation[index].stationName,
-                      width: 200,
-                      height: 35,
-                      backColor: [btnColorOrangeLight, btnColorOrangeDark],
-                      textColor: iconButtonTextColor,
-                      borderColor: indexListSubStationDelete == index &&
-                              isSubStationSelected
-                          ? btnColorPurpleLight
-                          : null,
-                    ),
-                    onTap: () {
-                      setState(() {
-                        indexListSubStationDelete = index;
+      child: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('subStation')
+            .where('stationId', isEqualTo: stationId)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (BuildContext context, int index) {
+                  DocumentSnapshot doc = snapshot.data!.docs[index];
+                  print('1111111111111111111111111111111111');
+                  print(doc['stationName']);
 
-                        isSubStationSelected = false;
-                        isSubStationSelected = true;
-                        indexListSubStation.clear();
-                        indexListSubStation
-                            .add(listSubStation[index].stationName);
+                  return Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Text(stations[index]),
+                        GestureDetector(
+                          onTap: doc['status'] == false
+                              ? null
+                              : () {
+                                  setState(() {
+                                    docId = doc.id;
+                                    print(docId);
+                                    indexListSubStationDelete = index;
 
-                        // for (var i = 0; i < indexListSubStation.length; i++) {
-                        //   print(indexListSubStation[i]);
-                        // }
-                      });
-                    },
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        indexListSubStationDelete == index &&
-                                isSubStationDiactivated == false
-                            ? isSubStationSelected = true
-                            : isSubStationSelected = false;
-                        // stations.removeAt(index);
-                        isSubStationSelected = false;
-                        // indexListSubStationDelete == index &&
-                        //         isSubStationSelected
-                        //     ? isSubStationSelected = false
-                        //     : isSubStationSelected = true;
-                        indexListSubStationDelete = index;
-                        // isSubStationDiactivated = !isSubStationDiactivated;
-                        isSubStationDiactivated = false;
-                        isSubStationDiactivated = true;
-                      });
-                    },
-                    child: ButtonMenu(
-                      text: indexListSubStationDelete == index &&
-                              isSubStationDiactivated
-                          ? 'D-ACT'
-                          : 'ACT',
-                      width: 50,
-                      height: 35,
-                      backColor: indexListSubStationDelete == index &&
-                              isSubStationDiactivated
-                          ? [btnColorGreyLight, btnColorGreyDark]
-                          : [btnColorPurpleLight, btnColorPurpleDark],
-                      textColor: indexListSubStationDelete == index &&
-                              isSubStationDiactivated
-                          ? btnColorRedDark
-                          : iconButtonTextColor,
-                      borderColor: null,
+                                    isSubStationSelected = false;
+                                    isSubStationSelected = true;
+                                    indexListSubStation.clear();
+                                    indexListSubStation.add(doc['stationName']);
+
+                                    // for (var i = 0; i < indexListSubStation.length; i++) {
+                                    //   print(indexListSubStation[i]);
+                                    // }
+                                  });
+                                },
+                          child: Opacity(
+                            opacity: doc['status'] == false ? 0.25 : 1.0,
+                            child: ButtonMenu(
+                              text: doc['stationName'],
+                              width: 200,
+                              height: 35,
+                              backColor: [
+                                btnColorOrangeLight,
+                                btnColorOrangeDark
+                              ],
+                              textColor: iconButtonTextColor,
+                              borderColor: indexListSubStationDelete == index &&
+                                      isSubStationSelected
+                                  ? btnColorPurpleLight
+                                  : null,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              print(doc.id);
+                              if (indexListSubStationDelete == index &&
+                                  doc['status'] == false) {
+                                FirebaseFirestore.instance
+                                    .collection('subStation')
+                                    .doc(doc.id)
+                                    .update({'status': true});
+                              } else {
+                                FirebaseFirestore.instance
+                                    .collection('subStation')
+                                    .doc(doc.id)
+                                    .update({'status': false});
+                              }
+                              // stations.removeAt(index);
+                              isSubStationSelected = false;
+                              // indexListSubStationDelete == index &&
+                              //         isSubStationSelected
+                              //     ? isSubStationSelected = false
+                              //     : isSubStationSelected = true;
+                              indexListSubStationDelete = index;
+                              // isSubStationDiactivated = !isSubStationDiactivated;
+                              isSubStationDiactivated = false;
+                              isSubStationDiactivated = true;
+                            });
+                          },
+                          child: ButtonMenu(
+                            text: doc['status'] == false ? 'D-ACT' : 'ACT',
+                            width: 50,
+                            height: 35,
+                            backColor: doc['status'] == false
+                                ? [btnColorGreyLight, btnColorGreyDark]
+                                : [btnColorPurpleLight, btnColorPurpleDark],
+                            textColor: doc['status'] == false
+                                ? btnColorRedDark
+                                : iconButtonTextColor,
+                            borderColor: null,
+                          ),
+                          // child: const Icon(
+                          //   Icons.close,
+                          //   color: Color(0xffef7700),
+                          // ),
+                        )
+                      ],
                     ),
-                    // child: const Icon(
-                    //   Icons.close,
-                    //   color: Color(0xffef7700),
-                    // ),
-                  )
-                ],
-              ),
-            );
-          }),
+                  );
+                });
+          } else {
+            return Container();
+          }
+        },
+      ),
+      // child: ListView.builder(
+      //     itemCount: listSubStation.length,
+      //     itemBuilder: (BuildContext context, int index) {
+      //       return Padding(
+      //         padding: const EdgeInsets.all(10.0),
+      //         child: Row(
+      //           crossAxisAlignment: CrossAxisAlignment.start,
+      //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //           children: [
+      //             // Text(stations[index]),
+      //             GestureDetector(
+      //               child: ButtonMenu(
+      //                 text: listSubStation[index].stationName,
+      //                 width: 200,
+      //                 height: 35,
+      //                 backColor: [btnColorOrangeLight, btnColorOrangeDark],
+      //                 textColor: iconButtonTextColor,
+      //                 borderColor: indexListSubStationDelete == index &&
+      //                         isSubStationSelected
+      //                     ? btnColorPurpleLight
+      //                     : null,
+      //               ),
+      //               onTap: () {
+      //                 setState(() {
+      //                   indexListSubStationDelete = index;
+
+      //                   isSubStationSelected = false;
+      //                   isSubStationSelected = true;
+      //                   indexListSubStation.clear();
+      //                   indexListSubStation
+      //                       .add(listSubStation[index].stationName);
+
+      //                   // for (var i = 0; i < indexListSubStation.length; i++) {
+      //                   //   print(indexListSubStation[i]);
+      //                   // }
+      //                 });
+      //               },
+      //             ),
+      //             GestureDetector(
+      //               onTap: () {
+      //                 setState(() {
+      //                   indexListSubStationDelete == index &&
+      //                           isSubStationDiactivated == false
+      //                       ? isSubStationSelected = true
+      //                       : isSubStationSelected = false;
+      //                   // stations.removeAt(index);
+      //                   isSubStationSelected = false;
+      //                   // indexListSubStationDelete == index &&
+      //                   //         isSubStationSelected
+      //                   //     ? isSubStationSelected = false
+      //                   //     : isSubStationSelected = true;
+      //                   indexListSubStationDelete = index;
+      //                   // isSubStationDiactivated = !isSubStationDiactivated;
+      //                   isSubStationDiactivated = false;
+      //                   isSubStationDiactivated = true;
+      //                 });
+      //               },
+      //               child: ButtonMenu(
+      //                 text: indexListSubStationDelete == index &&
+      //                         isSubStationDiactivated
+      //                     ? 'D-ACT'
+      //                     : 'ACT',
+      //                 width: 50,
+      //                 height: 35,
+      //                 backColor: indexListSubStationDelete == index &&
+      //                         isSubStationDiactivated
+      //                     ? [btnColorGreyLight, btnColorGreyDark]
+      //                     : [btnColorPurpleLight, btnColorPurpleDark],
+      //                 textColor: indexListSubStationDelete == index &&
+      //                         isSubStationDiactivated
+      //                     ? btnColorRedDark
+      //                     : iconButtonTextColor,
+      //                 borderColor: null,
+      //               ),
+      //               // child: const Icon(
+      //               //   Icons.close,
+      //               //   color: Color(0xffef7700),
+      //               // ),
+      //             )
+      //           ],
+      //         ),
+      //       );
+      //     }),
     );
   }
 
