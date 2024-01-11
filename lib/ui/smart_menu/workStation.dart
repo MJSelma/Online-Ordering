@@ -204,6 +204,9 @@ class _WorkStationState extends State<WorkStation> {
                                     onTap: () {
                                       setState(() {
                                         orderingMenu = 1;
+                                        stationMulMenu = 3;
+                                        stationMenu = 0;
+                                        showSetupMenu = false;
                                         servedOrderingMenu = 0;
                                       });
                                     },
@@ -351,7 +354,7 @@ class _WorkStationState extends State<WorkStation> {
                                         setState(() {
                                           // orderingMenu = 2;
                                           servedOrderingMenu = 1;
-                                          showSetupMenu = false;
+                                          showSetupMenu = true;
                                           isUploaded = false;
                                         });
                                       },
@@ -775,30 +778,37 @@ class _WorkStationState extends State<WorkStation> {
                     ),
                   ),
                 ),
-                // Visibility(
-                //   visible: !showSetupMenu,
-                //   child: Padding(
-                //       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                //       child: GestureDetector(
-                //           onTap: () {
-                //             setState(() {
-                //               showSetupMenu = false;
-                //             });
-                //           },
-                //           child: Image.asset(
-                //               'assets/images/single-right-arrow.png',
-                //               height: 20,
-                //               color: Colors.grey.shade500))),
-                // ),
+                Visibility(
+                  visible: showSetupMenu == false && servedOrderingMenu == 1 ||
+                      showSetupMenu == false && servedOrderingMenu == 2,
+                  child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              showSetupMenu = true;
+                            });
+                          },
+                          child: Image.asset(
+                              'assets/images/single-right-arrow.png',
+                              height: 20,
+                              color: Colors.grey.shade500))),
+                ),
+                Visibility(
+                  visible: orderingMenu == 1,
+                  child: Container(
+                    width: 2,
+                    color: Colors.grey.shade500,
+                    height: MediaQuery.of(context).size.height - 150,
+                  ),
+                ),
                 Visibility(
                     visible: servedOrderingMenu == 1 ||
                         servedOrderingMenu == 2 ||
-                        !showSetupMenu,
+                        showSetupMenu,
                     child: serveWidget()),
                 Visibility(
-                  visible: orderingMenu == 1 ||
-                      servedOrderingMenu == 1 ||
-                      servedOrderingMenu == 2,
+                  visible: servedOrderingMenu == 1 || servedOrderingMenu == 2,
                   child: Container(
                     width: 2,
                     color: Colors.grey.shade500,
@@ -820,7 +830,7 @@ class _WorkStationState extends State<WorkStation> {
                       child: getOutletMenu())
                 ],
                 Visibility(
-                  visible: servedOrderingMenu == 1,
+                  visible: servedOrderingMenu == 1 || servedOrderingMenu == 2,
                   child: Container(
                     width: 2,
                     color: Colors.grey.shade500,
@@ -828,14 +838,14 @@ class _WorkStationState extends State<WorkStation> {
                   ),
                 ),
                 Visibility(
-                  visible: urlxx.isEmpty,
+                  visible: urlxx.isEmpty && orderingMenu == 2,
                   child: const SizedBox(
                     width: 300,
                   ),
                 ),
                 Visibility(
-                  visible: true,
-                  // visible: servedOrderingMenu == 1 || servedOrderingMenu == 2,
+                  // visible: true,
+                  visible: servedOrderingMenu == 1 || servedOrderingMenu == 2,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -852,8 +862,8 @@ class _WorkStationState extends State<WorkStation> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Container(
-                              padding: const EdgeInsets.fromLTRB(
-                                  0.0, 50.0, 20.0, 0.0),
+                              padding: EdgeInsets.fromLTRB(
+                                  0.0, urlxx.isEmpty ? 0.0 : 20.0, 20.0, 0.0),
                               alignment: Alignment.bottomRight,
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -862,7 +872,7 @@ class _WorkStationState extends State<WorkStation> {
                                   GestureDetector(
                                     onTap: () {
                                       setState(() {
-                                        if (singleStationVal()) {
+                                        if (isUploaded) {
                                           context
                                               .read<MenuProvider>()
                                               .updateMenuCount(1);
@@ -3408,15 +3418,15 @@ class _WorkStationState extends State<WorkStation> {
 
   serveWidget() {
     final int menuCount = context.select((MenuProvider p) => p.menuCount);
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SizedBox(
-        width: 200,
-        child: Column(children: [
-          Visibility(
-            visible: servedOrderingMenu == 1,
-            child: Visibility(
-              visible: !showSetupMenu,
+    return Visibility(
+      visible: showSetupMenu,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: 200,
+          child: Column(children: [
+            Visibility(
+              visible: servedOrderingMenu == 1,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -3434,7 +3444,7 @@ class _WorkStationState extends State<WorkStation> {
                       GestureDetector(
                           onTap: () {
                             setState(() {
-                              showSetupMenu = true;
+                              showSetupMenu = false;
                             });
                           },
                           child: Image.asset(
@@ -3640,99 +3650,99 @@ class _WorkStationState extends State<WorkStation> {
                 ],
               ),
             ),
-          ),
-          // const SizedBox(
-          //   height: 50,
-          // ),
-          Visibility(
-            visible: servedOrderingMenu == 2,
-            child: Column(
-              children: [
-                Container(
-                  width: 200,
-                  height: 45,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.0),
-                    color: const Color(0xffffffff),
-                    border:
-                        Border.all(width: 1.0, color: systemDefaultColorOrange),
-                  ),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        controller: stationController,
-                        decoration: InputDecoration.collapsed(
-                            hintStyle: TextStyle(
-                                fontSize: 11,
-                                fontFamily: defaultFontFamily,
-                                fontStyle: FontStyle.italic),
-                            border: InputBorder.none,
-                            hintText: 'Station Name'),
+            // const SizedBox(
+            //   height: 50,
+            // ),
+            Visibility(
+              visible: servedOrderingMenu == 2,
+              child: Column(
+                children: [
+                  Container(
+                    width: 200,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      color: const Color(0xffffffff),
+                      border: Border.all(
+                          width: 1.0, color: systemDefaultColorOrange),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(
+                          controller: stationController,
+                          decoration: InputDecoration.collapsed(
+                              hintStyle: TextStyle(
+                                  fontSize: 11,
+                                  fontFamily: defaultFontFamily,
+                                  fontStyle: FontStyle.italic),
+                              border: InputBorder.none,
+                              hintText: 'Station Name'),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'EX. Kitchen, Bar, Lounge',
-                  style: TextStyle(
-                      fontSize: 11,
-                      fontFamily: defaultFontFamily,
-                      fontStyle: FontStyle.italic),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      // stations.add(stationController.text);
-                      int idexno = listSubStation.length;
-                      SubStationClass subStationx = SubStationClass(
-                          index: idexno,
-                          stationName: stationController.text,
-                          status: true);
-                      listSubStation.add(subStationx);
-                      context.read<MenuProvider>().setWorkStation(stations);
-                      stationController.text = '';
-                    });
-                  },
-                  child: Container(
-                    width: 200,
-                    height: 35,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: const Color(0xffef7700),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'ADD',
-                          style: TextStyle(
-                            fontFamily: 'SFPro',
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'EX. Kitchen, Bar, Lounge',
+                    style: TextStyle(
+                        fontSize: 11,
+                        fontFamily: defaultFontFamily,
+                        fontStyle: FontStyle.italic),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        // stations.add(stationController.text);
+                        int idexno = listSubStation.length;
+                        SubStationClass subStationx = SubStationClass(
+                            index: idexno,
+                            stationName: stationController.text,
+                            status: true);
+                        listSubStation.add(subStationx);
+                        context.read<MenuProvider>().setWorkStation(stations);
+                        stationController.text = '';
+                      });
+                    },
+                    child: Container(
+                      width: 200,
+                      height: 35,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10.0),
+                        color: const Color(0xffef7700),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'ADD',
+                            style: TextStyle(
+                              fontFamily: 'SFPro',
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                ListOfStation(200),
-              ],
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  ListOfStation(200),
+                ],
+              ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     );
   }
