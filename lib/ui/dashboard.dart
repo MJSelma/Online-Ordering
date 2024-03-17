@@ -713,13 +713,13 @@ class _DashBoardState extends State<DashBoard> {
                               ] else if (indexMenu == 2) ...[
                                 const ConsultationMenu(),
                               ] else if (indexMenu == 3) ...[
-                                SmartMenuPage()
+                                const SmartMenuPage()
                               ] else if (indexMenu == 13) ...[
-                                SmartMenuPage()
+                                const SmartMenuPage()
                               ] else if (indexMenu == 14) ...[
-                                SmartMenuPage()
+                                const SmartMenuPage()
                               ] else if (indexMenu == 15) ...[
-                                SmartMenuPage()
+                                const SmartMenuPage()
                               ] else if (indexMenu == 6) ...[
                                 const CasesMenu()
                               ] else ...[

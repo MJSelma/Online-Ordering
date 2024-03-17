@@ -7,6 +7,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 
 class SmartMenuPage extends HookWidget {
+  const SmartMenuPage({super.key});
+
 
 
   @override
@@ -17,13 +19,13 @@ class SmartMenuPage extends HookWidget {
 
     print(menu.toString());
     if(menu == 0){
-      return WorkStation();
+      return const WorkStation();
     }else if(menu == 1){
-      return WorkTop();
+      return const WorkTop();
     }else if(menu == 2){
-      return SmartMenu();
+      return const SmartMenu();
     }else{
-      return SmartMenu();
+      return const SmartMenu();
     }
   }
 }

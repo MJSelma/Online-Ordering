@@ -87,7 +87,10 @@ class MessagePage extends HookWidget {
     }
   }
 
-  Future<void> sendMessage(BuildContext context, String textMessage) {
+  Future<void> sendMessage(
+    BuildContext context,
+    String textMessage,
+  ) {
     final messProv = context.read<MessageProvider>();
     final String messageId = messProv.messageId;
     print(messageId);

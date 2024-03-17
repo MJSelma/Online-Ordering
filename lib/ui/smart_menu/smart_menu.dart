@@ -1,12 +1,9 @@
-import 'package:drinklinkmerchant/%20model/operators_model.dart';
 import 'package:drinklinkmerchant/%20model/smart_menu_model.dart';
 import 'package:drinklinkmerchant/%20model/smart_menu_section_model.dart';
-import 'package:drinklinkmerchant/%20model/waiters_model.dart';
 import 'package:drinklinkmerchant/provider/menu_provider.dart';
 import 'package:drinklinkmerchant/ui/constant/theme_data.dart';
 import 'package:drinklinkmerchant/ui/smart_menu/menu_section/menu_section.dart';
 import 'package:drinklinkmerchant/widgets/button.dart';
-import 'package:drinklinkmerchant/widgets/icon_button.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -133,7 +130,7 @@ class _SmartMenuState extends State<SmartMenu> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Padding(
+        const Padding(
           padding: EdgeInsets.all(8.0),
           child: Text(
             'Smart Menu > Menu',
@@ -160,7 +157,7 @@ class _SmartMenuState extends State<SmartMenu> {
                           showOrderingMenu = true;
                         });
                       },
-                      child: Icon(Icons.arrow_forward_ios)),
+                      child: const Icon(Icons.arrow_forward_ios)),
                 )),
             Visibility(
               visible: showOrderingMenu,
@@ -170,22 +167,22 @@ class _SmartMenuState extends State<SmartMenu> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 24,
                       ),
                       Row(
                         children: [
-                          Spacer(),
+                          const Spacer(),
                           GestureDetector(
                               onTap: () {
                                 setState(() {
                                   showOrderingMenu = false;
                                 });
                               },
-                              child: Icon(Icons.arrow_back_ios))
+                              child: const Icon(Icons.arrow_back_ios))
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 12,
                       ),
                       Row(
@@ -204,17 +201,17 @@ class _SmartMenuState extends State<SmartMenu> {
                                 child: addMenuButton('ADD NEW \nMENU', 1,
                                     Icons.payment, 50, 12, false)),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           GestureDetector(
                               onTap: () {
                                 setState(() {
                                   //TODO
                                 });
                               },
-                              child: Icon(Icons.settings))
+                              child: const Icon(Icons.settings))
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       showMainMenu(),
@@ -222,14 +219,17 @@ class _SmartMenuState extends State<SmartMenu> {
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
-                            Text('Lanugage'),
-                            SizedBox(width: 12,),
+                            const Text('Lanugage'),
+                            const SizedBox(
+                              width: 12,
+                            ),
                             Container(
                               width: 100,
                               height: 40,
                               decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black45),
-                                   borderRadius: BorderRadius.circular(10),),
+                                border: Border.all(color: Colors.black45),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                               child: Center(child: Text(language.text)),
                             ),
                           ],
@@ -243,18 +243,22 @@ class _SmartMenuState extends State<SmartMenu> {
                               width: 100,
                               height: 40,
                               decoration: BoxDecoration(
-                                  color: btnColorBlueLight,
-                                   borderRadius: BorderRadius.circular(10),),
-                              child: Center(child: Text('View')),
+                                color: btnColorBlueLight,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Center(child: Text('View')),
                             ),
-                            SizedBox(width: 12,),
+                            const SizedBox(
+                              width: 12,
+                            ),
                             Container(
                               width: 100,
                               height: 40,
                               decoration: BoxDecoration(
-                                  color: btnColorPurpleDark,
-                                   borderRadius: BorderRadius.circular(10),),
-                              child: Center(child: Text('Add/Edit')),
+                                color: btnColorPurpleDark,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Center(child: Text('Add/Edit')),
                             ),
                           ],
                         ),
@@ -272,7 +276,7 @@ class _SmartMenuState extends State<SmartMenu> {
             ),
             Visibility(
                 visible: menuIndex != null,
-                child: Container(
+                child: SizedBox(
                     width: MediaQuery.of(context).size.width - 600,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -282,8 +286,8 @@ class _SmartMenuState extends State<SmartMenu> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text('SHOW'),
-                            Spacer(),
+                            const Text('SHOW'),
+                            const Spacer(),
                             Visibility(
                               child: GestureDetector(
                                 onTap: () async {
@@ -300,7 +304,7 @@ class _SmartMenuState extends State<SmartMenu> {
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
                                       color: const Color(0xffef7700)),
-                                  child: Row(
+                                  child: const Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -322,7 +326,7 @@ class _SmartMenuState extends State<SmartMenu> {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         showMainMenuSection(),
@@ -331,7 +335,7 @@ class _SmartMenuState extends State<SmartMenu> {
                           thickness: 3,
                         ),
                         if (menuIndexSection != null) ...[
-                          MenuSectionItems()
+                          const MenuSectionItems()
                         ] else ...[
                           Container()
                         ]
@@ -366,7 +370,7 @@ class _SmartMenuState extends State<SmartMenu> {
             ),
             Text(
               text,
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'SFPro',
                 fontSize: 18,
                 color: Colors.white,
@@ -391,7 +395,7 @@ class _SmartMenuState extends State<SmartMenu> {
           borderRadius: BorderRadius.circular(10.0),
           color: menuIndex == val
               ? const Color(0xffef7700)
-              : Color.fromARGB(255, 65, 76, 237),
+              : const Color.fromARGB(255, 65, 76, 237),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -411,7 +415,7 @@ class _SmartMenuState extends State<SmartMenu> {
             ),
             Text(
               text,
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'SFPro',
                 fontSize: 18,
                 color: Colors.white,
@@ -421,7 +425,7 @@ class _SmartMenuState extends State<SmartMenu> {
             ),
             Text(
               daysDes,
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'SFPro',
                 fontSize: 14,
                 color: Colors.white,
@@ -446,7 +450,7 @@ class _SmartMenuState extends State<SmartMenu> {
           borderRadius: BorderRadius.circular(10.0),
           color: menuIndexSection == val
               ? const Color(0xffef7700)
-              : Color.fromARGB(255, 65, 76, 237),
+              : const Color.fromARGB(255, 65, 76, 237),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -466,7 +470,7 @@ class _SmartMenuState extends State<SmartMenu> {
             ),
             Text(
               text,
-              style: TextStyle(
+              style: const TextStyle(
                 fontFamily: 'SFPro',
                 fontSize: 18,
                 color: Colors.white,
@@ -540,17 +544,17 @@ class _SmartMenuState extends State<SmartMenu> {
                               Row(
                                 children: [
                                   Checkbox(value: false, onChanged: (value) {}),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 10,
                                   ),
-                                  Text(
+                                  const Text(
                                     'IMPORT MENU FROM ANOTHER OUTELET',
                                     style: TextStyle(
                                         fontSize: 12, color: Color(0xffef7700)),
                                   )
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
                               DecoratedBox(
@@ -707,7 +711,7 @@ class _SmartMenuState extends State<SmartMenu> {
                             ],
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
                         //DateTime info
@@ -754,10 +758,10 @@ class _SmartMenuState extends State<SmartMenu> {
                                                   txtDay.text = 'Monday';
                                                 });
                                               }),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 10,
                                           ),
-                                          Text(
+                                          const Text(
                                             'ALL DAY',
                                             style: TextStyle(
                                                 fontSize: 12,
@@ -790,10 +794,10 @@ class _SmartMenuState extends State<SmartMenu> {
                                                       everyDay = 0;
                                                     });
                                                   }),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 10,
                                               ),
-                                              Text(
+                                              const Text(
                                                 'EVERY DAY',
                                                 style: TextStyle(
                                                     fontSize: 12,
@@ -828,10 +832,10 @@ class _SmartMenuState extends State<SmartMenu> {
                                                       everyDay = 1;
                                                     });
                                                   }),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 10,
                                               ),
-                                              Text(
+                                              const Text(
                                                 'SPECIFIC DAYS',
                                                 style: TextStyle(
                                                     fontSize: 12,
@@ -918,7 +922,7 @@ class _SmartMenuState extends State<SmartMenu> {
                                                   ],
                                                 ),
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 10,
                                               ),
                                               GestureDetector(
@@ -971,10 +975,10 @@ class _SmartMenuState extends State<SmartMenu> {
                                                       everyDay = 2;
                                                     });
                                                   }),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 10,
                                               ),
-                                              Text(
+                                              const Text(
                                                 'SPECIFIC DATES',
                                                 style: TextStyle(
                                                     fontSize: 12,
@@ -1015,7 +1019,7 @@ class _SmartMenuState extends State<SmartMenu> {
                                                           '${dtnow1.day}/${dtnow1.month}/${dtnow1.year}'),
                                                     )),
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 10,
                                               ),
                                               GestureDetector(
@@ -1044,7 +1048,7 @@ class _SmartMenuState extends State<SmartMenu> {
                                         visible:
                                             dayFrom == true && everyDay == 2,
                                         child: showDates(setStateDialog)),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 20,
                                     ),
                                     GestureDetector(
@@ -1076,10 +1080,10 @@ class _SmartMenuState extends State<SmartMenu> {
                                                   txtDay.text = 'Monday';
                                                 });
                                               }),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 10,
                                           ),
-                                          Text(
+                                          const Text(
                                             'T0-FROM',
                                             style: TextStyle(
                                                 fontSize: 12,
@@ -1116,7 +1120,7 @@ class _SmartMenuState extends State<SmartMenu> {
                                                         child: Text(
                                                             '${_timeFrom.hour}:${_timeFrom.minute}'))),
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 10,
                                               ),
                                               GestureDetector(
@@ -1166,10 +1170,10 @@ class _SmartMenuState extends State<SmartMenu> {
                                                       everyDay = 0;
                                                     });
                                                   }),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 10,
                                               ),
-                                              Text(
+                                              const Text(
                                                 'EVERY DAY',
                                                 style: TextStyle(
                                                     fontSize: 12,
@@ -1204,10 +1208,10 @@ class _SmartMenuState extends State<SmartMenu> {
                                                       everyDay = 1;
                                                     });
                                                   }),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 10,
                                               ),
-                                              Text(
+                                              const Text(
                                                 'SPECIFIC DAYS',
                                                 style: TextStyle(
                                                     fontSize: 12,
@@ -1294,7 +1298,7 @@ class _SmartMenuState extends State<SmartMenu> {
                                                   ],
                                                 ),
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 10,
                                               ),
                                               GestureDetector(
@@ -1347,10 +1351,10 @@ class _SmartMenuState extends State<SmartMenu> {
                                                       everyDay = 2;
                                                     });
                                                   }),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 10,
                                               ),
-                                              Text(
+                                              const Text(
                                                 'SPECIFIC DATES',
                                                 style: TextStyle(
                                                     fontSize: 12,
@@ -1391,7 +1395,7 @@ class _SmartMenuState extends State<SmartMenu> {
                                                           '${dtnow2.day}/${dtnow2.month}/${dtnow2.year}'),
                                                     )),
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 10,
                                               ),
                                               GestureDetector(
@@ -1447,10 +1451,10 @@ class _SmartMenuState extends State<SmartMenu> {
                                                   showHideMenu = 1;
                                                 });
                                               }),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 10,
                                           ),
-                                          Text(
+                                          const Text(
                                             'SHOW MENU',
                                             style: TextStyle(
                                                 fontSize: 12,
@@ -1478,10 +1482,10 @@ class _SmartMenuState extends State<SmartMenu> {
                                                   showHideMenu = 2;
                                                 });
                                               }),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 10,
                                           ),
-                                          Text(
+                                          const Text(
                                             'HIDE MENU',
                                             style: TextStyle(
                                                 fontSize: 12,
@@ -1498,7 +1502,7 @@ class _SmartMenuState extends State<SmartMenu> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 40,
                     ),
                     Padding(
@@ -1713,7 +1717,7 @@ class _SmartMenuState extends State<SmartMenu> {
                             ],
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 20,
                         ),
                         //DateTime info
@@ -1750,10 +1754,10 @@ class _SmartMenuState extends State<SmartMenu> {
                                                   sendAllWst = 1;
                                                 });
                                               }),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 10,
                                           ),
-                                          Text(
+                                          const Text(
                                             'SEND ALL MENU SECTION TO SPECIFIC WST',
                                             style: TextStyle(
                                                 fontSize: 12,
@@ -1810,7 +1814,7 @@ class _SmartMenuState extends State<SmartMenu> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: 20,
                                     ),
                                     GestureDetector(
@@ -1832,10 +1836,10 @@ class _SmartMenuState extends State<SmartMenu> {
                                                   sendAllWst = 1;
                                                 });
                                               }),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 10,
                                           ),
-                                          Text(
+                                          const Text(
                                             'SEND EACH MENU ITEM TO A WST',
                                             style: TextStyle(
                                                 fontSize: 12,
@@ -1853,7 +1857,7 @@ class _SmartMenuState extends State<SmartMenu> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 40,
                     ),
                     Padding(
@@ -2003,7 +2007,7 @@ class _SmartMenuState extends State<SmartMenu> {
                       width: 150,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
-                        color: Color.fromARGB(255, 65, 76, 237),
+                        color: const Color.fromARGB(255, 65, 76, 237),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -2013,7 +2017,7 @@ class _SmartMenuState extends State<SmartMenu> {
                           children: [
                             Text(
                               listDays[index],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontFamily: 'SFPro',
                                 fontSize: 18,
                                 color: Colors.white,
@@ -2021,18 +2025,17 @@ class _SmartMenuState extends State<SmartMenu> {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            Spacer(),
+                            const Spacer(),
                             GestureDetector(
                               onTap: () {
                                 myState(() {
                                   listDays.removeAt(index);
                                 });
                               },
-                              child: Visibility(
+                              child: const Visibility(
                                 visible: true,
                                 child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                  padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                                   child: Icon(Icons.close, color: Colors.white),
                                 ),
                               ),
@@ -2071,7 +2074,7 @@ class _SmartMenuState extends State<SmartMenu> {
                       width: 150,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
-                        color: Color.fromARGB(255, 65, 76, 237),
+                        color: const Color.fromARGB(255, 65, 76, 237),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -2081,7 +2084,7 @@ class _SmartMenuState extends State<SmartMenu> {
                           children: [
                             Text(
                               listDates[index],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontFamily: 'SFPro',
                                 fontSize: 18,
                                 color: Colors.white,
@@ -2089,18 +2092,17 @@ class _SmartMenuState extends State<SmartMenu> {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            Spacer(),
+                            const Spacer(),
                             GestureDetector(
                               onTap: () {
                                 myState(() {
                                   listDates.removeAt(index);
                                 });
                               },
-                              child: Visibility(
+                              child: const Visibility(
                                 visible: true,
                                 child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                  padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                                   child: Icon(Icons.close, color: Colors.white),
                                 ),
                               ),

@@ -25,8 +25,8 @@ class MenuProvider with ChangeNotifier {
   String _searchMenuName = '';
   int _smartMenuSelected = 0;
   List<String> _workStation = [];
-  List<MenuModel> _smartMenu = [];
-  List<MenuSectionModel> _smartMenuSection = [];
+  final List<MenuModel> _smartMenu = [];
+  final List<MenuSectionModel> _smartMenuSection = [];
 
   List<MenuSectionModel> get smartMenuSection => _smartMenuSection;
   List<MenuModel> get smartMenu => _smartMenu;

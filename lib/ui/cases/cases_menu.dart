@@ -58,7 +58,7 @@ class _CasesMenuState extends State<CasesMenu> {
 
     var txtStyle = const TextStyle(fontSize: 12);
 
-    _getProvider(BuildContext context) {
+    getProvider(BuildContext context) {
       final caseClasss = Provider.of<List<CasesClass>>(context);
       if (query.isNotEmpty) {
         casesClass = caseClasss
@@ -77,7 +77,7 @@ class _CasesMenuState extends State<CasesMenu> {
       casesClass = casesClass..sort((a, b) => a.status.compareTo(b.status));
     }
 
-    Future<void> _launchInBrowser(Uri url) async {
+    Future<void> launchInBrowser(Uri url) async {
       if (!await launchUrl(
         url,
         mode: LaunchMode.externalApplication,
@@ -86,7 +86,7 @@ class _CasesMenuState extends State<CasesMenu> {
       }
     }
 
-    _upload(String fileName, String types) async {
+    upload(String fileName, String types) async {
       print('ersult here');
       final url = await FirebaseStorage.instance
           .ref()
@@ -125,7 +125,7 @@ class _CasesMenuState extends State<CasesMenu> {
               progress = 100.0 * (event.bytesTransferred / event.totalBytes);
               if (progress == 100) {
                 Future.delayed(const Duration(seconds: 2), () {
-                  _upload(fileName, types);
+                  upload(fileName, types);
                 });
               }
               print("Upload is $progress% complete.");
@@ -148,7 +148,7 @@ class _CasesMenuState extends State<CasesMenu> {
       }
     }
 
-    _getProvider(context);
+    getProvider(context);
 
     return SizedBox(
       width: isMenuOpen == true
@@ -644,7 +644,7 @@ class _CasesMenuState extends State<CasesMenu> {
                                                                   ),
                                                                   onPressed:
                                                                       () {
-                                                                    _launchInBrowser(
+                                                                    launchInBrowser(
                                                                         Uri.parse(
                                                                             doc['message']));
                                                                   },
@@ -686,7 +686,7 @@ class _CasesMenuState extends State<CasesMenu> {
                                                             )),
                                                           ),
                                                           onTap: () {
-                                                            _launchInBrowser(
+                                                            launchInBrowser(
                                                                 Uri.parse(doc[
                                                                     'message']));
                                                           },

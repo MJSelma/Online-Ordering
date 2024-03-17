@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:drinklinkmerchant/routes/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
