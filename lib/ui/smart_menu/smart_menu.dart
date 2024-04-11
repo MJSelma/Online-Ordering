@@ -299,7 +299,46 @@ class _SmartMenuState extends State<SmartMenu> {
                                   );
                                 },
                                 child: Container(
-                                  width: 250,
+                                  width: 150,
+                                  height: 70,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: iconButtonTextColorPurple),
+                                  child: const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'ADD NEW \nMENU SECTION',
+                                        style: TextStyle(
+                                          fontFamily: 'SFPro',
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 12,
+                            ),
+                            Visibility(
+                              child: GestureDetector(
+                                onTap: () async {
+                                  await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) {
+                                      return editMenuSection(context);
+                                    },
+                                  );
+                                },
+                                child: Container(
+                                  width: 100,
                                   height: 50,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10.0),
@@ -310,7 +349,7 @@ class _SmartMenuState extends State<SmartMenu> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'ADD NEW MENU SECTION',
+                                        'EDIT',
                                         style: TextStyle(
                                           fontFamily: 'SFPro',
                                           fontSize: 18,
@@ -1912,6 +1951,272 @@ class _SmartMenuState extends State<SmartMenu> {
                     ),
                   ],
                 ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  int menuEdit = 0;
+
+  Widget editMenuSection(
+    BuildContext context,
+  ) {
+    List<String> work = context.select((MenuProvider p) => p.workStation) ?? [];
+    return StatefulBuilder(
+      builder: (context, setStateDialog) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+              side: BorderSide(
+                width: 3,
+                color: systemDefaultColorOrange,
+              ),
+              borderRadius: BorderRadius.circular(20.0)),
+          title: DecoratedBox(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: SizedBox(
+              width: 1000,
+              height: 600,
+              child: Stack(
+                children: [
+                  Container(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text('MENU-SECTION EDIT PAGE',
+                                  style: TextStyle(
+                                      color: systemDefaultColorOrange,
+                                      fontWeight: FontWeight.bold)),
+                              Container(
+                                alignment: Alignment.topRight,
+                                child: InkWell(
+                                  child: const Icon(
+                                    Icons.close,
+                                    size: 14,
+                                  ),
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 15),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //MENU info
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Column(
+                                  children: [
+                                    GestureDetector(
+                                      child: ButtonMenu(
+                                        text: 'MENU SECTION LIST',
+                                        width: 200,
+                                        height: 45,
+                                        backColor: menuEdit == 0
+                                            ? [
+                                                btnColorOrangeDark,
+                                                btnColorOrangeLight
+                                              ]
+                                            : [
+                                                btnColorGreyDark,
+                                                btnColorGreyDark
+                                              ],
+                                        textColor: menuEdit == 0
+                                            ? iconButtonTextColor
+                                            : Colors.black54,
+                                      ),
+                                      onTap: () {
+                                        setStateDialog(() {
+                                          menuEdit = 0;
+                                        });
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 12,
+                                    ),
+                                    GestureDetector(
+                                      child: ButtonMenu(
+                                        text: 'TEMPLATES',
+                                        width: 200,
+                                        height: 45,
+                                        backColor: menuEdit == 1
+                                            ? [
+                                                btnColorOrangeDark,
+                                                btnColorOrangeLight
+                                              ]
+                                            : [
+                                                btnColorGreyDark,
+                                                btnColorGreyDark
+                                              ],
+                                        textColor: menuEdit == 1
+                                            ? iconButtonTextColor
+                                            : Colors.black54,
+                                      ),
+                                      onTap: () {
+                                        setStateDialog(() {
+                                          menuEdit = 1;
+                                        });
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 12,
+                                    ),
+                                    GestureDetector(
+                                      child: ButtonMenu(
+                                        text: 'FONTS',
+                                        width: 200,
+                                        height: 45,
+                                        backColor: menuEdit == 2
+                                            ? [
+                                                btnColorOrangeDark,
+                                                btnColorOrangeLight
+                                              ]
+                                            : [
+                                                btnColorGreyDark,
+                                                btnColorGreyDark
+                                              ],
+                                        textColor: menuEdit == 2
+                                            ? iconButtonTextColor
+                                            : Colors.black54,
+                                      ),
+                                      onTap: () {
+                                        setStateDialog(() {
+                                          menuEdit = 2;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              VerticalDivider(),
+                              if(menuEdit == 0)...[
+                                  Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 700,
+                                    height: 100,
+                                    child: SizedBox(
+                                      height: 60,
+                                      child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: smartMenuSection.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return Row(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      menuIndexSection = index;
+                                                    });
+                                                  },
+                                                  child: Card(
+                                                    child: myButtonSection(
+                                                        smartMenuSection[index]
+                                                            .name,
+                                                        index,
+                                                        Icons.payment,
+                                                        50,
+                                                        12,
+                                                        false),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          }),
+                                    ),
+                                  ),
+                                ],
+                              )
+                              ]else if(menuEdit == 1)...[
+
+                              ]else if(menuEdit == 2)...[
+                                
+                              ]else...[
+  Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 700,
+                                    height: 100,
+                                    child: SizedBox(
+                                      height: 60,
+                                      child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: smartMenuSection.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return Row(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      menuIndexSection = index;
+                                                    });
+                                                  },
+                                                  child: Card(
+                                                    child: myButtonSection(
+                                                        smartMenuSection[index]
+                                                            .name,
+                                                        index,
+                                                        Icons.payment,
+                                                        50,
+                                                        12,
+                                                        false),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          }),
+                                    ),
+                                  ),
+                                ],
+                              )
+                              ],
+                            
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Icon(Icons.delete,color: Colors.red,)),
+                          
+                        ],
+                      ),
+                    ),
+                  )
+                ],
               ),
             ),
           ),

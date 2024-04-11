@@ -37,6 +37,7 @@ class _MenuSectionItemsState extends State<MenuSectionItems> {
   bool isUploadPic = false;
   bool isCalCogs = false;
   List<Item> itemList = [];
+  List<String> subcatList = [];
   List<PortionModel> pList = [];
   TextEditingController portionController = TextEditingController(text: '');
   TextEditingController portionPriceController =
@@ -57,12 +58,14 @@ class _MenuSectionItemsState extends State<MenuSectionItems> {
   TextEditingController adDesText = TextEditingController(text: '');
   TextEditingController adIngText = TextEditingController(text: '');
   TextEditingController adAlText = TextEditingController(text: '');
+  TextEditingController subcat = TextEditingController(text: '');
 
   String? uploadimage;
   Uint8List? webImage;
   int sendAllWst = 0;
   String workingStaion = 'wst';
   int drinkItem = 0;
+  int isOptionOrAdOns = 0;
 
   bool drinkSold1 = false;
   bool drinkSold2 = false;
@@ -79,11 +82,19 @@ class _MenuSectionItemsState extends State<MenuSectionItems> {
 
   List<AddOns> adList = [];
   List<AddOns> optList = [];
+  List<SectionOption> sectionOpt = [];
+  List<SectionAdOn> sectionAdOn = [];
   List<Ingredients> ingredientsList = [];
   TextEditingController adOnsName = TextEditingController(text: '');
   TextEditingController adonsPrice = TextEditingController(text: '');
   TextEditingController optName = TextEditingController(text: '');
   TextEditingController optPrice = TextEditingController(text: '');
+  TextEditingController adoptSeciont = TextEditingController(text: '');
+  TextEditingController adoptSeciontFrom = TextEditingController(text: '');
+  TextEditingController adoptSeciontTo = TextEditingController(text: '');
+  bool moreOption = false;
+  bool optionToSelectFrom = false;
+  bool optionToSelectTo = false;
 
   int pageItemAdd = 0;
   List<String> adsUnitList = ['Volume', 'Unit', 'Weight'];
@@ -179,10 +190,22 @@ class _MenuSectionItemsState extends State<MenuSectionItems> {
               SizedBox(
                 height: MediaQuery.of(context).size.height - 500,
                 width: MediaQuery.of(context).size.width - 400,
-                child: ListView.builder(
+                child: ReorderableListView.builder(
                     itemCount: itemList.length,
+                    onReorder: (int oldIndex, int newIndex) {
+                      setState(() {
+                        if (oldIndex < newIndex) {
+                          newIndex -= 1;
+                        }
+
+                        final int item = oldIndex;
+                        itemList.insert(newIndex, itemList[item]);
+                        itemList.removeAt(oldIndex);
+                      });
+                    },
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
+                        key: Key('$index'),
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -561,621 +584,1973 @@ class _MenuSectionItemsState extends State<MenuSectionItems> {
       height: 600,
       child: Stack(
         children: [
-          Column(
-            children: [
-              Column(
-                children: [
-                  SizedBox(
-                    width: 900,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('MENU ITEM SET UP PAGE',
-                            style: TextStyle(
-                                color: systemDefaultColorOrange,
-                                fontWeight: FontWeight.bold)),
-                        // const Spacer(),
-                        // Container(
-                        //   alignment: Alignment.topRight,
-                        //   child: InkWell(
-                        //     child: const Icon(
-                        //       Icons.close,
-                        //       size: 14,
-                        //     ),
-                        //     onTap: () {
-                        //       Navigator.pop(context);
-                        //     },
-                        //   ),
-                        // )
-                      ],
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Column(
+                  children: [
+                    SizedBox(
+                      width: 900,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('MENU ITEM SET UP PAGE',
+                              style: TextStyle(
+                                  color: systemDefaultColorOrange,
+                                  fontWeight: FontWeight.bold)),
+                          // const Spacer(),
+                          // Container(
+                          //   alignment: Alignment.topRight,
+                          //   child: InkWell(
+                          //     child: const Icon(
+                          //       Icons.close,
+                          //       size: 14,
+                          //     ),
+                          //     onTap: () {
+                          //       Navigator.pop(context);
+                          //     },
+                          //   ),
+                          // )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //MENU info
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            // ignore: prefer_const_literals_to_create_immutables
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  setStateDialog(() {
-                                    ChooseFood = 1;
-                                  });
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Checkbox(
-                                        value: ChooseFood == 1,
-                                        onChanged: (value) {
-                                          setStateDialog(() {
-                                            ChooseFood = 1;
-                                          });
-                                        }),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      'FOOD ITEM',
-                                      style: TextStyle(
-                                          fontSize: 12, color: Colors.black),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      '(Ex. Pasta, Meat, Fish, Dessert)',
-                                      style: TextStyle(
-                                          fontSize: 8, color: Colors.black),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Visibility(
-                                visible: ChooseFood == 1,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(80, 20, 0, 0),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //MENU info
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    setStateDialog(() {
+                                      ChooseFood = 1;
+                                    });
+                                  },
                                   child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
-                                      const Column(
-                                        children: [
-                                          Text(
-                                            'COOKING LEVEL REQUIRED',
-                                            style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.black),
-                                          ),
-                                          SizedBox(
-                                            width: 200,
-                                            child: Text(
-                                              'This creates a window in the Drinklink app asking the cooking level of the meat. Ideal for Steaks',
-                                              style: TextStyle(
-                                                  fontSize: 8,
-                                                  color: Colors.black),
-                                            ),
-                                          ),
-                                        ],
+                                      Checkbox(
+                                          value: ChooseFood == 1,
+                                          onChanged: (value) {
+                                            setStateDialog(() {
+                                              ChooseFood = 1;
+                                            });
+                                          }),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      const Text(
+                                        'FOOD ITEM',
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.black),
                                       ),
                                       const SizedBox(
-                                        width: 12,
+                                        width: 10,
                                       ),
-                                      Switch(
-                                        value: isCookLevel,
-                                        activeColor: const Color(0xffef7700),
-                                        onChanged: (bool value) {
-                                          setStateDialog(() {
-                                            isCookLevel = value;
-                                          });
-                                        },
-                                      ),
+                                      const Text(
+                                        '(Ex. Pasta, Meat, Fish, Dessert)',
+                                        style: TextStyle(
+                                            fontSize: 8, color: Colors.black),
+                                      )
                                     ],
                                   ),
                                 ),
-                              ),
-                              Visibility(
-                                visible: isCookLevel,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(80, 40, 0, 0),
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          const Column(
+                                Visibility(
+                                  visible: ChooseFood == 1,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(80, 12, 0, 0),
+                                    child: Row(
+                                      children: [
+                                        const Column(
+                                          children: [
+                                            Text(
+                                              'COOKING LEVEL REQUIRED',
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.black),
+                                            ),
+                                            SizedBox(
+                                              width: 200,
+                                              child: Text(
+                                                'This creates a window in the Drinklink app asking the cooking level of the meat. Ideal for Steaks',
+                                                style: TextStyle(
+                                                    fontSize: 8,
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(
+                                          width: 12,
+                                        ),
+                                        Switch(
+                                          value: isCookLevel,
+                                          activeColor: const Color(0xffef7700),
+                                          onChanged: (bool value) {
+                                            setStateDialog(() {
+                                              isCookLevel = value;
+                                            });
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: ChooseFood == 1,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(80, 10, 0, 0),
+                                    child: Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            setStateDialog(() {
+                                              isEgg = true;
+                                            });
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
                                             children: [
-                                              Text(
-                                                'Meat',
+                                              Checkbox(
+                                                  value: isEgg,
+                                                  onChanged: (value) {
+                                                    setStateDialog(() {
+                                                      isEgg = true;
+                                                    });
+                                                  }),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'CREATE SUB-CATEGORY',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black),
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'Ex. Pasta, Meat, Fish, Dessert',
+                                                style: TextStyle(
+                                                    fontSize: 8,
+                                                    color: Colors.black),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        //asdaasdasd
+                                        Visibility(
+                                            visible: isEgg,
+                                            child: SizedBox(
+                                              width: 200,
+                                              height: 100,
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 142,
+                                                    child: TextField(
+                                                      controller: subcat,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () async {
+                                                      setStateDialog(() {
+                                                        subcatList
+                                                            .add(subcat.text);
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      width: 50,
+                                                      height: 40,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
+                                                          color:
+                                                              btnColorGreenDark),
+                                                      child: const Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            'ADD',
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'SFPro',
+                                                              fontSize: 18,
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
+                                        Visibility(
+                                          visible: isEgg,
+                                          child: SizedBox(
+                                            height: 150,
+                                            width: 200,
+                                            child: ListView.builder(
+                                                itemCount: subcatList.length,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {},
+                                                        child: SizedBox(
+                                                          width: 200,
+                                                          child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  subcatList[
+                                                                      index],
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          12),
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    setStateDialog(
+                                                                        () {
+                                                                      subcatList
+                                                                          .removeAt(
+                                                                              index);
+                                                                    });
+                                                                  },
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .delete,
+                                                                    color: Colors
+                                                                        .red,
+                                                                  ),
+                                                                )
+                                                              ]),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                }),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 12,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setStateDialog(() {
+                                              isEgg = false;
+                                            });
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Checkbox(
+                                                  value: isEgg == false,
+                                                  onChanged: (value) {
+                                                    setStateDialog(() {
+                                                      isEgg = false;
+                                                    });
+                                                  }),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'ADD TO AN EXISTING SUB-CATEGORY',
                                                 style: TextStyle(
                                                     fontSize: 12,
                                                     color: Colors.black),
                                               ),
                                             ],
                                           ),
-                                          const SizedBox(
-                                            width: 12,
-                                          ),
-                                          Switch(
-                                            value: isMeat,
-                                            activeColor:
-                                                const Color(0xffef7700),
-                                            onChanged: (bool value) {
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setStateDialog(() {
+                                      ChooseFood = 2;
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Checkbox(
+                                          value: ChooseFood == 2,
+                                          onChanged: (value) {
+                                            setStateDialog(() {
+                                              ChooseFood = 2;
+                                            });
+                                          }),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      const Text(
+                                        'DRINK ITEM',
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.black),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      const Text(
+                                        '(Ex. Beer, Coca Cola, Water)',
+                                        style: TextStyle(
+                                            fontSize: 8, color: Colors.black),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: ChooseFood == 2,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: GestureDetector(
+                                            onTap: () {
                                               setStateDialog(() {
-                                                isMeat = value;
-                                                if (isMeat == true) {
-                                                  isEgg = false;
-                                                }
+                                                drinkItem = 1;
                                               });
                                             },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Checkbox(
+                                                    value: drinkItem == 1,
+                                                    onChanged: (value) {
+                                                      setStateDialog(() {
+                                                        drinkItem = 1;
+                                                      });
+                                                    }),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                const Text(
+                                                  'SOFT DRINKS',
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.black),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: 12,
-                                      ),
-                                      Row(
-                                        children: [
-                                          const Column(
-                                            children: [
-                                              Text(
-                                                'Egg',
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            width: 12,
-                                          ),
-                                          Switch(
-                                            value: isEgg,
-                                            activeColor:
-                                                const Color(0xffef7700),
-                                            onChanged: (bool value) {
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: GestureDetector(
+                                            onTap: () {
                                               setStateDialog(() {
-                                                isEgg = value;
-                                                if (isEgg == true) {
-                                                  isMeat = false;
-                                                }
+                                                drinkItem = 2;
                                               });
                                             },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Checkbox(
+                                                    value: drinkItem == 2,
+                                                    onChanged: (value) {
+                                                      setStateDialog(() {
+                                                        drinkItem = 2;
+                                                      });
+                                                    }),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                const Text(
+                                                  'BEER',
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.black),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ],
-                                      ),
-                                    ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              setStateDialog(() {
+                                                drinkItem = 3;
+                                              });
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Checkbox(
+                                                    value: drinkItem == 3,
+                                                    onChanged: (value) {
+                                                      setStateDialog(() {
+                                                        drinkItem = 3;
+                                                      });
+                                                    }),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                const Text(
+                                                  'WINE',
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.black),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              setStateDialog(() {
+                                                drinkItem = 4;
+                                              });
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Checkbox(
+                                                    value: drinkItem == 4,
+                                                    onChanged: (value) {
+                                                      setStateDialog(() {
+                                                        drinkItem = 4;
+                                                      });
+                                                    }),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                const Text(
+                                                  'SPIRIT',
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.black),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: ChooseFood == 2,
+                                          child: Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                80, 10, 0, 0),
+                                            child: Column(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setStateDialog(() {
+                                                      isEgg = true;
+                                                    });
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Checkbox(
+                                                          value: isEgg,
+                                                          onChanged: (value) {
+                                                            setStateDialog(() {
+                                                              isEgg = true;
+                                                            });
+                                                          }),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      const Text(
+                                                        'CREATE SUB-CATEGORY',
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      const Text(
+                                                        'Ex. Pasta, Meat, Fish, Dessert',
+                                                        style: TextStyle(
+                                                            fontSize: 8,
+                                                            color:
+                                                                Colors.black),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                                //asdaasdasd
+                                                Visibility(
+                                                    visible: isEgg,
+                                                    child: SizedBox(
+                                                      width: 200,
+                                                      height: 100,
+                                                      child: Row(
+                                                        children: [
+                                                          SizedBox(
+                                                            width: 142,
+                                                            child: TextField(
+                                                              controller:
+                                                                  subcat,
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 8,
+                                                          ),
+                                                          GestureDetector(
+                                                            onTap: () async {
+                                                              setStateDialog(
+                                                                  () {
+                                                                subcatList.add(
+                                                                    subcat
+                                                                        .text);
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                              width: 50,
+                                                              height: 40,
+                                                              decoration: BoxDecoration(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10.0),
+                                                                  color:
+                                                                      btnColorGreenDark),
+                                                              child: const Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Text(
+                                                                    'ADD',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontFamily:
+                                                                          'SFPro',
+                                                                      fontSize:
+                                                                          18,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500,
+                                                                    ),
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )),
+                                                Visibility(
+                                                  visible: isEgg,
+                                                  child: SizedBox(
+                                                    height: 150,
+                                                    width: 200,
+                                                    child: ListView.builder(
+                                                        itemCount:
+                                                            subcatList.length,
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                int index) {
+                                                          return Row(
+                                                            children: [
+                                                              GestureDetector(
+                                                                onTap: () {},
+                                                                child: SizedBox(
+                                                                  width: 200,
+                                                                  child: Row(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      children: [
+                                                                        Text(
+                                                                          subcatList[
+                                                                              index],
+                                                                          style:
+                                                                              const TextStyle(fontSize: 12),
+                                                                        ),
+                                                                        GestureDetector(
+                                                                          onTap:
+                                                                              () {
+                                                                            setStateDialog(() {
+                                                                              subcatList.removeAt(index);
+                                                                            });
+                                                                          },
+                                                                          child:
+                                                                              Icon(
+                                                                            Icons.delete,
+                                                                            color:
+                                                                                Colors.red,
+                                                                          ),
+                                                                        )
+                                                                      ]),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          );
+                                                        }),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 12,
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setStateDialog(() {
+                                                      isEgg = false;
+                                                    });
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Checkbox(
+                                                          value: isEgg == false,
+                                                          onChanged: (value) {
+                                                            setStateDialog(() {
+                                                              isEgg = false;
+                                                            });
+                                                          }),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      const Text(
+                                                        'ADD TO AN EXISTING SUB-CATEGORY',
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setStateDialog(() {
-                                    ChooseFood = 2;
-                                  });
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Checkbox(
-                                        value: ChooseFood == 2,
-                                        onChanged: (value) {
-                                          setStateDialog(() {
-                                            ChooseFood = 2;
-                                          });
-                                        }),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      'DRINK ITEM',
-                                      style: TextStyle(
-                                          fontSize: 12, color: Colors.black),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      '(Ex. Beer, Coca Cola, Water)',
-                                      style: TextStyle(
-                                          fontSize: 8, color: Colors.black),
-                                    )
-                                  ],
+                                const SizedBox(
+                                  height: 20,
                                 ),
-                              ),
-                              Visibility(
-                                visible: ChooseFood == 2,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                  child: Column(
+                                GestureDetector(
+                                  onTap: () {
+                                    setStateDialog(() {
+                                      ChooseFood = 3;
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: GestureDetector(
-                                          onTap: () {
+                                      Checkbox(
+                                          value: ChooseFood == 3,
+                                          onChanged: (value) {
                                             setStateDialog(() {
-                                              drinkItem = 1;
+                                              ChooseFood = 3;
                                             });
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Checkbox(
-                                                  value: drinkItem == 1,
-                                                  onChanged: (value) {
-                                                    setStateDialog(() {
-                                                      drinkItem = 1;
-                                                    });
-                                                  }),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              const Text(
-                                                'SOFT DRINKS',
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                          }),
+                                      const SizedBox(
+                                        width: 10,
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            setStateDialog(() {
-                                              drinkItem = 2;
-                                            });
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Checkbox(
-                                                  value: drinkItem == 2,
-                                                  onChanged: (value) {
-                                                    setStateDialog(() {
-                                                      drinkItem = 2;
-                                                    });
-                                                  }),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              const Text(
-                                                'BEER',
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                      const Text(
+                                        'MIXOLOGY ITEM',
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.black),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            setStateDialog(() {
-                                              drinkItem = 3;
-                                            });
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Checkbox(
-                                                  value: drinkItem == 3,
-                                                  onChanged: (value) {
-                                                    setStateDialog(() {
-                                                      drinkItem = 3;
-                                                    });
-                                                  }),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              const Text(
-                                                'WINE',
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                      const SizedBox(
+                                        width: 10,
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            setStateDialog(() {
-                                              drinkItem = 4;
-                                            });
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Checkbox(
-                                                  value: drinkItem == 4,
-                                                  onChanged: (value) {
-                                                    setStateDialog(() {
-                                                      drinkItem = 4;
-                                                    });
-                                                  }),
-                                              const SizedBox(
-                                                width: 10,
-                                              ),
-                                              const Text(
-                                                'SPIRIT',
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.black),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
+                                      const Text(
+                                        '(Ex. Mojito, Negroni, Gin-Tonic)',
+                                        style: TextStyle(
+                                            fontSize: 8, color: Colors.black),
+                                      )
                                     ],
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setStateDialog(() {
-                                    ChooseFood = 3;
-                                  });
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Checkbox(
-                                        value: ChooseFood == 3,
-                                        onChanged: (value) {
-                                          setStateDialog(() {
-                                            ChooseFood = 3;
-                                          });
-                                        }),
-                                    const SizedBox(
-                                      width: 10,
+                                Visibility(
+                                  visible: ChooseFood == 3,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(80, 10, 0, 0),
+                                    child: Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            setStateDialog(() {
+                                              isEgg = true;
+                                            });
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Checkbox(
+                                                  value: isEgg,
+                                                  onChanged: (value) {
+                                                    setStateDialog(() {
+                                                      isEgg = true;
+                                                    });
+                                                  }),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'CREATE SUB-CATEGORY',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black),
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'Ex. Pasta, Meat, Fish, Dessert',
+                                                style: TextStyle(
+                                                    fontSize: 8,
+                                                    color: Colors.black),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        //asdaasdasd
+                                        Visibility(
+                                            visible: isEgg,
+                                            child: SizedBox(
+                                              width: 200,
+                                              height: 100,
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 142,
+                                                    child: TextField(
+                                                      controller: subcat,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () async {
+                                                      setStateDialog(() {
+                                                        subcatList
+                                                            .add(subcat.text);
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      width: 50,
+                                                      height: 40,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
+                                                          color:
+                                                              btnColorGreenDark),
+                                                      child: const Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            'ADD',
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'SFPro',
+                                                              fontSize: 18,
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
+                                        Visibility(
+                                          visible: isEgg,
+                                          child: SizedBox(
+                                            height: 150,
+                                            width: 200,
+                                            child: ListView.builder(
+                                                itemCount: subcatList.length,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {},
+                                                        child: SizedBox(
+                                                          width: 200,
+                                                          child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  subcatList[
+                                                                      index],
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          12),
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    setStateDialog(
+                                                                        () {
+                                                                      subcatList
+                                                                          .removeAt(
+                                                                              index);
+                                                                    });
+                                                                  },
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .delete,
+                                                                    color: Colors
+                                                                        .red,
+                                                                  ),
+                                                                )
+                                                              ]),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                }),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 12,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setStateDialog(() {
+                                              isEgg = false;
+                                            });
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Checkbox(
+                                                  value: isEgg == false,
+                                                  onChanged: (value) {
+                                                    setStateDialog(() {
+                                                      isEgg = false;
+                                                    });
+                                                  }),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'ADD TO AN EXISTING SUB-CATEGORY',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    const Text(
-                                      'MIXOLOGY ITEM',
-                                      style: TextStyle(
-                                          fontSize: 12, color: Colors.black),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      '(Ex. Mojito, Negroni, Gin-Tonic)',
-                                      style: TextStyle(
-                                          fontSize: 8, color: Colors.black),
-                                    )
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 15),
-                      ],
+                          const SizedBox(height: 15),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  //DateTime info
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            // ignore: prefer_const_literals_to_create_immutables
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  setStateDialog(() {
-                                    ChooseFood = 4;
-                                  });
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Checkbox(
-                                        value: ChooseFood == 4,
-                                        onChanged: (value) {
-                                          setStateDialog(() {
-                                            ChooseFood = 4;
-                                          });
-                                        }),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      'MEAL PACKAGE',
-                                      style: TextStyle(
-                                          fontSize: 12, color: Colors.black),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      '',
-                                      style: TextStyle(
-                                          fontSize: 8, color: Colors.black),
-                                    )
-                                  ],
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    //DateTime info
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    setStateDialog(() {
+                                      ChooseFood = 4;
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Checkbox(
+                                          value: ChooseFood == 4,
+                                          onChanged: (value) {
+                                            setStateDialog(() {
+                                              ChooseFood = 4;
+                                            });
+                                          }),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      const Text(
+                                        'MEAL PACKAGE',
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.black),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      const Text(
+                                        '',
+                                        style: TextStyle(
+                                            fontSize: 8, color: Colors.black),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setStateDialog(() {
-                                    ChooseFood = 5;
-                                  });
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Checkbox(
-                                        value: ChooseFood == 5,
-                                        onChanged: (value) {
-                                          setStateDialog(() {
-                                            ChooseFood = 5;
-                                          });
-                                        }),
-                                    const SizedBox(
-                                      width: 10,
+                                Visibility(
+                                  visible: ChooseFood == 4,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(80, 10, 0, 0),
+                                    child: Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            setStateDialog(() {
+                                              isEgg = true;
+                                            });
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Checkbox(
+                                                  value: isEgg,
+                                                  onChanged: (value) {
+                                                    setStateDialog(() {
+                                                      isEgg = true;
+                                                    });
+                                                  }),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'CREATE SUB-CATEGORY',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black),
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'Ex. Pasta, Meat, Fish, Dessert',
+                                                style: TextStyle(
+                                                    fontSize: 8,
+                                                    color: Colors.black),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        //asdaasdasd
+                                        Visibility(
+                                            visible: isEgg,
+                                            child: SizedBox(
+                                              width: 200,
+                                              height: 100,
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 142,
+                                                    child: TextField(
+                                                      controller: subcat,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () async {
+                                                      setStateDialog(() {
+                                                        subcatList
+                                                            .add(subcat.text);
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      width: 50,
+                                                      height: 40,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
+                                                          color:
+                                                              btnColorGreenDark),
+                                                      child: const Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            'ADD',
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'SFPro',
+                                                              fontSize: 18,
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
+                                        Visibility(
+                                          visible: isEgg,
+                                          child: SizedBox(
+                                            height: 150,
+                                            width: 200,
+                                            child: ListView.builder(
+                                                itemCount: subcatList.length,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {},
+                                                        child: SizedBox(
+                                                          width: 200,
+                                                          child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  subcatList[
+                                                                      index],
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          12),
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    setStateDialog(
+                                                                        () {
+                                                                      subcatList
+                                                                          .removeAt(
+                                                                              index);
+                                                                    });
+                                                                  },
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .delete,
+                                                                    color: Colors
+                                                                        .red,
+                                                                  ),
+                                                                )
+                                                              ]),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                }),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 12,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setStateDialog(() {
+                                              isEgg = false;
+                                            });
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Checkbox(
+                                                  value: isEgg == false,
+                                                  onChanged: (value) {
+                                                    setStateDialog(() {
+                                                      isEgg = false;
+                                                    });
+                                                  }),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'ADD TO AN EXISTING SUB-CATEGORY',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    const Text(
-                                      'PROMOTION',
-                                      style: TextStyle(
-                                          fontSize: 12, color: Colors.black),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      '',
-                                      style: TextStyle(
-                                          fontSize: 8, color: Colors.black),
-                                    )
-                                  ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setStateDialog(() {
-                                    ChooseFood = 6;
-                                  });
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Checkbox(
-                                        value: ChooseFood == 6,
-                                        onChanged: (value) {
-                                          setStateDialog(() {
-                                            ChooseFood = 6;
-                                          });
-                                        }),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      'FOOD PRODUCT',
-                                      style: TextStyle(
-                                          fontSize: 12, color: Colors.black),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      'Ex. Chocolate bar etc',
-                                      style: TextStyle(
-                                          fontSize: 8, color: Colors.black),
-                                    )
-                                  ],
+                                const SizedBox(
+                                  height: 20,
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setStateDialog(() {
-                                    ChooseFood = 7;
-                                  });
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Checkbox(
-                                        value: ChooseFood == 7,
-                                        onChanged: (value) {
-                                          setStateDialog(() {
-                                            ChooseFood = 7;
-                                          });
-                                        }),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      'PRODUCT ITEM',
-                                      style: TextStyle(
-                                          fontSize: 12, color: Colors.black),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    const Text(
-                                      'Ex. Gadgets',
-                                      style: TextStyle(
-                                          fontSize: 8, color: Colors.black),
-                                    )
-                                  ],
+                                GestureDetector(
+                                  onTap: () {
+                                    setStateDialog(() {
+                                      ChooseFood = 5;
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Checkbox(
+                                          value: ChooseFood == 5,
+                                          onChanged: (value) {
+                                            setStateDialog(() {
+                                              ChooseFood = 5;
+                                            });
+                                          }),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      const Text(
+                                        'PROMOTION',
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.black),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      const Text(
+                                        '',
+                                        style: TextStyle(
+                                            fontSize: 8, color: Colors.black),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                                Visibility(
+                                  visible: ChooseFood == 5,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(80, 10, 0, 0),
+                                    child: Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            setStateDialog(() {
+                                              isEgg = true;
+                                            });
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Checkbox(
+                                                  value: isEgg,
+                                                  onChanged: (value) {
+                                                    setStateDialog(() {
+                                                      isEgg = true;
+                                                    });
+                                                  }),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'CREATE SUB-CATEGORY',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black),
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'Ex. Pasta, Meat, Fish, Dessert',
+                                                style: TextStyle(
+                                                    fontSize: 8,
+                                                    color: Colors.black),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        //asdaasdasd
+                                        Visibility(
+                                            visible: isEgg,
+                                            child: SizedBox(
+                                              width: 200,
+                                              height: 100,
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 142,
+                                                    child: TextField(
+                                                      controller: subcat,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () async {
+                                                      setStateDialog(() {
+                                                        subcatList
+                                                            .add(subcat.text);
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      width: 50,
+                                                      height: 40,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
+                                                          color:
+                                                              btnColorGreenDark),
+                                                      child: const Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            'ADD',
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'SFPro',
+                                                              fontSize: 18,
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
+                                        Visibility(
+                                          visible: isEgg,
+                                          child: SizedBox(
+                                            height: 150,
+                                            width: 200,
+                                            child: ListView.builder(
+                                                itemCount: subcatList.length,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {},
+                                                        child: SizedBox(
+                                                          width: 200,
+                                                          child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  subcatList[
+                                                                      index],
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          12),
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    setStateDialog(
+                                                                        () {
+                                                                      subcatList
+                                                                          .removeAt(
+                                                                              index);
+                                                                    });
+                                                                  },
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .delete,
+                                                                    color: Colors
+                                                                        .red,
+                                                                  ),
+                                                                )
+                                                              ]),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                }),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 12,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setStateDialog(() {
+                                              isEgg = false;
+                                            });
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Checkbox(
+                                                  value: isEgg == false,
+                                                  onChanged: (value) {
+                                                    setStateDialog(() {
+                                                      isEgg = false;
+                                                    });
+                                                  }),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'ADD TO AN EXISTING SUB-CATEGORY',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setStateDialog(() {
+                                      ChooseFood = 6;
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Checkbox(
+                                          value: ChooseFood == 6,
+                                          onChanged: (value) {
+                                            setStateDialog(() {
+                                              ChooseFood = 6;
+                                            });
+                                          }),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      const Text(
+                                        'FOOD PRODUCT',
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.black),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      const Text(
+                                        'Ex. Chocolate bar etc',
+                                        style: TextStyle(
+                                            fontSize: 8, color: Colors.black),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: ChooseFood == 6,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(80, 10, 0, 0),
+                                    child: Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            setStateDialog(() {
+                                              isEgg = true;
+                                            });
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Checkbox(
+                                                  value: isEgg,
+                                                  onChanged: (value) {
+                                                    setStateDialog(() {
+                                                      isEgg = true;
+                                                    });
+                                                  }),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'CREATE SUB-CATEGORY',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black),
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'Ex. Pasta, Meat, Fish, Dessert',
+                                                style: TextStyle(
+                                                    fontSize: 8,
+                                                    color: Colors.black),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        //asdaasdasd
+                                        Visibility(
+                                            visible: isEgg,
+                                            child: SizedBox(
+                                              width: 200,
+                                              height: 100,
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 142,
+                                                    child: TextField(
+                                                      controller: subcat,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () async {
+                                                      setStateDialog(() {
+                                                        subcatList
+                                                            .add(subcat.text);
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      width: 50,
+                                                      height: 40,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
+                                                          color:
+                                                              btnColorGreenDark),
+                                                      child: const Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            'ADD',
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'SFPro',
+                                                              fontSize: 18,
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
+                                        Visibility(
+                                          visible: isEgg,
+                                          child: SizedBox(
+                                            height: 150,
+                                            width: 200,
+                                            child: ListView.builder(
+                                                itemCount: subcatList.length,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {},
+                                                        child: SizedBox(
+                                                          width: 200,
+                                                          child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  subcatList[
+                                                                      index],
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          12),
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    setStateDialog(
+                                                                        () {
+                                                                      subcatList
+                                                                          .removeAt(
+                                                                              index);
+                                                                    });
+                                                                  },
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .delete,
+                                                                    color: Colors
+                                                                        .red,
+                                                                  ),
+                                                                )
+                                                              ]),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                }),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 12,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setStateDialog(() {
+                                              isEgg = false;
+                                            });
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Checkbox(
+                                                  value: isEgg == false,
+                                                  onChanged: (value) {
+                                                    setStateDialog(() {
+                                                      isEgg = false;
+                                                    });
+                                                  }),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'ADD TO AN EXISTING SUB-CATEGORY',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setStateDialog(() {
+                                      ChooseFood = 7;
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Checkbox(
+                                          value: ChooseFood == 7,
+                                          onChanged: (value) {
+                                            setStateDialog(() {
+                                              ChooseFood = 7;
+                                            });
+                                          }),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      const Text(
+                                        'PRODUCT ITEM',
+                                        style: TextStyle(
+                                            fontSize: 12, color: Colors.black),
+                                      ),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      const Text(
+                                        'Ex. Gadgets',
+                                        style: TextStyle(
+                                            fontSize: 8, color: Colors.black),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: ChooseFood == 7,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(80, 10, 0, 0),
+                                    child: Column(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            setStateDialog(() {
+                                              isEgg = true;
+                                            });
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Checkbox(
+                                                  value: isEgg,
+                                                  onChanged: (value) {
+                                                    setStateDialog(() {
+                                                      isEgg = true;
+                                                    });
+                                                  }),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'CREATE SUB-CATEGORY',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black),
+                                              ),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'Ex. Pasta, Meat, Fish, Dessert',
+                                                style: TextStyle(
+                                                    fontSize: 8,
+                                                    color: Colors.black),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        //asdaasdasd
+                                        Visibility(
+                                            visible: isEgg,
+                                            child: SizedBox(
+                                              width: 200,
+                                              height: 100,
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 142,
+                                                    child: TextField(
+                                                      controller: subcat,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () async {
+                                                      setStateDialog(() {
+                                                        subcatList
+                                                            .add(subcat.text);
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      width: 50,
+                                                      height: 40,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      10.0),
+                                                          color:
+                                                              btnColorGreenDark),
+                                                      child: const Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text(
+                                                            'ADD',
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'SFPro',
+                                                              fontSize: 18,
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                            ),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
+                                        Visibility(
+                                          visible: isEgg,
+                                          child: SizedBox(
+                                            height: 150,
+                                            width: 200,
+                                            child: ListView.builder(
+                                                itemCount: subcatList.length,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return Row(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {},
+                                                        child: SizedBox(
+                                                          width: 200,
+                                                          child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  subcatList[
+                                                                      index],
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          12),
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    setStateDialog(
+                                                                        () {
+                                                                      subcatList
+                                                                          .removeAt(
+                                                                              index);
+                                                                    });
+                                                                  },
+                                                                  child: Icon(
+                                                                    Icons
+                                                                        .delete,
+                                                                    color: Colors
+                                                                        .red,
+                                                                  ),
+                                                                )
+                                                              ]),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                }),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 12,
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setStateDialog(() {
+                                              isEgg = false;
+                                            });
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Checkbox(
+                                                  value: isEgg == false,
+                                                  onChanged: (value) {
+                                                    setStateDialog(() {
+                                                      isEgg = false;
+                                                    });
+                                                  }),
+                                              const SizedBox(
+                                                width: 10,
+                                              ),
+                                              const Text(
+                                                'ADD TO AN EXISTING SUB-CATEGORY',
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.black),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 15),
-                      ],
+                          const SizedBox(height: 15),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
           // const Spacer(),
           Align(
@@ -4095,7 +5470,8 @@ class _MenuSectionItemsState extends State<MenuSectionItems> {
                         Visibility(
                           visible: isDescription,
                           child: Container(
-                              width: 200,
+                              width: 300,
+                              height: 400,
                               decoration: BoxDecoration(
                                 color: Colors.grey.shade100,
                                 borderRadius: BorderRadius.circular(20),
@@ -4103,7 +5479,7 @@ class _MenuSectionItemsState extends State<MenuSectionItems> {
                               child: const Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: TextField(
-                                  maxLines: 3,
+                                  maxLines: 100,
                                   // controller: txtmenusectionName,
                                 ),
                               )),
@@ -4147,7 +5523,8 @@ class _MenuSectionItemsState extends State<MenuSectionItems> {
                         Visibility(
                           visible: isIngridient,
                           child: Container(
-                              width: 200,
+                              width: 300,
+                              height: 400,
                               decoration: BoxDecoration(
                                 color: Colors.grey.shade100,
                                 borderRadius: BorderRadius.circular(20),
@@ -4155,7 +5532,7 @@ class _MenuSectionItemsState extends State<MenuSectionItems> {
                               child: const Padding(
                                 padding: EdgeInsets.all(8.0),
                                 child: TextField(
-                                  maxLines: 3,
+                                  maxLines: 100,
                                   // controller: txtmenusectionName,
                                 ),
                               )),
@@ -4199,7 +5576,8 @@ class _MenuSectionItemsState extends State<MenuSectionItems> {
                         Visibility(
                           visible: isAllergens,
                           child: Container(
-                              width: 200,
+                              width: 300,
+                              height: 400,
                               decoration: BoxDecoration(
                                 color: Colors.grey.shade100,
                                 borderRadius: BorderRadius.circular(20),
@@ -4208,7 +5586,7 @@ class _MenuSectionItemsState extends State<MenuSectionItems> {
                                 padding: EdgeInsets.all(8.0),
                                 child: TextField(
                                   // controller: txtmenusectionName,
-                                  maxLines: 3,
+                                  maxLines: 100,
                                 ),
                               )),
                         ),
@@ -4267,1195 +5645,1123 @@ class _MenuSectionItemsState extends State<MenuSectionItems> {
       width: 1000,
       height: 600,
       child: Stack(
-        // mainAxisAlignment: MainAxisAlignment.start,
-        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            children: [
-              Column(
-                children: [
-                  SizedBox(
-                    width: 800,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Column(
+                  children: [
+                    SizedBox(
+                      width: 800,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text('OPTION & ADD-ONS',
+                              style: TextStyle(
+                                  color: systemDefaultColorOrange,
+                                  fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('ADD-ONS/OPTION',
-                            style: TextStyle(
-                                color: systemDefaultColorOrange,
-                                fontWeight: FontWeight.bold)),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //MENU info
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'CREATE OPTIONS & ADD-ONS',
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      const SizedBox(
+                                        width: 12,
+                                      ),
+                                      Switch(
+                                        value: isAddons,
+                                        activeColor: const Color(0xffef7700),
+                                        onChanged: (bool value) {
+                                          setStateDialog(() {
+                                            isAddons = value;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  const Text(
+                                    'Ex. Creamy Spinach, Wedge Potatoes, French Fries',
+                                    style: TextStyle(fontSize: 10),
+                                  ),
+                                  const SizedBox(
+                                    height: 8,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Visibility(
+                                            visible: isAddons,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setStateDialog(() {
+                                                      isOptionOrAdOns = 1;
+                                                    });
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Checkbox(
+                                                          value:
+                                                              isOptionOrAdOns ==
+                                                                  1,
+                                                          onChanged: (value) {
+                                                            setStateDialog(() {
+                                                              isOptionOrAdOns =
+                                                                  1;
+                                                            });
+                                                          }),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      const Text(
+                                                        'CREATE OPTION SECTION',
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 12,
+                                                ),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setStateDialog(() {
+                                                      isOptionOrAdOns = 2;
+                                                    });
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Checkbox(
+                                                          value:
+                                                              isOptionOrAdOns ==
+                                                                  2,
+                                                          onChanged: (value) {
+                                                            setStateDialog(() {
+                                                              isOptionOrAdOns =
+                                                                  2;
+                                                            });
+                                                          }),
+                                                      const SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      const Text(
+                                                        'CREATE ADD-ON',
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: isAddons,
+                                            child: DecoratedBox(
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey.shade100,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  // ignore: prefer_const_literals_to_create_immutables
+                                                  children: [
+                                                    const Text(
+                                                      'CREATE SECTION NAME',
+                                                      style: TextStyle(
+                                                          fontSize: 12),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 5,
+                                                    ),
+                                                    Container(
+                                                        width: 200,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors
+                                                              .grey.shade100,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                        ),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: TextField(
+                                                            controller:
+                                                                adoptSeciont,
+                                                          ),
+                                                        )),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Visibility(
+                                        visible: isAddons,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            width: 2,
+                                            height: 140,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Visibility(
+                                            visible: isAddons == true &&
+                                                isOptionOrAdOns == 1,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                setStateDialog(() {
+                                                  moreOption = !moreOption;
+                                                });
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Checkbox(
+                                                      value: moreOption,
+                                                      onChanged: (value) {
+                                                        setStateDialog(() {
+                                                          moreOption = value!;
+                                                        });
+                                                      }),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  const Text(
+                                                    'MORE THAN ONE OPTION TO SELECT',
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.black),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: isAddons && moreOption,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                setStateDialog(() {
+                                                  optionToSelectFrom =
+                                                      !optionToSelectFrom;
+                                                });
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Checkbox(
+                                                      value: optionToSelectFrom,
+                                                      onChanged: (value) {
+                                                        setStateDialog(() {
+                                                          optionToSelectFrom =
+                                                              value!;
+                                                        });
+                                                      }),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Container(
+                                                      width: 80,
+                                                      height: 60,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .grey.shade100,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.fromLTRB(
+                                                                8, 2, 8, 2),
+                                                        child: TextField(
+                                                          controller:
+                                                              adoptSeciontFrom,
+                                                        ),
+                                                      )),
+                                                  const SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  const Text(
+                                                    'OPTION/S TO SELECT',
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.black),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: isAddons && moreOption,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                setStateDialog(() {
+                                                  optionToSelectTo =
+                                                      !optionToSelectTo;
+                                                });
+                                              },
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Checkbox(
+                                                      value: optionToSelectTo,
+                                                      onChanged: (value) {
+                                                        setStateDialog(() {
+                                                          optionToSelectTo =
+                                                              value!;
+                                                        });
+                                                      }),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  const Text(
+                                                    'UP TO',
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.black),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  Container(
+                                                      width: 80,
+                                                      height: 60,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .grey.shade100,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            EdgeInsets.fromLTRB(
+                                                                8, 2, 8, 2),
+                                                        child: TextField(
+                                                          controller:
+                                                              adoptSeciontTo,
+                                                        ),
+                                                      )),
+                                                  SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  const Text(
+                                                    'OPTIONS TO SELECT',
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.black),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Visibility(
+                                        visible: isAddons && moreOption,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            width: 2,
+                                            height: 140,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ),
+                                      Visibility(
+                                          visible: isAddons,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  setStateDialog(() {
+                                                    if (isOptionOrAdOns == 1) {
+                                                      int id =
+                                                          sectionOpt.length + 1;
+                                                      SectionOption tmp =
+                                                          SectionOption(
+                                                              id.toString(),
+                                                              adoptSeciont.text,
+                                                              adoptSeciontFrom
+                                                                  .text,
+                                                              adoptSeciontTo
+                                                                  .text);
+                                                      sectionOpt.add(tmp);
+                                                    } else if (isOptionOrAdOns ==
+                                                        2) {
+                                                      int id =
+                                                          sectionAdOn.length +
+                                                              1;
+                                                      SectionAdOn tmp =
+                                                          SectionAdOn(
+                                                              id.toString(),
+                                                              adoptSeciont.text,
+                                                              adoptSeciontFrom
+                                                                  .text,
+                                                              adoptSeciontTo
+                                                                  .text);
+                                                      sectionAdOn.add(tmp);
+                                                    }
+                                                  });
+                                                },
+                                                child: Container(
+                                                  width: 100,
+                                                  height: 35,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10.0),
+                                                      color: const Color(
+                                                          0xffef7700)),
+                                                  child: const Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        'SAVE',
+                                                        style: TextStyle(
+                                                          fontFamily: 'SFPro',
+                                                          fontSize: 14,
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                        ),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 12,
+                                  ),
+                                  // Visibility(
+                                  //     visible: isAddons,
+                                  //     child: Column(
+                                  //       mainAxisAlignment:
+                                  //           MainAxisAlignment.start,
+                                  //       crossAxisAlignment:
+                                  //           CrossAxisAlignment.start,
+                                  //       children: [
+                                  //         DecoratedBox(
+                                  //           decoration: BoxDecoration(
+                                  //             color: Colors.grey.shade100,
+                                  //             borderRadius:
+                                  //                 BorderRadius.circular(20),
+                                  //           ),
+                                  //           child: Padding(
+                                  //             padding:
+                                  //                 const EdgeInsets.fromLTRB(
+                                  //                     10, 10, 10, 10),
+                                  //             child: Column(
+                                  //               mainAxisAlignment:
+                                  //                   MainAxisAlignment.start,
+                                  //               crossAxisAlignment:
+                                  //                   CrossAxisAlignment.start,
+                                  //               children: [
+                                  //                 Column(
+                                  //                   mainAxisAlignment:
+                                  //                       MainAxisAlignment.start,
+                                  //                   crossAxisAlignment:
+                                  //                       CrossAxisAlignment
+                                  //                           .start,
+                                  //                   // ignore: prefer_const_literals_to_create_immutables
+                                  //                   children: [
+                                  //                     const Text(
+                                  //                       'ENTER NAME',
+                                  //                       style: TextStyle(
+                                  //                           fontSize: 12),
+                                  //                     ),
+                                  //                     const SizedBox(
+                                  //                       height: 5,
+                                  //                     ),
+                                  //                     Container(
+                                  //                         width: 200,
+                                  //                         decoration:
+                                  //                             BoxDecoration(
+                                  //                           color: Colors
+                                  //                               .grey.shade100,
+                                  //                           borderRadius:
+                                  //                               BorderRadius
+                                  //                                   .circular(
+                                  //                                       20),
+                                  //                         ),
+                                  //                         child: Padding(
+                                  //                           padding:
+                                  //                               const EdgeInsets
+                                  //                                   .all(8.0),
+                                  //                           child: TextField(
+                                  //                             controller:
+                                  //                                 adOnsName,
+                                  //                           ),
+                                  //                         )),
+                                  //                   ],
+                                  //                 ),
+                                  //                 Column(
+                                  //                   mainAxisAlignment:
+                                  //                       MainAxisAlignment.start,
+                                  //                   crossAxisAlignment:
+                                  //                       CrossAxisAlignment
+                                  //                           .start,
+                                  //                   // ignore: prefer_const_literals_to_create_immutables
+                                  //                   children: [
+                                  //                     const SizedBox(
+                                  //                       width: 150,
+                                  //                       height: 50,
+                                  //                       child: Row(
+                                  //                         children: [
+                                  //                           Text(
+                                  //                             'ENTER ADDITIONAL PRICE',
+                                  //                             style: TextStyle(
+                                  //                                 fontSize: 12),
+                                  //                           ),
+                                  //                         ],
+                                  //                       ),
+                                  //                     ),
+                                  //                     const SizedBox(
+                                  //                       height: 5,
+                                  //                     ),
+                                  //                     Row(
+                                  //                       children: [
+                                  //                         Container(
+                                  //                             width: 150,
+                                  //                             decoration:
+                                  //                                 BoxDecoration(
+                                  //                               color: Colors
+                                  //                                   .grey
+                                  //                                   .shade100,
+                                  //                               borderRadius:
+                                  //                                   BorderRadius
+                                  //                                       .circular(
+                                  //                                           20),
+                                  //                             ),
+                                  //                             child: Padding(
+                                  //                               padding:
+                                  //                                   const EdgeInsets
+                                  //                                       .all(
+                                  //                                       8.0),
+                                  //                               child:
+                                  //                                   TextField(
+                                  //                                 controller:
+                                  //                                     adonsPrice,
+                                  //                               ),
+                                  //                             )),
+                                  //                         const Text(
+                                  //                           'USD',
+                                  //                           style: TextStyle(
+                                  //                               fontSize: 16),
+                                  //                         )
+                                  //                       ],
+                                  //                     ),
+                                  //                     Row(
+                                  //                       children: [
+                                  //                         Checkbox(
+                                  //                             value:
+                                  //                                 adonsNoPrice,
+                                  //                             onChanged:
+                                  //                                 (value) {
+                                  //                               setStateDialog(
+                                  //                                   () {
+                                  //                                 adonsNoPrice =
+                                  //                                     value!;
+                                  //                               });
+                                  //                             }),
+                                  //                         const SizedBox(
+                                  //                           width: 8,
+                                  //                         ),
+                                  //                         const Text(
+                                  //                           'NO PRICE REQUIRED',
+                                  //                           style: TextStyle(
+                                  //                               fontSize: 12),
+                                  //                         ),
+                                  //                       ],
+                                  //                     ),
+                                  //                     Row(
+                                  //                       crossAxisAlignment:
+                                  //                           CrossAxisAlignment
+                                  //                               .end,
+                                  //                       mainAxisAlignment:
+                                  //                           MainAxisAlignment
+                                  //                               .end,
+                                  //                       children: [
+                                  //                         GestureDetector(
+                                  //                           onTap: () async {
+                                  //                             setStateDialog(
+                                  //                                 () {
+                                  //                               adOnsName.text =
+                                  //                                   '';
+                                  //                               adDesText.text =
+                                  //                                   '';
+                                  //                               adIngText.text =
+                                  //                                   '';
+                                  //                               adAlText.text =
+                                  //                                   '';
+                                  //                               adonsPrice
+                                  //                                   .text = '';
+                                  //                               adonsDes =
+                                  //                                   false;
+                                  //                               adonsAler =
+                                  //                                   false;
+                                  //                               adonsInd =
+                                  //                                   false;
+                                  //                               adonsNoPrice =
+                                  //                                   false;
+                                  //                             });
+                                  //                           },
+                                  //                           child: Container(
+                                  //                             width: 100,
+                                  //                             height: 35,
+                                  //                             decoration: BoxDecoration(
+                                  //                                 borderRadius:
+                                  //                                     BorderRadius
+                                  //                                         .circular(
+                                  //                                             10.0),
+                                  //                                 color: const Color(
+                                  //                                     0xffef7700)),
+                                  //                             child: const Row(
+                                  //                               mainAxisAlignment:
+                                  //                                   MainAxisAlignment
+                                  //                                       .center,
+                                  //                               crossAxisAlignment:
+                                  //                                   CrossAxisAlignment
+                                  //                                       .center,
+                                  //                               children: [
+                                  //                                 Text(
+                                  //                                   'CLEAR',
+                                  //                                   style:
+                                  //                                       TextStyle(
+                                  //                                     fontFamily:
+                                  //                                         'SFPro',
+                                  //                                     fontSize:
+                                  //                                         14,
+                                  //                                     color: Colors
+                                  //                                         .white,
+                                  //                                     fontWeight:
+                                  //                                         FontWeight
+                                  //                                             .w500,
+                                  //                                   ),
+                                  //                                   textAlign:
+                                  //                                       TextAlign
+                                  //                                           .center,
+                                  //                                 ),
+                                  //                               ],
+                                  //                             ),
+                                  //                           ),
+                                  //                         ),
+                                  //                         SizedBox(
+                                  //                           width: 12,
+                                  //                         ),
+                                  //                         GestureDetector(
+                                  //                           onTap: () async {
+                                  //                             setStateDialog(
+                                  //                                 () {
+                                  //                               if (isOptionOrAdOns ==
+                                  //                                   1) {
+                                  //                                 String id =
+                                  //                                     (optList.length +
+                                  //                                             1)
+                                  //                                         .toString();
+                                  //                                 String inf =
+                                  //                                     '';
+                                  //                                 if (adonsDes) {
+                                  //                                   inf =
+                                  //                                       '${inf}D';
+                                  //                                 }
+                                  //                                 if (adonsInd) {
+                                  //                                   inf =
+                                  //                                       '$inf,I';
+                                  //                                 }
+                                  //                                 if (adonsAler) {
+                                  //                                   inf =
+                                  //                                       '$inf,A';
+                                  //                                 }
+                                  //                                 AddOns tmp = AddOns(
+                                  //                                     id,
+                                  //                                     adOnsName
+                                  //                                         .text,
+                                  //                                     adonsPrice
+                                  //                                         .text,
+                                  //                                     inf,
+                                  //                                     false,
+                                  //                                     '100',
+                                  //                                     []);
+                                  //                                 adList
+                                  //                                     .add(tmp);
+                                  //                               } else if (isOptionOrAdOns ==
+                                  //                                   2) {
+                                  //                                 String id =
+                                  //                                     (adList.length +
+                                  //                                             1)
+                                  //                                         .toString();
+                                  //                                 String inf =
+                                  //                                     '';
+                                  //                                 if (adonsDes) {
+                                  //                                   inf =
+                                  //                                       '${inf}D';
+                                  //                                 }
+                                  //                                 if (adonsInd) {
+                                  //                                   inf =
+                                  //                                       '$inf,I';
+                                  //                                 }
+                                  //                                 if (adonsAler) {
+                                  //                                   inf =
+                                  //                                       '$inf,A';
+                                  //                                 }
+                                  //                                 AddOns tmp = AddOns(
+                                  //                                     id,
+                                  //                                     adOnsName
+                                  //                                         .text,
+                                  //                                     adonsPrice
+                                  //                                         .text,
+                                  //                                     inf,
+                                  //                                     false,
+                                  //                                     '100',
+                                  //                                     []);
+                                  //                                 optList
+                                  //                                     .add(tmp);
+                                  //                               }
+                                  //                               adOnsName.text =
+                                  //                                   '';
+                                  //                               adDesText.text =
+                                  //                                   '';
+                                  //                               adIngText.text =
+                                  //                                   '';
+                                  //                               adAlText.text =
+                                  //                                   '';
+                                  //                               adonsPrice
+                                  //                                   .text = '';
+                                  //                               adonsDes =
+                                  //                                   false;
+                                  //                               adonsAler =
+                                  //                                   false;
+                                  //                               adonsInd =
+                                  //                                   false;
+                                  //                               adonsNoPrice =
+                                  //                                   false;
+                                  //                             });
+                                  //                           },
+                                  //                           child: Container(
+                                  //                             width: 100,
+                                  //                             height: 35,
+                                  //                             decoration: BoxDecoration(
+                                  //                                 borderRadius:
+                                  //                                     BorderRadius
+                                  //                                         .circular(
+                                  //                                             10.0),
+                                  //                                 color: const Color(
+                                  //                                     0xffef7700)),
+                                  //                             child: const Row(
+                                  //                               mainAxisAlignment:
+                                  //                                   MainAxisAlignment
+                                  //                                       .center,
+                                  //                               crossAxisAlignment:
+                                  //                                   CrossAxisAlignment
+                                  //                                       .center,
+                                  //                               children: [
+                                  //                                 Text(
+                                  //                                   'SAVE',
+                                  //                                   style:
+                                  //                                       TextStyle(
+                                  //                                     fontFamily:
+                                  //                                         'SFPro',
+                                  //                                     fontSize:
+                                  //                                         14,
+                                  //                                     color: Colors
+                                  //                                         .white,
+                                  //                                     fontWeight:
+                                  //                                         FontWeight
+                                  //                                             .w500,
+                                  //                                   ),
+                                  //                                   textAlign:
+                                  //                                       TextAlign
+                                  //                                           .center,
+                                  //                                 ),
+                                  //                               ],
+                                  //                             ),
+                                  //                           ),
+                                  //                         ),
+                                  //                       ],
+                                  //                     ),
+                                  //                   ],
+                                  //                 ),
+                                  //               ],
+                                  //             ),
+                                  //           ),
+                                  //         ),
+                                  //       ],
+                                  //     ))
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          //MENU info
-                          Expanded(
-                            flex: 1,
-                            child: Column(
+                    Visibility(
+                       visible: isAddons,
+                      child: Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                          child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
+                              // ignore: prefer_const_literals_to_create_immutables
                               children: [
-                                Row(
-                                  children: [
-                                    const Text(
-                                      'CREATE ADD-ONS',
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                    const SizedBox(
-                                      width: 12,
-                                    ),
-                                    Switch(
-                                      value: isAddons,
-                                      activeColor: const Color(0xffef7700),
-                                      onChanged: (bool value) {
-                                        setStateDialog(() {
-                                          isAddons = value;
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                const Text(
-                                  'Ex. Creamy Spinach, Wedge Potatoes, French Fries',
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Visibility(
-                                    visible: isAddons,
-                                    child: Column(
-                                      children: [
-                                        DecoratedBox(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey.shade100,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                10, 10, 10, 10),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              // ignore: prefer_const_literals_to_create_immutables
-                                              children: [
-                                                const Text(
-                                                  'ENTER NAME',
-                                                  style:
-                                                      TextStyle(fontSize: 12),
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Container(
-                                                    width: 200,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          Colors.grey.shade100,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                    ),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: TextField(
-                                                        controller: adOnsName,
-                                                      ),
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 6,
-                                        ),
-                                        DecoratedBox(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey.shade100,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                10, 10, 10, 10),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              // ignore: prefer_const_literals_to_create_immutables
-                                              children: [
-                                                SizedBox(
-                                                  width: 200,
-                                                  height: 50,
-                                                  child: Row(
-                                                    children: [
-                                                      const Text(
-                                                        'ENTER DESCRIPTION',
-                                                        style: TextStyle(
-                                                            fontSize: 12),
-                                                      ),
-                                                      const Spacer(),
-                                                      Switch(
-                                                        value: adonsDes,
-                                                        activeColor:
-                                                            const Color(
-                                                                0xffef7700),
-                                                        onChanged:
-                                                            (bool value) {
-                                                          setStateDialog(() {
-                                                            adonsDes = value;
-                                                          });
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Visibility(
-                                                  visible: adonsDes,
-                                                  child: Container(
+                                SizedBox(
+                                  height: 400,
+                                  width: 400,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      //LIST of adons
+                                      Text(
+                                        'OPTIONS',
+                                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        height: 380,
+                                        width: 400,
+                                        child: ListView.builder(
+                                            itemCount: sectionOpt.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return Row(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {},
+                                                    child: SizedBox(
                                                       width: 200,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors
-                                                            .grey.shade100,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
-                                                        child: TextField(
-                                                          controller: adDesText,
-                                                        ),
-                                                      )),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 6,
-                                        ),
-                                        DecoratedBox(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey.shade100,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                10, 10, 10, 10),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              // ignore: prefer_const_literals_to_create_immutables
-                                              children: [
-                                                SizedBox(
-                                                  width: 200,
-                                                  height: 50,
-                                                  child: Row(
-                                                    children: [
-                                                      const Text(
-                                                        'ENTER INGRIDIENTS',
-                                                        style: TextStyle(
-                                                            fontSize: 12),
-                                                      ),
-                                                      const Spacer(),
-                                                      Switch(
-                                                        value: adonsInd,
-                                                        activeColor:
-                                                            const Color(
-                                                                0xffef7700),
-                                                        onChanged:
-                                                            (bool value) {
-                                                          setStateDialog(() {
-                                                            adonsInd = value;
-                                                          });
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Visibility(
-                                                  visible: adonsInd,
-                                                  child: Container(
-                                                      width: 200,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors
-                                                            .grey.shade100,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
-                                                        child: TextField(
-                                                          controller: adIngText,
-                                                        ),
-                                                      )),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 6,
-                                        ),
-                                        DecoratedBox(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey.shade100,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                10, 10, 10, 10),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              // ignore: prefer_const_literals_to_create_immutables
-                                              children: [
-                                                SizedBox(
-                                                  width: 200,
-                                                  height: 50,
-                                                  child: Row(
-                                                    children: [
-                                                      const Text(
-                                                        'ENTER ALLERGENS',
-                                                        style: TextStyle(
-                                                            fontSize: 12),
-                                                      ),
-                                                      const Spacer(),
-                                                      Switch(
-                                                        value: adonsAler,
-                                                        activeColor:
-                                                            const Color(
-                                                                0xffef7700),
-                                                        onChanged:
-                                                            (bool value) {
-                                                          setStateDialog(() {
-                                                            adonsAler = value;
-                                                          });
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Visibility(
-                                                  visible: adonsAler,
-                                                  child: Container(
-                                                      width: 200,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors
-                                                            .grey.shade100,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
-                                                        child: TextField(
-                                                          controller: adAlText,
-                                                        ),
-                                                      )),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ))
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 12,
-                          ),
-                          Visibility(
-                            visible: isAddons,
-                            child: Expanded(
-                              flex: 1,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 10, 10, 10),
-                                      child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          // ignore: prefer_const_literals_to_create_immutables
-                                          children: [
-                                            DecoratedBox(
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey.shade100,
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        10, 10, 10, 10),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  // ignore: prefer_const_literals_to_create_immutables
-                                                  children: [
-                                                    const SizedBox(
-                                                      width: 150,
-                                                      height: 50,
-                                                      child: Row(
+                                                      child: Column(
                                                         children: [
-                                                          Text(
-                                                            'ENTER PRICE',
-                                                            style: TextStyle(
-                                                                fontSize: 12),
+                                                          Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  sectionOpt[
+                                                                          index]
+                                                                      .name,
+                                                                  style:
+                                                                      const TextStyle(
+                                                                          fontSize:
+                                                                              12),
+                                                                ),
+                                                              ]),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                children: [
+                                                                  Text(
+                                                                      "${sectionOpt[index].upFrom} OPTIONS TO SELECT ${sectionOpt[index].upTo}",
+                                                                      style: const TextStyle(
+                                                                          fontSize:
+                                                                              12)),
+                                                                ]),
                                                           ),
                                                         ],
                                                       ),
                                                     ),
-                                                    const SizedBox(
-                                                      height: 5,
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Container(
-                                                            width: 150,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors.grey
-                                                                  .shade100,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20),
-                                                            ),
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child: TextField(
-                                                                controller:
-                                                                    adonsPrice,
-                                                              ),
-                                                            )),
-                                                        const Text(
-                                                          'USD',
-                                                          style: TextStyle(
-                                                              fontSize: 16),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Checkbox(
-                                                            value: adonsNoPrice,
-                                                            onChanged: (value) {
-                                                              setStateDialog(
-                                                                  () {
-                                                                adonsNoPrice =
-                                                                    value!;
-                                                              });
-                                                            }),
-                                                        const SizedBox(
-                                                          width: 8,
-                                                        ),
-                                                        const Text(
-                                                          'NO PRICE REQUIRED',
-                                                          style: TextStyle(
-                                                              fontSize: 12),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        GestureDetector(
-                                                          onTap: () async {
-                                                            setStateDialog(() {
-                                                              String id =
-                                                                  (adList.length +
-                                                                          1)
-                                                                      .toString();
-                                                              String inf = '';
-                                                              if (adonsDes) {
-                                                                inf = '${inf}D';
-                                                              }
-                                                              if (adonsInd) {
-                                                                inf = '$inf,I';
-                                                              }
-                                                              if (adonsAler) {
-                                                                inf = '$inf,A';
-                                                              }
-                                                              AddOns tmp =
-                                                                  AddOns(
-                                                                      id,
-                                                                      adOnsName
-                                                                          .text,
-                                                                      adonsPrice
-                                                                          .text,
-                                                                      inf,
-                                                                      false,
-                                                                      '100',
-                                                                      []);
-                                                              adList.add(tmp);
-                                                              adOnsName.text =
-                                                                  '';
-                                                              adDesText.text =
-                                                                  '';
-                                                              adIngText.text =
-                                                                  '';
-                                                              adAlText.text =
-                                                                  '';
-                                                              adonsPrice.text =
-                                                                  '';
-                                                              adonsDes = false;
-                                                              adonsAler = false;
-                                                              adonsInd = false;
-                                                              adonsNoPrice =
-                                                                  false;
-                                                            });
-                                                          },
-                                                          child: Container(
-                                                            width: 100,
-                                                            height: 35,
-                                                            decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10.0),
-                                                                color: const Color(
-                                                                    0xffef7700)),
-                                                            child: const Row(
+                                                  ),
+                                                ],
+                                              );
+                                            }),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // SizedBox(
+                                //   height: 200,
+                                //   width: 150,
+                                //   child: Column(
+                                //     mainAxisAlignment:
+                                //         MainAxisAlignment.start,
+                                //     crossAxisAlignment:
+                                //         CrossAxisAlignment.start,
+                                //     children: [
+                                //       //LIST of adons
+                                //       SizedBox(
+                                //         height: 200,
+                                //         width: 150,
+                                //         child: ListView.builder(
+                                //             itemCount: adList.length,
+                                //             itemBuilder:
+                                //                 (BuildContext context,
+                                //                     int index) {
+                                //               return Row(
+                                //                 children: [
+                                //                   GestureDetector(
+                                //                     onTap: () {},
+                                //                     child: SizedBox(
+                                //                       width: 150,
+                                //                       child: Row(
+                                //                           mainAxisAlignment:
+                                //                               MainAxisAlignment
+                                //                                   .spaceBetween,
+                                //                           children: [
+                                //                             Text(
+                                //                               adList[index]
+                                //                                   .name,
+                                //                               style: const TextStyle(
+                                //                                   fontSize:
+                                //                                       12),
+                                //                             ),
+                                //                             Text(
+                                //                               adList[index]
+                                //                                   .price,
+                                //                               style: const TextStyle(
+                                //                                   fontSize:
+                                //                                       12),
+                                //                             ),
+                                //                             Text(
+                                //                               adList[index]
+                                //                                   .info,
+                                //                               style: const TextStyle(
+                                //                                   fontSize:
+                                //                                       12),
+                                //                             ),
+                                //                             Checkbox(
+                                //                                 value: adList[index]
+                                //                                     .status,
+                                //                                 onChanged:
+                                //                                     null)
+                                //                           ]),
+                                //                     ),
+                                //                   ),
+                                //                 ],
+                                //               );
+                                //             }),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
+                      
+                                SizedBox(
+                                  height: 400,
+                                  width: 400,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      //LIST of adons
+                                      Text('ADD-ONS', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
+                                      SizedBox(
+                                        height: 380,
+                                        width: 400,
+                                        child: ListView.builder(
+                                            itemCount: sectionAdOn.length,
+                                            itemBuilder: (BuildContext context,
+                                                int index) {
+                                              return Row(
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {},
+                                                    child: SizedBox(
+                                                      width: 100,
+                                                      child: Column(
+                                                        children: [
+                                                          Row(
                                                               mainAxisAlignment:
+                                                                  //$2a$11$uDz98JNFS4eiIVjJEbN0seswMi.B3lb4lVSTc2JvqQ.WQLPx.T8tm",
                                                                   MainAxisAlignment
-                                                                      .center,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .center,
+                                                                      .spaceBetween,
                                                               children: [
                                                                 Text(
-                                                                  'SAVE',
+                                                                  sectionAdOn[
+                                                                          index]
+                                                                      .name,
                                                                   style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'SFPro',
-                                                                    fontSize:
-                                                                        14,
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                  ),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
+                                                                      const TextStyle(
+                                                                          fontSize:
+                                                                              12),
                                                                 ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(
-                                                      height: 20,
-                                                    ),
-                                                    Visibility(
-                                                      visible: isAddons,
-                                                      child: SizedBox(
-                                                        height: 200,
-                                                        width: 150,
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            //LIST of adons
-                                                            SizedBox(
-                                                              height: 200,
-                                                              width: 150,
-                                                              child: ListView
-                                                                  .builder(
-                                                                      itemCount:
-                                                                          adList
-                                                                              .length,
-                                                                      itemBuilder:
-                                                                          (BuildContext context,
-                                                                              int index) {
-                                                                        return Row(
-                                                                          children: [
-                                                                            GestureDetector(
-                                                                              onTap: () {},
-                                                                              child: SizedBox(
-                                                                                width: 150,
-                                                                                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                                                                  Text(
-                                                                                    adList[index].name,
-                                                                                    style: const TextStyle(fontSize: 12),
-                                                                                  ),
-                                                                                  Text(
-                                                                                    adList[index].price,
-                                                                                    style: const TextStyle(fontSize: 12),
-                                                                                  ),
-                                                                                  Text(
-                                                                                    adList[index].info,
-                                                                                    style: const TextStyle(fontSize: 12),
-                                                                                  ),
-                                                                                  Checkbox(value: adList[index].status, onChanged: null)
-                                                                                ]),
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        );
-                                                                      }),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ]))
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          //MENU info
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    const Text(
-                                      'CREATE OPTION',
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                    const SizedBox(
-                                      width: 12,
-                                    ),
-                                    Switch(
-                                      value: isOption,
-                                      activeColor: const Color(0xffef7700),
-                                      onChanged: (bool value) {
-                                        setStateDialog(() {
-                                          isOption = value;
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                const Text(
-                                  'Ex. Creamy Spinach, Wedge Potatoes, French Fries',
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Visibility(
-                                    visible: isOption,
-                                    child: Column(
-                                      children: [
-                                        DecoratedBox(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey.shade100,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                10, 10, 10, 10),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              // ignore: prefer_const_literals_to_create_immutables
-                                              children: [
-                                                const Text(
-                                                  'ENTER NAME',
-                                                  style:
-                                                      TextStyle(fontSize: 12),
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Container(
-                                                    width: 200,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          Colors.grey.shade100,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                    ),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: TextField(
-                                                        controller: optName,
-                                                      ),
-                                                    )),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 6,
-                                        ),
-                                        DecoratedBox(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey.shade100,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                10, 10, 10, 10),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              // ignore: prefer_const_literals_to_create_immutables
-                                              children: [
-                                                SizedBox(
-                                                  width: 200,
-                                                  height: 50,
-                                                  child: Row(
-                                                    children: [
-                                                      const Text(
-                                                        'ENTER DESCRIPTION',
-                                                        style: TextStyle(
-                                                            fontSize: 12),
-                                                      ),
-                                                      const Spacer(),
-                                                      Switch(
-                                                        value: adonsDes,
-                                                        activeColor:
-                                                            const Color(
-                                                                0xffef7700),
-                                                        onChanged:
-                                                            (bool value) {
-                                                          setStateDialog(() {
-                                                            adonsDes = value;
-                                                          });
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Visibility(
-                                                  visible: adonsDes,
-                                                  child: Container(
-                                                      width: 200,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors
-                                                            .grey.shade100,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
-                                                        child: TextField(
-                                                          controller: adDesText,
-                                                        ),
-                                                      )),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 6,
-                                        ),
-                                        DecoratedBox(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey.shade100,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                10, 10, 10, 10),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              // ignore: prefer_const_literals_to_create_immutables
-                                              children: [
-                                                SizedBox(
-                                                  width: 200,
-                                                  height: 50,
-                                                  child: Row(
-                                                    children: [
-                                                      const Text(
-                                                        'ENTER INGRIDIENTS',
-                                                        style: TextStyle(
-                                                            fontSize: 12),
-                                                      ),
-                                                      const Spacer(),
-                                                      Switch(
-                                                        value: adonsInd,
-                                                        activeColor:
-                                                            const Color(
-                                                                0xffef7700),
-                                                        onChanged:
-                                                            (bool value) {
-                                                          setStateDialog(() {
-                                                            adonsInd = value;
-                                                          });
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Visibility(
-                                                  visible: adonsInd,
-                                                  child: Container(
-                                                      width: 200,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors
-                                                            .grey.shade100,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
-                                                        child: TextField(
-                                                          controller: adIngText,
-                                                        ),
-                                                      )),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 6,
-                                        ),
-                                        DecoratedBox(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey.shade100,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                10, 10, 10, 10),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              // ignore: prefer_const_literals_to_create_immutables
-                                              children: [
-                                                SizedBox(
-                                                  width: 200,
-                                                  height: 50,
-                                                  child: Row(
-                                                    children: [
-                                                      const Text(
-                                                        'ENTER ALLERGENS',
-                                                        style: TextStyle(
-                                                            fontSize: 12),
-                                                      ),
-                                                      const Spacer(),
-                                                      Switch(
-                                                        value: adonsAler,
-                                                        activeColor:
-                                                            const Color(
-                                                                0xffef7700),
-                                                        onChanged:
-                                                            (bool value) {
-                                                          setStateDialog(() {
-                                                            adonsAler = value;
-                                                          });
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Visibility(
-                                                  visible: adonsAler,
-                                                  child: Container(
-                                                      width: 200,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors
-                                                            .grey.shade100,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
-                                                        child: TextField(
-                                                          controller: adAlText,
-                                                        ),
-                                                      )),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ))
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 12,
-                          ),
-                          Visibility(
-                            visible: isOption,
-                            child: Expanded(
-                              flex: 1,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 10, 10, 10),
-                                      child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          // ignore: prefer_const_literals_to_create_immutables
-                                          children: [
-                                            DecoratedBox(
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey.shade100,
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        10, 10, 10, 10),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  // ignore: prefer_const_literals_to_create_immutables
-                                                  children: [
-                                                    const SizedBox(
-                                                      width: 150,
-                                                      height: 50,
-                                                      child: Row(
-                                                        children: [
-                                                          Text(
-                                                            'ENTER PRICE',
-                                                            style: TextStyle(
-                                                                fontSize: 12),
-                                                          ),
+                                                              ]),
+                                                          
                                                         ],
                                                       ),
                                                     ),
-                                                    const SizedBox(
-                                                      height: 5,
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Container(
-                                                            width: 150,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors.grey
-                                                                  .shade100,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20),
-                                                            ),
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(8.0),
-                                                              child: TextField(
-                                                                controller:
-                                                                    optPrice,
-                                                              ),
-                                                            )),
-                                                        const Text(
-                                                          'USD',
-                                                          style: TextStyle(
-                                                              fontSize: 16),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Checkbox(
-                                                            value: adonsNoPrice,
-                                                            onChanged: (value) {
-                                                              setStateDialog(
-                                                                  () {
-                                                                adonsNoPrice =
-                                                                    value!;
-                                                              });
-                                                            }),
-                                                        const SizedBox(
-                                                          width: 8,
-                                                        ),
-                                                        const Text(
-                                                          'NO PRICE REQUIRED',
-                                                          style: TextStyle(
-                                                              fontSize: 12),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .end,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        GestureDetector(
-                                                          onTap: () async {
-                                                            setStateDialog(() {
-                                                              String id =
-                                                                  (optList.length +
-                                                                          1)
-                                                                      .toString();
-                                                              String inf = '';
-                                                              if (adonsDes) {
-                                                                inf = '${inf}D';
-                                                              }
-                                                              if (adonsInd) {
-                                                                inf = '$inf,I';
-                                                              }
-                                                              if (adonsAler) {
-                                                                inf = '$inf,A';
-                                                              }
-                                                              AddOns tmp =
-                                                                  AddOns(
-                                                                      id,
-                                                                      optName
-                                                                          .text,
-                                                                      optPrice
-                                                                          .text,
-                                                                      inf,
-                                                                      false,
-                                                                      '100',
-                                                                      []);
-                                                              optList.add(tmp);
-                                                              optName.text = '';
-                                                              adDesText.text =
-                                                                  '';
-                                                              adIngText.text =
-                                                                  '';
-                                                              adAlText.text =
-                                                                  '';
-                                                              optPrice.text =
-                                                                  '';
-                                                              adonsDes = false;
-                                                              adonsAler = false;
-                                                              adonsInd = false;
-                                                              adonsNoPrice =
-                                                                  false;
-                                                            });
-                                                          },
-                                                          child: Container(
-                                                            width: 100,
-                                                            height: 35,
-                                                            decoration: BoxDecoration(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            10.0),
-                                                                color: const Color(
-                                                                    0xffef7700)),
-                                                            child: const Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                  'SAVE',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'SFPro',
-                                                                    fontSize:
-                                                                        14,
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w500,
-                                                                  ),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    SizedBox(
-                                                      height: 20,
-                                                    ),
-                                                    Visibility(
-                                                      visible: isAddons,
-                                                      child: SizedBox(
-                                                        height: 200,
-                                                        width: 150,
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            //LIST of adons
-                                                            SizedBox(
-                                                              height: 200,
-                                                              width: 150,
-                                                              child: ListView
-                                                                  .builder(
-                                                                      itemCount:
-                                                                          optList
-                                                                              .length,
-                                                                      itemBuilder:
-                                                                          (BuildContext context,
-                                                                              int index) {
-                                                                        return Row(
-                                                                          children: [
-                                                                            GestureDetector(
-                                                                              onTap: () {},
-                                                                              child: SizedBox(
-                                                                                width: 150,
-                                                                                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                                                                  Text(
-                                                                                    optList[index].name,
-                                                                                    style: const TextStyle(fontSize: 12),
-                                                                                  ),
-                                                                                  Text(
-                                                                                    optList[index].price,
-                                                                                    style: const TextStyle(fontSize: 12),
-                                                                                  ),
-                                                                                  Text(
-                                                                                    optList[index].info,
-                                                                                    style: const TextStyle(fontSize: 12),
-                                                                                  ),
-                                                                                  Checkbox(value: optList[index].status, onChanged: null)
-                                                                                ]),
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        );
-                                                                      }),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ]))
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                                                  ),
+                                                ],
+                                              );
+                                            }),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // SizedBox(
+                                //   height: 200,
+                                //   width: 200,
+                                //   child: Column(
+                                //     mainAxisAlignment:
+                                //         MainAxisAlignment.start,
+                                //     crossAxisAlignment:
+                                //         CrossAxisAlignment.start,
+                                //     children: [
+                                //       //LIST of adons
+                                //       SizedBox(
+                                //         height: 200,
+                                //         width: 150,
+                                //         child: ListView.builder(
+                                //             itemCount: optList.length,
+                                //             itemBuilder:
+                                //                 (BuildContext context,
+                                //                     int index) {
+                                //               return Row(
+                                //                 children: [
+                                //                   GestureDetector(
+                                //                     onTap: () {},
+                                //                     child: SizedBox(
+                                //                       width: 150,
+                                //                       child: Row(
+                                //                           mainAxisAlignment:
+                                //                               MainAxisAlignment
+                                //                                   .spaceBetween,
+                                //                           children: [
+                                //                             Text(
+                                //                               optList[index]
+                                //                                   .name,
+                                //                               style: const TextStyle(
+                                //                                   fontSize:
+                                //                                       12),
+                                //                             ),
+                                //                             Text(
+                                //                               optList[index]
+                                //                                   .price,
+                                //                               style: const TextStyle(
+                                //                                   fontSize:
+                                //                                       12),
+                                //                             ),
+                                //                             Text(
+                                //                               optList[index]
+                                //                                   .info,
+                                //                               style: const TextStyle(
+                                //                                   fontSize:
+                                //                                       12),
+                                //                             ),
+                                //                             Checkbox(
+                                //                                 value: optList[index]
+                                //                                     .status,
+                                //                                 onChanged:
+                                //                                     null)
+                                //                           ]),
+                                //                     ),
+                                //                   ),
+                                //                 ],
+                                //               );
+                                //             }),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
+                              ])),
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
           Align(
             alignment: Alignment.bottomCenter,
@@ -7590,6 +8896,12 @@ class _MenuSectionItemsState extends State<MenuSectionItems> {
   }
 }
 
+class SubCat {
+  String id;
+  String name;
+  SubCat(this.id, this.name);
+}
+
 class PortionModel {
   final String id;
   String name;
@@ -7645,4 +8957,22 @@ class Item {
   bool status;
 
   Item(this.id, this.name, this.price, this.percentage, this.status);
+}
+
+class SectionOption {
+  String id;
+  String name;
+  String upFrom;
+  String upTo;
+
+  SectionOption(this.id, this.name, this.upFrom, this.upTo);
+}
+
+class SectionAdOn {
+  String id;
+  String name;
+  String upFrom;
+  String upTo;
+
+  SectionAdOn(this.id, this.name, this.upFrom, this.upTo);
 }
